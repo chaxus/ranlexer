@@ -9,7 +9,7 @@
 
 # ranlexer
 
-A lightweight ast generator and compiler
+A lightweight ast generator and compiler.(Currently only js is supported, and the function of ast parsing into code is still under development)
 
 ## Install
 

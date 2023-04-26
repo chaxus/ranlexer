@@ -1,0 +1,54 @@
+{
+  "name": "ranlexer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.mjs",
+    "default": "./dist/index.umd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaxus/ranlexer"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest",
+    "lint": "sh ./bin/lint.sh",
+    "lint:ts": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix",
+    "lint:prettier": "prettier --check --cache .",
+    "format": "prettier --write --cache .",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "frontend",
+    "build-tool",
+    "transpiler",
+    "es6",
+    "transpile",
+    "compiler"
+  ],
+  "types": "./dist/index.d.ts",
+  "author": "chaxus",
+  "license": "MIT",
+  "dependencies": {
+    "magic-string": "^0.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
+    "eslint-define-config": "^1.19.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-regexp": "^1.14.0",
+    "prettier": "^2.8.8",
+    "vite": "^4.3.2",
+    "vite-plugin-dts": "^2.3.0",
+    "vitest": "^0.30.1"
+  }
+}

@@ -69,11 +69,7 @@ export class Generate {
   generateFunctionDeclaration(node: FunctionDeclaration): void {
     const { start, end, id, params = [], body } = node
     if (id) {
-      this.code.update(
-        start - this.ast.start,
-        id.start - start - this.ast.start,
-        'function ',
-      )
+      this.code.update(start,id.start - start,'function ')
       this.generateIdentifier(id)
     }
     if (params.length > 0) {
@@ -85,7 +81,7 @@ export class Generate {
   }
   generateIdentifier(node: Identifier): void {
     const { start, end, type, name } = node
-    this.code.update(start - this.ast.start, end, name)
+    this.code.update(start, end, name)
   }
   generateMemberExpression(node: Expression): void {
     const { type, start, end } = node
@@ -115,11 +111,7 @@ export class Generate {
     const { start, end, id, init } = node
     if (init) {
       if (init.type === NodeType.Literal) {
-        this.code.update(
-          start - this.ast.start,
-          end - 1,
-          `${id.name} = ${init ? init.raw : undefined}`,
-        )
+        this.code.update(start,end - 1,`${id.name} = ${init ? init.raw : undefined}`)
       }
     }
   }
@@ -129,7 +121,7 @@ export class Generate {
    */
   generateVariableDeclaration(node: VariableDeclaration): void {
     const { start, declarations, kind, end } = node
-    this.code.update(start - this.ast.start, kind.length, kind)
+    this.code.update(start, kind.length, kind)
     this.code.update(end - 1, end, ';')
     declarations.forEach((declaration) => {
       const { type } = declaration

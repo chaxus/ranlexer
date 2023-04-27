@@ -124,7 +124,83 @@ describe('generate', () => {
     expect(generate(ast)).to.be.equal(result)
   })
   it('function', () => {
-
+    const ast: Program = {
+      type: NodeType.Program,
+      start: 0,
+      end: 39,
+      body: [
+        {
+          start: 0,
+          end: 39,
+          type: NodeType.FunctionDeclaration,
+          id: {
+            start: 9,
+            end: 12,
+            type: NodeType.Identifier,
+            name: 'foo',
+          },
+          params: [
+            {
+              start: 13,
+              end: 14,
+              type: NodeType.Identifier,
+              name: 'a',
+            },
+            {
+              start: 16,
+              end: 17,
+              type: NodeType.Identifier,
+              name: 'b',
+            },
+          ],
+          body: {
+            type: NodeType.BlockStatement,
+            start: 19,
+            end: 39,
+            body: [
+              {
+                type: NodeType.ReturnStatement,
+                start: 21,
+                end: 36,
+                argument: {
+                  type: NodeType.CallExpression,
+                  start: 28,
+                  end: 36,
+                  callee: {
+                    type: NodeType.MemberExpression,
+                    object: {
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      start: 28,
+                      end: 29,
+                    },
+                    property: {
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      start: 30,
+                      end: 33,
+                    },
+                    start: 28,
+                    end: 33,
+                    computed: false,
+                  },
+                  arguments: [
+                    {
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      start: 34,
+                      end: 35,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    }
+    const result = 'function foo(a,b) {  return a.add(b)  }'
+    expect(generate(ast)).to.be.equal(result)
   })
   it('import declaration', () => {
 

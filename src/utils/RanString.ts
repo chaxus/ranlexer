@@ -1,5 +1,4 @@
-
-type HandleString = (s:string) => string
+type HandleString = (s: string) => string
 
 export class RanString {
   str: string
@@ -10,16 +9,21 @@ export class RanString {
       this.str = new Array(size).fill(' ').join('')
     }
   }
-  update(start: number = 0, end: number, sign: string = '', character:string | RegExp | HandleString = ''): string {
+  update(
+    start: number = 0,
+    end: number,
+    sign: string = '',
+    character: string | RegExp | HandleString = '',
+  ): string {
     const length = this.str.length
     const startStr = this.str.slice(0, start)
     const endStr = this.str.slice(end, length)
-    if(character instanceof RegExp){
+    if (character instanceof RegExp) {
       const str = this.str.slice(start, end)
       this.str = `${startStr}${str.replace(character, sign)}${endStr}`
       return this.str
     }
-    if(character instanceof Function){
+    if (character instanceof Function) {
       const str = this.str.slice(start, end)
       this.str = `${startStr}${character(str)}${endStr}`
       return this.str

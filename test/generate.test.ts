@@ -294,10 +294,11 @@ describe('generate', () => {
         },
       ],
     }
-    const result = "import foo, { name1, name2 as bar } from 'foo';       import * as mod from 'mod'; "
+    const result =
+      "import foo, { name1, name2 as bar } from 'foo';       import * as mod from 'mod'; "
     expect(generate(ast)).to.be.equal(result)
   })
   it('export declaration', () => {
-
+    
   })
 })

@@ -40,13 +40,10 @@ module.exports = defineConfig({
     'node/no-unpublished-require': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
     'no-shadow-restricted-names': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
 
-    '@typescript-eslint/ban-ts-comment': 'off', // TODO: we should turn this on in a new PR
-    '@typescript-eslint/ban-types': 'off', // TODO: we should turn this on in a new PR
-    '@typescript-eslint/explicit-module-boundary-types': [
-      'error',
-      { allowArgumentsExplicitlyTypedAsAny: true },
-    ],
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-empty-function': [
       'error',
       { allow: ['arrowFunctions'] },

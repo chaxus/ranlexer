@@ -21,9 +21,10 @@ npm install ranlexer --save
 
 ## Usage
 
-ranlexer can export three methods：
+ranlexer can export three methods
 
 - **parse**: Parse the code into an ast
+- **walk**: Walk through the structure of the ast to perform custom operations
 - **generate**: Parse the ast into code
 - **build**: A lightweight build tool that supports treeshaking
 
@@ -36,6 +37,30 @@ import { parse } from 'ranlexer'
 
 const code = 'let a = 1;'
 const ast = parse(code)
+```
+
+### walk
+
+Walk through the structure of the ast to perform custom operations
+
+There are two options：
+
+- **ast**: ast structure node
+- **opts**: One object with two methods in it
+
+```ts
+// Export the type of the ast node
+import type { Types } from 'ranlexer'
+
+const opts = {
+  enter: (node: types.Node) => {
+    // Enter the processing of the node
+  },
+  leave: (node: types.Node) => {
+    // Leave the node processing
+  }
+walk(ast, opts)
+
 ```
 
 ### generate

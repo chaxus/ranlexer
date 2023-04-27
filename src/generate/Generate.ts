@@ -5,6 +5,10 @@ import type {
   ExpressionStatement,
   FunctionDeclaration,
   Identifier,
+  ImportDeclaration,
+  ImportDefaultSpecifier,
+  ImportNamespaceSpecifier,
+  ImportSpecifier,
   Program,
   ReturnStatement,
   VariableDeclaration,
@@ -20,6 +24,67 @@ export class Generate {
     const { start, end } = ast
     this.ast = ast
     this.code = new RanString(end - start)
+  }
+  generateImportDefaultSpecifier(node: ImportDefaultSpecifier): void {
+    const { start, end, local } = node
+    if (local.type === NodeType.Identifier) {
+      this.generateIdentifier(local)
+    }
+  }
+  generateImportSpecifier(node: ImportSpecifier): void {
+    const { start, end, imported, local } = node
+    if (imported.name === local.name) {
+      this.code.update(start, end, local.name)
+    } else {
+      this.code.update(start, end, `${imported.name} as ${local.name}`)
+    }
+  }
+  generateImportNamespaceSpecifier(node: ImportNamespaceSpecifier): void {
+    const { start, end, local } = node
+    this.code.update(start, end, `* as ${local.name}`)
+  }
+  generateImportDeclaration(node: ImportDeclaration): void {
+    const { specifiers = [], source, start } = node
+    this.code.update(start, start + 7, 'import ')
+    const size = specifiers.length - 1
+    // 1. flag true indicates the beginning of the open parenthesis
+    // and false indicates the end of the close parenthesis
+    let flag = true
+    specifiers.forEach((specifier, index) => {
+      const { type, start, end } = specifier
+      if (type === NodeType.ImportDefaultSpecifier) {
+        this.generateImportDefaultSpecifier(specifier)
+        // 2. ImportDefaultSpecifier does not require parentheses
+        // 3. Close the parenthesis if ImportDefaultSpecifier is encountered
+        if (!flag) {
+          flag = true
+          this.code.update(end - 2, end, ' }')
+        }
+      }
+      // 4. ImportSpecifier need parenthesis
+      // 5. The first ImportSpecifier adds an open bracket
+      if (type === NodeType.ImportSpecifier) {
+        this.generateImportSpecifier(specifier)
+        if (flag) {
+          flag = false
+          this.code.update(start - 2, start, '{ ')
+        }
+      }
+      if (type === NodeType.ImportNamespaceSpecifier) {
+        this.generateImportNamespaceSpecifier(specifier)
+      }
+      if (index < size) {
+        this.code.update(end, end + 1, ',')
+      }
+    })
+    // 6. Or if the specifiers are consumed and flag is false, add an open parenthesis
+    if (!flag) {
+      flag = true
+      this.code.update(specifiers[size].end, specifiers[size].end + 2, ' }')
+    }
+    if (source) {
+      this.code.update(source.start - 5, source.end, `from ${source.raw};`)
+    }
   }
   generateCallExpression(node: CallExpression): void {
     const { start, end } = node
@@ -47,7 +112,7 @@ export class Generate {
       }
     })
   }
-  generateFunctionParams(params: Expression[] | Identifier[] = []):void{
+  generateFunctionParams(params: Expression[] | Identifier[] = []): void {
     const paramsEndIndex = params.length - 1
     const paramsStartIndex = 0
     params.forEach((param, index) => {
@@ -69,7 +134,7 @@ export class Generate {
   generateFunctionDeclaration(node: FunctionDeclaration): void {
     const { start, end, id, params = [], body } = node
     if (id) {
-      this.code.update(start,id.start - start,'function ')
+      this.code.update(start, id.start - start, 'function ')
       this.generateIdentifier(id)
     }
     if (params.length > 0) {
@@ -111,7 +176,11 @@ export class Generate {
     const { start, end, id, init } = node
     if (init) {
       if (init.type === NodeType.Literal) {
-        this.code.update(start,end - 1,`${id.name} = ${init ? init.raw : undefined}`)
+        this.code.update(
+          start,
+          end - 1,
+          `${id.name} = ${init ? init.raw : undefined}`,
+        )
       }
     }
   }
@@ -142,6 +211,9 @@ export class Generate {
       }
       if (type === NodeType.FunctionDeclaration) {
         return this.generateFunctionDeclaration(node)
+      }
+      if (type === NodeType.ImportDeclaration) {
+        return this.generateImportDeclaration(node)
       }
     })
     return this.code.toString()

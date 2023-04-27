@@ -16,16 +16,16 @@ A lightweight ast generator and compiler.(Currently only js is supported, and th
 Using npm:
 
 ```console
-npm install ranlexer --save-dev
+npm install ranlexer --save
 ```
 
 ## Usage
 
 ranlexer can export three methods：
 
-- parse：Parse the code into an ast:
-- generate：Parse the ast into code
-- build：A lightweight build tool that supports treeshaking
+- **parse**: Parse the code into an ast
+- **generate**: Parse the ast into code
+- **build**: A lightweight build tool that supports treeshaking
 
 ### parse
 
@@ -40,7 +40,7 @@ const ast = parse(code)
 
 ### generate
 
-Parse the ast into code
+Parse the ast into code:
 
 ```ts
 import { generate } from 'ranlexer'
@@ -91,20 +91,20 @@ import { build } from 'ranlexer'
 const bundle = await build(option)
 ```
 
-Generate a bundle by passing in options，All options are, well, optional:
+Generate a bundle by passing in options，All options are well, optional:
 
-- input： Build entry, if not set, has a default value. The default value is `./index.js`
-- output = Path to the build output file. If not set, the default value is `./dist/index.js`
+- **input**: Build entry, if not set, the default value is `./index.js`
+- **output**: Path to the build output file. If not set, the default value is `./dist/index.js`
 
-The bundle has two methods,
+The bundle has two methods:
 
-One is to output the built code directly,
+- **generate**: generate is to output the built code directly,
 
 ```ts
 const code = bundle.generate()
 ```
 
-and the other is to output the file to a directory.
+- **write**: write is to output the file to a directory.
 
 ```ts
 bundle.write()

@@ -3,7 +3,7 @@ import type { MemberExpression, Program } from '@/parser/nodeTypes'
 import { NodeType, parse } from '@/parser'
 
 describe('Parser', () => {
-  it('test variable declaration', () => {
+  it('variable declaration', () => {
     const input = 'let a = 1;'
     const ast = {
       type: NodeType.Program,
@@ -40,7 +40,7 @@ describe('Parser', () => {
     }
     expect(parse(input)).toEqual(ast)
   })
-  it('test member expression', () => {
+  it('member expression', () => {
     const input = 'foo.bar'
     const memberExpression: MemberExpression = {
       type: NodeType.MemberExpression,
@@ -73,11 +73,10 @@ describe('Parser', () => {
         },
       ],
     }
-
     expect(parse(input)).toEqual(ast)
   })
 
-  it('test nested member expression', () => {
+  it('nested member expression', () => {
     const input = 'foo.bar.zoo'
     const memberExpression: MemberExpression = {
       type: NodeType.MemberExpression,
@@ -126,7 +125,7 @@ describe('Parser', () => {
     expect(parse(input)).toEqual(ast)
   })
 
-  it('test function', () => {
+  it('function', () => {
     const input = 'function foo(a, b) { return a.add(b); }'
     const ast: Program = {
       type: NodeType.Program,
@@ -206,7 +205,7 @@ describe('Parser', () => {
     expect(parse(input)).toEqual(ast)
   })
 
-  it('test import declaration', () => {
+  it('import declaration', () => {
     const input = `import foo, { name1, name2 as bar } from 'foo';
       import * as mod from 'mod';`
     const ast: Program = {
@@ -303,7 +302,7 @@ describe('Parser', () => {
     expect(parse(input)).toEqual(ast)
   })
 
-  it('test export declaration', () => {
+  it('export declaration', () => {
     let input = "export { foo, bar as ccc } from 'foo';"
     let ast: Program = {
       type: NodeType.Program,

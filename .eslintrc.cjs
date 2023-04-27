@@ -35,26 +35,6 @@ module.exports = defineConfig({
         tryExtensions: ['.ts', '.js', '.jsx', '.tsx', '.d.ts'],
       },
     ],
-    'node/no-missing-require': [
-      'error',
-      {
-        // for try-catching yarn pnp
-        allowModules: ['pnpapi', 'ranite'],
-        tryExtensions: ['.ts', '.js', '.jsx', '.tsx', '.d.ts'],
-      },
-    ],
-    'node/no-extraneous-import': [
-      'error',
-      {
-        allowModules: ['ranite', 'less', 'sass', 'vitest'],
-      },
-    ],
-    'node/no-extraneous-require': [
-      'error',
-      {
-        allowModules: ['ranite'],
-      },
-    ],
     'node/no-deprecated-api': 'off',
     'node/no-unpublished-import': 'off',
     'node/no-unpublished-require': 'off',
@@ -110,7 +90,7 @@ module.exports = defineConfig({
   },
   overrides: [
     {
-      files: ['packages/**'],
+      files: ['src/**'],
       excludedFiles: '**/test/**',
       rules: {
         'no-undef': 'off',
@@ -123,25 +103,6 @@ module.exports = defineConfig({
           '__dirname',
           '__filename',
         ],
-      },
-    },
-    {
-      files: ['packages/ranite/**'],
-      rules: {
-        'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
-        'no-restricted-globals': ['error', 'event'],
-      },
-    },
-    {
-      files: ['*.js', '*.mjs', '*.cjs'],
-      rules: {
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-      },
-    },
-    {
-      files: ['*.d.ts'],
-      rules: {
-        '@typescript-eslint/triple-slash-reference': 'off',
       },
     },
   ],

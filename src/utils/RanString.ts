@@ -1,4 +1,4 @@
-export class BetterString {
+export class RanString {
   str: string
   constructor(size: number | string = 0) {
     if (typeof size === 'string') {
@@ -15,6 +15,10 @@ export class BetterString {
     return this.str
   }
   toString(): string {
+    return this.str
+  }
+  replace(rule: RegExp | string, char: string): string {
+    this.str = this.str.replace(rule, char)
     return this.str
   }
 }

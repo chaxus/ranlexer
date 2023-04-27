@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { Generate } from '@/generate/Generate'
+import { generate } from '@/generate'
 import { NodeType } from '@/parser'
-import type { Program } from '@/parser/nodeTypes'
+import type { MemberExpression, Program } from '@/parser/nodeTypes'
 
 describe('generate', () => {
-  it('let a = 1;', async () => {
+  it('variable declaration', async () => {
     const ast: Program = {
       type: NodeType.Program,
       start: 0,
@@ -38,7 +38,98 @@ describe('generate', () => {
         },
       ],
     }
-    const generate = new Generate(ast)
-    expect(generate.render()).to.be.equal('let a = 1;')
+    const result = 'let a = 1;'
+    expect(generate(ast)).to.be.equal(result)
+  })
+  it('member expression', () => {
+    const memberExpression: MemberExpression = {
+      type: NodeType.MemberExpression,
+      object: {
+        type: NodeType.Identifier,
+        name: 'foo',
+        start: 0,
+        end: 3,
+      },
+      start: 0,
+      end: 7,
+      property: {
+        type: NodeType.Identifier,
+        name: 'bar',
+        start: 4,
+        end: 7,
+      },
+      computed: false,
+    }
+    const ast: Program = {
+      type: NodeType.Program,
+      start: 0,
+      end: 7,
+      body: [
+        {
+          type: NodeType.ExpressionStatement,
+          expression: memberExpression,
+          start: 0,
+          end: 7,
+        },
+      ],
+    }
+    const result = 'foo.bar'
+    expect(generate(ast)).to.be.equal(result)
+  })
+  it('nested member expression', () => {
+    const result = 'foo.bar.zoo'
+    const memberExpression: MemberExpression = {
+      type: NodeType.MemberExpression,
+      object: {
+        type: NodeType.MemberExpression,
+        object: {
+          start: 0,
+          end: 3,
+          type: NodeType.Identifier,
+          name: 'foo',
+        },
+        property: {
+          start: 4,
+          end: 7,
+          type: NodeType.Identifier,
+          name: 'bar',
+        },
+        start: 0,
+        end: 7,
+        computed: false,
+      },
+      property: {
+        start: 8,
+        end: 11,
+        type: NodeType.Identifier,
+        name: 'zoo',
+      },
+      start: 0,
+      end: 11,
+      computed: false,
+    }
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.ExpressionStatement,
+          expression: memberExpression,
+          start: 0,
+          end: 11,
+        },
+      ],
+      start: 0,
+      end: 11,
+    }
+    expect(generate(ast)).to.be.equal(result)
+  })
+  it('function', () => {
+
+  })
+  it('import declaration', () => {
+
+  })
+  it('export declaration', () => {
+
   })
 })

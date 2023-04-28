@@ -1,3 +1,7 @@
+# ranlexer
+
+A lightweight JavaScript generator and compiler.
+
 [npm]: https://img.shields.io/npm/v/ranlexer
 [npm-url]: https://www.npmjs.com/package/ranlexer
 [size]: https://packagephobia.now.sh/badge?p=ranlexer
@@ -6,10 +10,6 @@
 [![npm][npm]][npm-url]
 [![size][size]][size-url]
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
-
-# ranlexer
-
-A lightweight JavaScript generator and compiler.
 
 ## Install
 
@@ -103,7 +103,7 @@ const ast = {
     },
   ],
 }
-const code = generate(ast)
+const code = generate(ast) // 'let a = 1;'
 ```
 
 ### build

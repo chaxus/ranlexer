@@ -1,6 +1,10 @@
 import type {
   BlockStatement,
   CallExpression,
+  ExportAllDeclaration,
+  ExportDefaultDeclaration,
+  ExportNamedDeclaration,
+  ExportSpecifier,
   Expression,
   ExpressionStatement,
   FunctionDeclaration,
@@ -24,6 +28,51 @@ export class Generate {
     const { start, end } = ast
     this.ast = ast
     this.code = new RanString(end - start)
+  }
+  generateExportDefaultDeclaration(node: ExportDefaultDeclaration): void {
+    const { start, end, declaration } = node
+    this.code.update(start, start + 15, `export default `)
+    if (declaration.type === NodeType.FunctionDeclaration) {
+      this.generateFunctionDeclaration(declaration)
+    }
+  }
+  generateExportAllDeclaration(node: ExportAllDeclaration): void {
+    const { start, end, exported, source } = node
+    this.code.update(start, end, `export * from ${source.raw};`)
+  }
+  generateExportSpecifier(node: ExportSpecifier): void {
+    const { start, end, exported, local } = node
+    if (exported.name === local.name) {
+      this.code.update(start, end, local.name)
+    } else {
+      this.code.update(start, end, `${exported.name} as ${local.name}`)
+    }
+  }
+  generateExportNamedDeclaration(node: ExportNamedDeclaration): void {
+    const { start, end, specifiers = [], source } = node
+    this.code.update(start, start + 7, 'export ')
+    const size = specifiers.length - 1
+    let flag = true
+    specifiers.forEach((specifier, index) => {
+      const { type, end, start } = specifier
+      if (type === NodeType.ExportSpecifier) {
+        this.generateExportSpecifier(specifier)
+        if (flag) {
+          flag = false
+          this.code.update(start - 2, start, '{ ')
+        }
+      }
+      if (index < size) {
+        this.code.update(end, end + 1, ',')
+      }
+    })
+    if (!flag) {
+      flag = true
+      this.code.update(specifiers[size].end, specifiers[size].end + 2, ' }')
+    }
+    if (source) {
+      this.code.update(source.start - 5, source.end, `from ${source.raw};`)
+    }
   }
   generateImportDefaultSpecifier(node: ImportDefaultSpecifier): void {
     const { start, end, local } = node
@@ -77,7 +126,7 @@ export class Generate {
         this.code.update(end, end + 1, ',')
       }
     })
-    // 6. Or if the specifiers are consumed and flag is false, add an open parenthesis
+    // 6. if the specifiers are consumed and flag is false, add an open parenthesis
     if (!flag) {
       flag = true
       this.code.update(specifiers[size].end, specifiers[size].end + 2, ' }')
@@ -103,14 +152,18 @@ export class Generate {
     }
   }
   generateBlockStatement(node: BlockStatement): void {
-    const { start, end, body } = node
-    body.forEach((item) => {
-      if (item.type === NodeType.ReturnStatement) {
-        this.code.update(start - 1, start, '{')
-        this.code.update(end, end - 1, '}')
-        this.generateReturnStatement(item)
-      }
-    })
+    const { start, end, body = [] } = node
+    if (body.length > 0) {
+      body.forEach((item) => {
+        if (item.type === NodeType.ReturnStatement) {
+          this.code.update(start - 1, start, '{')
+          this.code.update(end, end - 1, '}')
+          this.generateReturnStatement(item)
+        }
+      })
+    }else{
+      this.code.update(start, end, ' {}')
+    }
   }
   generateFunctionParams(params: Expression[] | Identifier[] = []): void {
     const paramsEndIndex = params.length - 1
@@ -133,12 +186,14 @@ export class Generate {
   }
   generateFunctionDeclaration(node: FunctionDeclaration): void {
     const { start, end, id, params = [], body } = node
+    this.code.update(start, start + 8, 'function')
     if (id) {
-      this.code.update(start, id.start - start, 'function ')
       this.generateIdentifier(id)
     }
     if (params.length > 0) {
       this.generateFunctionParams(params)
+    } else {
+      this.code.update(start + 8, start + 13, '()')
     }
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
@@ -214,6 +269,15 @@ export class Generate {
       }
       if (type === NodeType.ImportDeclaration) {
         return this.generateImportDeclaration(node)
+      }
+      if (type === NodeType.ExportNamedDeclaration) {
+        return this.generateExportNamedDeclaration(node)
+      }
+      if (type === NodeType.ExportAllDeclaration) {
+        return this.generateExportAllDeclaration(node)
+      }
+      if (type === NodeType.ExportDefaultDeclaration) {
+        return this.generateExportDefaultDeclaration(node)
       }
     })
     return this.code.toString()

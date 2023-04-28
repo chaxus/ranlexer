@@ -298,6 +298,30 @@ describe('generate', () => {
       "import foo, { name1, name2 as bar } from 'foo';       import * as mod from 'mod'; "
     expect(generate(ast)).to.be.equal(result)
   })
+  it('import declaration', () => {
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.ImportDeclaration,
+          specifiers: [],
+          start: 1,
+          end: 27,
+          source: {
+            type: NodeType.Literal,
+            value: 'common/reset.scss',
+            start: 8,
+            end: 27,
+            raw: "'common/reset.scss'",
+          },
+        },
+      ],
+      start: 0,
+      end: 27,
+    }
+    const result = ` import 'common/reset.scss';`
+    expect(generate(ast)).to.be.equal(result)
+  })
   it('export ExportNamedDeclaration declaration', () => {
     const result = "export { foo, ccc as bar } from 'foo';"
     const ast: Program = {

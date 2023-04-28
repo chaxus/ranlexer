@@ -132,7 +132,11 @@ export class Generate {
       this.code.update(specifiers[size].end, specifiers[size].end + 2, ' }')
     }
     if (source) {
-      this.code.update(source.start - 5, source.end, `from ${source.raw};`)
+      if (size < 0) {
+        this.code.update(source.start, source.end, `${source.raw};`)
+      } else {
+        this.code.update(source.start - 5, source.end, `from ${source.raw};`)
+      }
     }
   }
   generateCallExpression(node: CallExpression): void {

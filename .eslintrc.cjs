@@ -35,37 +35,15 @@ module.exports = defineConfig({
         tryExtensions: ['.ts', '.js', '.jsx', '.tsx', '.d.ts'],
       },
     ],
-    'node/no-missing-require': [
-      'error',
-      {
-        // for try-catching yarn pnp
-        allowModules: ['pnpapi', 'ranite'],
-        tryExtensions: ['.ts', '.js', '.jsx', '.tsx', '.d.ts'],
-      },
-    ],
-    'node/no-extraneous-import': [
-      'error',
-      {
-        allowModules: ['ranite', 'less', 'sass', 'vitest'],
-      },
-    ],
-    'node/no-extraneous-require': [
-      'error',
-      {
-        allowModules: ['ranite'],
-      },
-    ],
     'node/no-deprecated-api': 'off',
     'node/no-unpublished-import': 'off',
     'node/no-unpublished-require': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
+    'no-shadow-restricted-names': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
 
-    '@typescript-eslint/ban-ts-comment': 'off', // TODO: we should turn this on in a new PR
-    '@typescript-eslint/ban-types': 'off', // TODO: we should turn this on in a new PR
-    '@typescript-eslint/explicit-module-boundary-types': [
-      'error',
-      { allowArgumentsExplicitlyTypedAsAny: true },
-    ],
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-empty-function': [
       'error',
       { allow: ['arrowFunctions'] },
@@ -110,7 +88,7 @@ module.exports = defineConfig({
   },
   overrides: [
     {
-      files: ['packages/**'],
+      files: ['src/**'],
       excludedFiles: '**/test/**',
       rules: {
         'no-undef': 'off',
@@ -123,25 +101,6 @@ module.exports = defineConfig({
           '__dirname',
           '__filename',
         ],
-      },
-    },
-    {
-      files: ['packages/ranite/**'],
-      rules: {
-        'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
-        'no-restricted-globals': ['error', 'event'],
-      },
-    },
-    {
-      files: ['*.js', '*.mjs', '*.cjs'],
-      rules: {
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-      },
-    },
-    {
-      files: ['*.d.ts'],
-      rules: {
-        '@typescript-eslint/triple-slash-reference': 'off',
       },
     },
   ],

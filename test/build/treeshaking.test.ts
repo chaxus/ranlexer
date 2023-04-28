@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const option = {
-  input: resolve(__dirname, './build/treeshaking/index'),
+  input: resolve(__dirname, './treeshaking/index'),
 }
 
 async function buildTest() {

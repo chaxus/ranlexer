@@ -14,4 +14,3 @@ export function parse(code: string): Program {
   const parser = new Parser(tokens)
   return parser.parse()
 }
-

@@ -1,4 +1,3 @@
-
 # ranlexer
 
 Tiny JavaScript generator and compiler.

@@ -161,7 +161,7 @@ export class Generate {
           this.generateReturnStatement(item)
         }
       })
-    }else{
+    } else {
       this.code.update(start, end, ' {}')
     }
   }

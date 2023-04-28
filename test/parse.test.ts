@@ -302,9 +302,9 @@ describe('Parser', () => {
     expect(parse(input)).toEqual(ast)
   })
 
-  it('export declaration', () => {
-    let input = "export { foo, bar as ccc } from 'foo';"
-    let ast: Program = {
+  it('export ExportNamedDeclaration', () => {
+    const input = "export { foo, bar as ccc } from 'foo';"
+    const ast: Program = {
       type: NodeType.Program,
       start: 0,
       end: 37,
@@ -361,9 +361,10 @@ describe('Parser', () => {
       ],
     }
     expect(parse(input)).toEqual(ast)
-
-    input = "export * from 'foo';"
-    ast = {
+  })
+  it('export ExportAllDeclaration', () => {
+    const input = "export * from 'foo';"
+    const ast = {
       type: NodeType.Program,
       start: 0,
       end: 19,
@@ -384,9 +385,10 @@ describe('Parser', () => {
       ],
     }
     expect(parse(input)).toEqual(ast)
-
-    input = 'export default function() {}'
-    ast = {
+  })
+  it('export ExportDefaultDeclaration', () => {
+    const input = 'export default function() {}'
+    const ast = {
       type: NodeType.Program,
       start: 0,
       end: 28,
@@ -412,5 +414,12 @@ describe('Parser', () => {
       ],
     }
     expect(parse(input)).toEqual(ast)
+  })
+  it('Conditional assignment', () => {
+    const input = `
+    let basename = '';
+    if (baseTag) basename = baseTag.getAttribute('href');`
+    const ast = {}
+    // expect(parse(input)).toEqual(ast)
   })
 })

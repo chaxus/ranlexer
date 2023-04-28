@@ -360,7 +360,7 @@ describe('generate', () => {
   })
   it('export ExportAllDeclaration declaration', () => {
     const result = "export * from 'foo';"
-    const ast:Program = {
+    const ast: Program = {
       type: NodeType.Program,
       start: 0,
       end: 19,
@@ -384,7 +384,7 @@ describe('generate', () => {
   })
   it('export ExportDefaultDeclaration declaration', () => {
     const result = 'export default function() {}'
-    const ast:Program = {
+    const ast: Program = {
       type: NodeType.Program,
       start: 0,
       end: 28,

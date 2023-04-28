@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import type { MemberExpression, Program } from '@/parser/nodeTypes'
-import { NodeType, parse } from '@/parser'
+import type { MemberExpression, Program } from '@/ast/nodeTypes'
+import { NodeType } from '@/ast/nodeTypes'
+import { parse } from '@/parser'
 
 describe('Parser', () => {
   it('variable declaration', () => {

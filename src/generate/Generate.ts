@@ -17,8 +17,8 @@ import type {
   ReturnStatement,
   VariableDeclaration,
   VariableDeclarator,
-} from '@/parser/nodeTypes'
-import { NodeType } from '@/parser'
+} from '@/ast/nodeTypes'
+import { NodeType } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
 
 export class Generate {

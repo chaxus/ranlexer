@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { generate } from '@/generate'
-import { NodeType } from '@/parser'
-import type { MemberExpression, Program } from '@/parser/nodeTypes'
+import { NodeType } from '@/ast/nodeTypes'
+import type { MemberExpression, Program } from '@/ast/nodeTypes'
 
 describe('generate', () => {
   it('variable declaration', async () => {

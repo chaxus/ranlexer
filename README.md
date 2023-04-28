@@ -1,6 +1,9 @@
+
 # ranlexer
 
-A lightweight JavaScript generator and compiler.
+Tiny JavaScript generator and compiler.
+
+---
 
 [npm]: https://img.shields.io/npm/v/ranlexer
 [npm-url]: https://www.npmjs.com/package/ranlexer
@@ -10,6 +13,8 @@ A lightweight JavaScript generator and compiler.
 [![npm][npm]][npm-url]
 [![size][size]][size-url]
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
+
+---
 
 ## Install
 

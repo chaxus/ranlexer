@@ -1,4 +1,4 @@
-import type { Program } from '@/parser/nodeTypes'
+import type { Program } from '@/ast/nodeTypes'
 import { Parser } from '@/parser/Parser'
 import type { Token } from '@/parser/Tokenizer'
 import { Tokenizer } from '@/parser/Tokenizer'
@@ -14,6 +14,3 @@ export function parse(code: string): Program {
   const parser = new Parser(tokens)
   return parser.parse()
 }
-
-export * from './Tokenizer'
-export * from './nodeTypes'

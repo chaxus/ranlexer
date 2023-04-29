@@ -1,15 +1,14 @@
-[npm]: https://img.shields.io/npm/v/ranlexer
-[npm-url]: https://www.npmjs.com/package/ranlexer
-[size]: https://packagephobia.now.sh/badge?p=ranlexer
-[size-url]: https://packagephobia.now.sh/result?p=ranlexer
-
-[![npm][npm]][npm-url]
-[![size][size]][size-url]
-[![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
-
 # ranlexer
 
-A lightweight ast generator and compiler.(Currently only js is supported, and the function of ast parsing into code is still under development)
+Tiny JavaScript generator and compiler.
+
+---
+
+<a href="https://github.com/chaxus/ranlexer/actions"><img src="https://img.shields.io/github/actions/workflow/status/chaxus/ranlexer/main.yml" alt="Build Status"></a>
+<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/v/ranlexer.svg" alt="npm-v"></a>
+<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/dt/ranlexer.svg" alt="npm-d"></a>
+<a href="https://bundlephobia.com/result?p=fre"><img src="https://img.badgesize.io/https:/unpkg.com/ranlexer/dist/index.umd.js?label=brotli&compression=brotli" alt="brotli"></a>
+<a href="#alternative-installation-methods"><img src="https://img.shields.io/badge/module%20formats-umd%2C%20esm-green.svg" alt="module formats: umd, esm"></a>
 
 ## Install
 
@@ -103,7 +102,7 @@ const ast = {
     },
   ],
 }
-const code = generate(ast)
+const code = generate(ast) // 'let a = 1;'
 ```
 
 ### build

@@ -19,9 +19,14 @@ export enum TokenType {
   RightParen = 'RightParen',
   LeftCurly = 'LeftCurly',
   RightCurly = 'RightCurly',
+  LeftBracket = 'LeftBracket',
+  RightBracket = 'RightBracket',
   Comma = 'Comma',
   Dot = 'Dot',
   Semicolon = 'Semicolon',
+  LessSign = 'LessSign',
+  Colon = 'Colon',
+  GreaterSign = 'GreaterSign',
   StringLiteral = 'StringLiteral',
   Return = 'Return',
   Import = 'Import',
@@ -166,6 +171,12 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   rightParen(start: number) {
     return { type: TokenType.RightParen, value: ')', start, end: start + 1 }
   },
+  leftBracket(start: number) {
+    return { type: TokenType.LeftBracket, value: '[', start, end: start + 1 }
+  },
+  rightBracket(start: number) {
+    return { type: TokenType.RightBracket, value: ']', start, end: start + 1 }
+  },
   leftCurly(start: number) {
     return { type: TokenType.LeftCurly, value: '{', start, end: start + 1 }
   },
@@ -177,6 +188,15 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   semicolon(start: number) {
     return { type: TokenType.Semicolon, value: ';', start, end: start + 1 }
+  },
+  colon(start: number) {
+    return { type: TokenType.Colon, value: ':', start, end: start + 1 }
+  },
+  lessSign(start: number) {
+    return { type: TokenType.LessSign, value: '<', start, end: start + 1 }
+  },
+  greaterSign(start: number) {
+    return { type: TokenType.GreaterSign, value: '>', start, end: start + 1 }
   },
   stringLiteral(start: number, value: string, raw: string) {
     return {
@@ -198,7 +218,21 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
 }
 
 // Single-character token
-type SingleCharTokens = '(' | ')' | '{' | '}' | '.' | ';' | ',' | '*' | '='
+type SingleCharTokens =
+  | '('
+  | ')'
+  | '{'
+  | '}'
+  | '['
+  | ']'
+  | '.'
+  | ';'
+  | ','
+  | '*'
+  | '='
+  | '<'
+  | '>'
+  | ':'
 
 // Single-character mapping to Token generator
 const KNOWN_SINGLE_CHAR_TOKENS = new Map<
@@ -207,13 +241,18 @@ const KNOWN_SINGLE_CHAR_TOKENS = new Map<
 >([
   ['(', TOKENS_GENERATOR.leftParen],
   [')', TOKENS_GENERATOR.rightParen],
+  ['[', TOKENS_GENERATOR.leftBracket],
+  [']', TOKENS_GENERATOR.rightBracket],
   ['{', TOKENS_GENERATOR.leftCurly],
   ['}', TOKENS_GENERATOR.rightCurly],
   ['.', TOKENS_GENERATOR.dot],
   [';', TOKENS_GENERATOR.semicolon],
+  [':', TOKENS_GENERATOR.colon],
   [',', TOKENS_GENERATOR.comma],
   ['*', TOKENS_GENERATOR.asterisk],
   ['=', TOKENS_GENERATOR.assign],
+  ['<', TOKENS_GENERATOR.lessSign],
+  ['>', TOKENS_GENERATOR.greaterSign],
 ])
 // Quotation token
 const QUOTATION_TOKENS = ["'", '"', '`']
@@ -257,6 +296,7 @@ export class Tokenizer {
    * @description: Main program, scan string to generate token
    */
   tokenize(): Token[] {
+    debugger
     // scan
     while (this._currentIndex < this._source.length) {
       const currentChar = this._source[this._currentIndex]

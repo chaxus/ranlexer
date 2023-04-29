@@ -5,8 +5,8 @@ import type {
   Node,
   VariableDeclaration,
   VariableDeclarator,
-} from '@/parser'
-import { NodeType } from '@/parser'
+} from '@/ast/nodeTypes'
+import { NodeType } from '@/ast/nodeTypes'
 import { walk } from '@/utils/walk'
 /**
  * @description: Build the scope chain

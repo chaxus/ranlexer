@@ -1,6 +1,6 @@
 {
   "name": "ranlexer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.mjs",
@@ -21,7 +21,7 @@
     "lint:fix": "eslint --cache --fix",
     "lint:prettier": "prettier --check --cache .",
     "format": "prettier --write --cache .",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "frontend",
@@ -47,6 +47,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-regexp": "^1.14.0",
     "prettier": "^2.8.8",
+    "typescript": "^5.0.4",
     "vite": "^4.3.2",
     "vite-plugin-dts": "^2.3.0",
     "vitest": "^0.30.1"

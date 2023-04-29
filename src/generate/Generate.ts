@@ -217,7 +217,7 @@ export class Generate {
       if (object.type === NodeType.Identifier) {
         this.generateIdentifier(object)
       }
-      if (property.type === NodeType.Identifier) {
+      if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)
       }
       this.code.update(start, end, '.', /\s/g)
@@ -263,7 +263,7 @@ export class Generate {
     nodes.forEach((node) => {
       const { type } = node
       if (type === NodeType.VariableDeclaration) {
-        this.generateVariableDeclaration(node)
+        return this.generateVariableDeclaration(node)
       }
       if (type === NodeType.ExpressionStatement) {
         return this.generateExpressionStatement(node)

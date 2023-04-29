@@ -12,7 +12,10 @@ export enum NodeType {
   BinaryExpression = 'BinaryExpression',
   MemberExpression = 'MemberExpression',
   FunctionExpression = 'FunctionExpression',
+  ArrayExpression = 'ArrayExpression',
+  ObjectExpression = 'ObjectExpression',
   Literal = 'Literal',
+  Property = '"Property"',
   ImportDeclaration = 'ImportDeclaration',
   ImportSpecifier = 'ImportSpecifier', // import {c, d} from 'c';
   ImportDefaultSpecifier = 'ImportDefaultSpecifier', // import a from 'a';
@@ -42,6 +45,9 @@ export type Expression =
   | Literal
   | BinaryExpression
   | FunctionExpression
+  | ObjectExpression
+  | ArrayExpression
+
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -80,7 +86,7 @@ export interface CallExpression extends Node {
 export interface MemberExpression extends Node {
   type: NodeType.MemberExpression
   object: Identifier | MemberExpression
-  property: Identifier
+  property: Identifier | Expression | undefined
   computed: boolean
 }
 
@@ -97,6 +103,24 @@ export interface ExpressionStatement extends Node {
 export interface FunctionExpression extends FunctionNode {
   type: NodeType.FunctionExpression
 }
+
+export interface Property extends Node {
+  type: NodeType.Property;
+  key: Literal | Identifier | null;
+  value: Literal | Identifier | null | Expression;
+  kind: "init" | "get" | "set";
+}
+
+export interface ObjectExpression extends Node {
+  type: NodeType.ObjectExpression
+  properties: Property[]
+}
+
+export interface ArrayExpression extends Node {
+  type: NodeType.ArrayExpression
+  elements: Expression[] | null;
+}
+
 
 export interface FunctionDeclaration extends FunctionNode {
   type: NodeType.FunctionDeclaration

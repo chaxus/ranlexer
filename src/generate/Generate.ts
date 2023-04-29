@@ -19,7 +19,7 @@ import type {
   Program,
   ReturnStatement,
   VariableDeclaration,
-  VariableDeclarator
+  VariableDeclarator,
 } from '@/ast/nodeTypes'
 import { NodeType } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'

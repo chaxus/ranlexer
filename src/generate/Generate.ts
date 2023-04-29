@@ -14,11 +14,12 @@ import type {
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
+  Literal,
   ObjectExpression,
   Program,
   ReturnStatement,
   VariableDeclaration,
-  VariableDeclarator,
+  VariableDeclarator
 } from '@/ast/nodeTypes'
 import { NodeType } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
@@ -218,6 +219,9 @@ export class Generate {
       }
       if (object.type === NodeType.Identifier) {
         this.generateIdentifier(object)
+      }
+      if (property?.type === NodeType.Literal) {
+        this.code.update(property.start, property.end, property.raw)
       }
       if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)

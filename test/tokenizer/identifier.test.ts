@@ -28,7 +28,7 @@ describe('Identifier', () => {
       { type: 'Identifier', value: 'name', start: 32, end: 36 },
       { type: 'RightParen', value: ')', start: 36, end: 37 },
       { type: 'Semicolon', value: ';', start: 37, end: 38 },
-      { type: 'RightCurly', value: '}', start: 38, end: 39 }
+      { type: 'RightCurly', value: '}', start: 38, end: 39 },
     ]
     const code = `function say(name) {console.log(name);}`
     expect(tokenize(code)).toEqual(result)
@@ -42,7 +42,7 @@ describe('Identifier', () => {
       { type: 'Identifier', value: 'name', start: 13, end: 17 },
       { type: 'Colon', value: ':', start: 17, end: 18 },
       { type: 'StringLiteral', value: 'a', start: 19, end: 22, raw: "'a'" },
-      { type: 'RightCurly', value: '}', start: 22, end: 23 }
+      { type: 'RightCurly', value: '}', start: 22, end: 23 },
     ]
     const code = `const obj = {name: 'a'}`
     expect(tokenize(code)).toEqual(result)

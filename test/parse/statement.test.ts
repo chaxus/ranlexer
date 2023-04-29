@@ -32,14 +32,57 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('{}', () => {
-    const result = {"type":"Program","body":[{"type":"BlockStatement","body":[],"start":0,"end":2}],"start":0,"end":2}
+    const result = {
+      type: 'Program',
+      body: [{ type: 'BlockStatement', body: [], start: 0, end: 2 }],
+      start: 0,
+      end: 2,
+    }
     const code = '{}'
     expect(parse(code)).toEqual(result)
   })
   it('try {} catch(e) {} finally{}', () => {
-    const result = {"type":"Program","body":[{"type":"ExpressionStatement","expression":{"type":"Identifier","name":"try","start":0,"end":3},"start":0,"end":3},{"type":"BlockStatement","body":[],"start":4,"end":6},{"type":"ExpressionStatement","expression":{"type":"CallExpression","callee":{"type":"Identifier","name":"catch","start":7,"end":12},"arguments":[{"type":"Identifier","name":"e","start":13,"end":14}],"start":7,"end":15},"start":7,"end":15},{"type":"BlockStatement","body":[],"start":16,"end":18},{"type":"ExpressionStatement","expression":{"type":"Identifier","name":"finally","start":19,"end":26},"start":19,"end":26},{"type":"BlockStatement","body":[],"start":26,"end":28}],"start":0,"end":28}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: { type: 'Identifier', name: 'try', start: 0, end: 3 },
+          start: 0,
+          end: 3,
+        },
+        { type: 'BlockStatement', body: [], start: 4, end: 6 },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'CallExpression',
+            callee: { type: 'Identifier', name: 'catch', start: 7, end: 12 },
+            arguments: [{ type: 'Identifier', name: 'e', start: 13, end: 14 }],
+            start: 7,
+            end: 15,
+          },
+          start: 7,
+          end: 15,
+        },
+        { type: 'BlockStatement', body: [], start: 16, end: 18 },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'finally',
+            start: 19,
+            end: 26,
+          },
+          start: 19,
+          end: 26,
+        },
+        { type: 'BlockStatement', body: [], start: 26, end: 28 },
+      ],
+      start: 0,
+      end: 28,
+    }
     const code = 'try {} catch(e) {} finally{}'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('for (let key in obj) {}', () => {
     const result = [

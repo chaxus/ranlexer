@@ -104,12 +104,12 @@ describe('Expression', () => {
   })
   it('a::b;', () => {
     const result = [
-        { type: 'Identifier', value: 'a', start: 0, end: 1 },
-        { type: 'Colon', value: ':', start: 1, end: 2 },
-        { type: 'Colon', value: ':', start: 2, end: 3 },
-        { type: 'Identifier', value: 'b', start: 3, end: 4 },
-        { type: 'Semicolon', value: ';', start: 4, end: 5 }
-      ]
+      { type: 'Identifier', value: 'a', start: 0, end: 1 },
+      { type: 'Colon', value: ':', start: 1, end: 2 },
+      { type: 'Colon', value: ':', start: 2, end: 3 },
+      { type: 'Identifier', value: 'b', start: 3, end: 4 },
+      { type: 'Semicolon', value: ';', start: 4, end: 5 },
+    ]
     const code = 'a::b;'
     expect(tokenize(code)).toEqual(result)
   })

@@ -106,8 +106,8 @@ export interface FunctionExpression extends FunctionNode {
 
 export interface Property extends Node {
   type: NodeType.Property;
-  key: Literal | Identifier | null;
-  value: Literal | Identifier | null | Expression;
+  key: Identifier | null;
+  value: Literal | Expression | null;
   kind: "init" | "get" | "set";
 }
 

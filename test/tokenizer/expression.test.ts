@@ -13,9 +13,9 @@ describe('Expression', () => {
       { type: 'Number', value: '2', start: 13, end: 14, raw: '2' },
       { type: 'Comma', value: ',', start: 14, end: 15 },
       { type: 'Number', value: '3', start: 15, end: 16, raw: '3' },
-      { type: 'RightBracket', value: ']', start: 16, end: 17 }
+      { type: 'RightBracket', value: ']', start: 16, end: 17 },
     ]
-    const code = "const a = [1,2,3]";
+    const code = 'const a = [1,2,3]'
     expect(tokenize(code)).toEqual(result)
   })
   it('a = 1', () => {

@@ -26,7 +26,7 @@ import type {
   Statement,
   VariableDeclaration,
   VariableDeclarator,
-  VariableKind
+  VariableKind,
 } from '@/ast/nodeTypes'
 import { FunctionType, NodeType } from '@/ast/nodeTypes'
 
@@ -128,21 +128,20 @@ export class Parser {
       start,
       end: Infinity,
       type: NodeType.Property,
-      kind: "init",
+      kind: 'init',
       key: null,
-      value: null
+      value: null,
     }
     if (this._checkCurrentTokenType(TokenType.Identifier)) {
       property.key = this._parseIdentifier()
     }
     if (this._checkCurrentTokenType(TokenType.Colon)) {
-      // analyze : 
+      // analyze :
       this._goNext(TokenType.Colon)
     }
-    if (this._checkCurrentTokenType([
-      TokenType.Number,
-      TokenType.StringLiteral,
-    ])) {
+    if (
+      this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
+    ) {
       property.value = this._parseLiteral()
       property.end = property.value.end
     }
@@ -165,7 +164,7 @@ export class Parser {
     this._goNext(TokenType.LeftBracket)
     while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
       if (this._checkCurrentTokenType(TokenType.Comma)) {
-        // analyze , 
+        // analyze ,
         this._goNext(TokenType.Comma)
       }
       // Recursive call to the Statement in the body of the _parseStatement parse function
@@ -498,7 +497,9 @@ export class Parser {
     while (!this._isEnd()) {
       if (this._checkCurrentTokenType(TokenType.LeftParen)) {
         expression = this._parseCallExpression(expression)
-      } else if (this._checkCurrentTokenType([TokenType.Dot,TokenType.LeftBracket])) {
+      } else if (
+        this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
+      ) {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
       } else if (this._checkCurrentTokenType(TokenType.Operator)) {
@@ -629,9 +630,9 @@ export class Parser {
       const param =
         mode === FunctionType.FunctionDeclaration
           ? // Function declaration
-          this._parseIdentifier()
+            this._parseIdentifier()
           : // Function call
-          this._parseExpression()
+            this._parseExpression()
       params.push(param)
       if (!this._checkCurrentTokenType(TokenType.RightParen)) {
         this._goNext(TokenType.Comma)

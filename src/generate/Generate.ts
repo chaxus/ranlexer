@@ -18,7 +18,7 @@ import type {
   Program,
   ReturnStatement,
   VariableDeclaration,
-  VariableDeclarator
+  VariableDeclarator,
 } from '@/ast/nodeTypes'
 import { NodeType } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
@@ -284,7 +284,7 @@ export class Generate {
   generateLiteral(node: VariableDeclarator): void {
     const { start, end, id, init } = node
     if (id?.type === NodeType.Identifier) {
-      this.code.update(id.start, id.end, `${id.name} = `)
+      this.code.update(id.start, id.end + 3, `${id.name} = `)
     }
     if (init) {
       if (init.type === NodeType.Literal) {
@@ -308,7 +308,7 @@ export class Generate {
   generateVariableDeclaration(node: VariableDeclaration): void {
     const { start, declarations, kind, end } = node
     this.code.update(start, kind.length, kind)
-    this.code.update(end - 1, end, ';')
+    this.code.update(end, end + 1, ';')
     declarations.forEach((declaration) => {
       const { type } = declaration
       if (type === NodeType.VariableDeclarator) {

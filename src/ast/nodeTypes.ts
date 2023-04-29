@@ -48,7 +48,6 @@ export type Expression =
   | ObjectExpression
   | ArrayExpression
 
-
 export enum FunctionType {
   FunctionDeclaration,
   CallExpression,
@@ -105,10 +104,10 @@ export interface FunctionExpression extends FunctionNode {
 }
 
 export interface Property extends Node {
-  type: NodeType.Property;
-  key: Identifier | null;
-  value: Literal | Expression | null;
-  kind: "init" | "get" | "set";
+  type: NodeType.Property
+  key: Identifier | null
+  value: Literal | Expression | null
+  kind: 'init' | 'get' | 'set'
 }
 
 export interface ObjectExpression extends Node {
@@ -118,9 +117,8 @@ export interface ObjectExpression extends Node {
 
 export interface ArrayExpression extends Node {
   type: NodeType.ArrayExpression
-  elements: Expression[] | null;
+  elements: Expression[] | null
 }
-
 
 export interface FunctionDeclaration extends FunctionNode {
   type: NodeType.FunctionDeclaration

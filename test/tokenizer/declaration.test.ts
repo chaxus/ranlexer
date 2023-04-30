@@ -69,7 +69,7 @@ describe('Declaration', () => {
       { type: 'RightCurly', value: '}', start: 12, end: 13 },
       { type: 'From', value: 'from', start: 14, end: 18 },
       { type: 'StringLiteral', value: 'c', start: 19, end: 22, raw: "'c'" },
-      { type: 'Semicolon', value: ';', start: 22, end: 23 }
+      { type: 'Semicolon', value: ';', start: 22, end: 23 },
     ]
     const code = `import {c, d} from 'c';`
     expect(tokenize(code)).toEqual(result)

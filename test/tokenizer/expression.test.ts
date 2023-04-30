@@ -2,17 +2,20 @@ import { describe, expect, it } from 'vitest'
 import { tokenize } from '@/parser'
 
 describe('Expression', () => {
-  it('[1,2,3]', () => {
+  it('const a = [1,2,3]', () => {
     const result = [
-      { type: 'LeftBracket', value: '[', start: 1, end: 2 },
-      { type: 'Number', value: '1', start: 2, end: 3, raw: '1' },
-      { type: 'Comma', value: ',', start: 3, end: 4 },
-      { type: 'Number', value: '2', start: 4, end: 5, raw: '2' },
-      { type: 'Comma', value: ',', start: 5, end: 6 },
-      { type: 'Number', value: '3', start: 6, end: 7, raw: '3' },
-      { type: 'RightBracket', value: ']', start: 7, end: 8 },
+      { type: 'Const', value: 'const', start: 0, end: 5 },
+      { type: 'Identifier', value: 'a', start: 6, end: 7 },
+      { type: 'Assign', value: '=', start: 8, end: 9 },
+      { type: 'LeftBracket', value: '[', start: 10, end: 11 },
+      { type: 'Number', value: '1', start: 11, end: 12, raw: '1' },
+      { type: 'Comma', value: ',', start: 12, end: 13 },
+      { type: 'Number', value: '2', start: 13, end: 14, raw: '2' },
+      { type: 'Comma', value: ',', start: 14, end: 15 },
+      { type: 'Number', value: '3', start: 15, end: 16, raw: '3' },
+      { type: 'RightBracket', value: ']', start: 16, end: 17 },
     ]
-    const code = ' [1,2,3]'
+    const code = 'const a = [1,2,3]'
     expect(tokenize(code)).toEqual(result)
   })
   it('a = 1', () => {
@@ -104,12 +107,12 @@ describe('Expression', () => {
   })
   it('a::b;', () => {
     const result = [
-        { type: 'Identifier', value: 'a', start: 0, end: 1 },
-        { type: 'Colon', value: ':', start: 1, end: 2 },
-        { type: 'Colon', value: ':', start: 2, end: 3 },
-        { type: 'Identifier', value: 'b', start: 3, end: 4 },
-        { type: 'Semicolon', value: ';', start: 4, end: 5 }
-      ]
+      { type: 'Identifier', value: 'a', start: 0, end: 1 },
+      { type: 'Colon', value: ':', start: 1, end: 2 },
+      { type: 'Colon', value: ':', start: 2, end: 3 },
+      { type: 'Identifier', value: 'b', start: 3, end: 4 },
+      { type: 'Semicolon', value: ';', start: 4, end: 5 },
+    ]
     const code = 'a::b;'
     expect(tokenize(code)).toEqual(result)
   })

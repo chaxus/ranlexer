@@ -1,4 +1,5 @@
 import type {
+  ArrayExpression,
   BlockStatement,
   CallExpression,
   ExportAllDeclaration,
@@ -13,6 +14,8 @@ import type {
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
+  Literal,
+  ObjectExpression,
   Program,
   ReturnStatement,
   VariableDeclaration,
@@ -217,7 +220,10 @@ export class Generate {
       if (object.type === NodeType.Identifier) {
         this.generateIdentifier(object)
       }
-      if (property.type === NodeType.Identifier) {
+      if (property?.type === NodeType.Literal) {
+        this.code.update(property.start, property.end, property.raw)
+      }
+      if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)
       }
       this.code.update(start, end, '.', /\s/g)
@@ -227,19 +233,75 @@ export class Generate {
     const { type, start, end, expression } = node
     this.generateMemberExpression(expression)
   }
+  generateArrayExpression(node: ArrayExpression): void {
+    this.code.update(node.start, node.start + 1, '[')
+    const size = node.elements?.length || 0
+    node.elements?.forEach((element, index) => {
+      const { type } = element
+      if (type === NodeType.Literal) {
+        this.code.update(element.start, element.end, element.raw)
+      }
+      if (type === NodeType.ArrayExpression) {
+        this.generateArrayExpression(element)
+      }
+      if (type === NodeType.Identifier) {
+        this.code.update(element.start, element.end, element.name)
+      }
+      if (type === NodeType.ObjectExpression) {
+        this.generateObjectExpression(element)
+      }
+      if (index + 1 < size) {
+        this.code.update(element.end, element.end + 1, ',')
+      }
+    })
+    this.code.update(node.end - 1, node.end, ']')
+  }
+  generateObjectExpression(node: ObjectExpression): void {
+    const { properties = [], start, end } = node
+    this.code.update(start, start + 1, '{')
+    const size = properties.length
+    properties.forEach((property, index) => {
+      const { start, end, key, value } = property
+      if (key?.type === NodeType.Identifier) {
+        this.code.update(key.start, key.end, key.name)
+        this.code.update(key.end, key.end + 1, ':')
+      }
+      if (value?.type === NodeType.Literal) {
+        this.code.update(value.start, value.end, value.raw)
+      }
+      if (value?.type === NodeType.Identifier) {
+        this.code.update(value.start, value.end, value.name)
+      }
+      if (value?.type === NodeType.ObjectExpression) {
+        this.generateObjectExpression(value)
+      }
+      if (index + 1 < size) {
+        this.code.update(end, end + 1, ',')
+      }
+    })
+    this.code.update(end - 1, end, '}')
+  }
   /**
    * @description: Parse literals
    * @param {VariableDeclarator} node
    */
   generateLiteral(node: VariableDeclarator): void {
     const { start, end, id, init } = node
+    if (id?.type === NodeType.Identifier) {
+      this.code.update(id.start, id.end + 3, `${id.name} = `)
+    }
     if (init) {
       if (init.type === NodeType.Literal) {
-        this.code.update(
-          start,
-          end - 1,
-          `${id.name} = ${init ? init.raw : undefined}`,
-        )
+        this.code.update(init.start, init.end, init.raw)
+      }
+      if (init.type === NodeType.Identifier) {
+        this.code.update(init.start, init.end, init.name)
+      }
+      if (init.type === NodeType.ArrayExpression) {
+        this.generateArrayExpression(init)
+      }
+      if (init.type === NodeType.ObjectExpression) {
+        this.generateObjectExpression(init)
       }
     }
   }
@@ -250,7 +312,7 @@ export class Generate {
   generateVariableDeclaration(node: VariableDeclaration): void {
     const { start, declarations, kind, end } = node
     this.code.update(start, kind.length, kind)
-    this.code.update(end - 1, end, ';')
+    this.code.update(end, end + 1, ';')
     declarations.forEach((declaration) => {
       const { type } = declaration
       if (type === NodeType.VariableDeclarator) {
@@ -263,7 +325,7 @@ export class Generate {
     nodes.forEach((node) => {
       const { type } = node
       if (type === NodeType.VariableDeclaration) {
-        this.generateVariableDeclaration(node)
+        return this.generateVariableDeclaration(node)
       }
       if (type === NodeType.ExpressionStatement) {
         return this.generateExpressionStatement(node)

@@ -1,6 +1,7 @@
 import type { Token } from '@/parser/Tokenizer'
 import { TokenType } from '@/parser/Tokenizer'
 import type {
+  ArrayExpression,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -18,7 +19,9 @@ import type {
   ImportSpecifiers,
   Literal,
   MemberExpression,
+  ObjectExpression,
   Program,
+  Property,
   ReturnStatement,
   Statement,
   VariableDeclaration,
@@ -73,7 +76,7 @@ export class Parser {
     // TokenType comes from the implementation of Tokenizer
     if (this._checkCurrentTokenType(TokenType.Function))
       return this._parseFunctionDeclaration()
-    if (this._checkCurrentTokenType(TokenType.Identifier))
+    if (this._checkCurrentTokenType([TokenType.Identifier]))
       return this._parseExpressionStatement()
     if (this._checkCurrentTokenType(TokenType.LeftCurly))
       return this._parseBlockStatement()
@@ -93,6 +96,85 @@ export class Parser {
       return this._parseVariableDeclaration()
     console.log('Unexpected token:', this._getCurrentToken())
     throw new Error('Unexpected token')
+  }
+  private _parseObjectExpression(): ObjectExpression {
+    const { start } = this._getCurrentToken()
+    const properties: Property[] = []
+    const objectExpression: ObjectExpression = {
+      type: NodeType.ObjectExpression,
+      properties,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftCurly)
+    while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseProperty()
+      properties.push(node)
+    }
+    objectExpression.end = this._getCurrentToken().end
+    // Consumption "}"
+    this._goNext(TokenType.RightCurly)
+    return objectExpression
+  }
+  private _parseProperty(): Property {
+    const { start } = this._getCurrentToken()
+    const property: Property = {
+      start,
+      end: Infinity,
+      type: NodeType.Property,
+      kind: 'init',
+      key: null,
+      value: null,
+    }
+    if (this._checkCurrentTokenType(TokenType.Identifier)) {
+      property.key = this._parseIdentifier()
+    }
+    if (this._checkCurrentTokenType(TokenType.Colon)) {
+      // analyze :
+      this._goNext(TokenType.Colon)
+    }
+    if (
+      this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
+    ) {
+      property.value = this._parseLiteral()
+      property.end = property.value.end
+    }
+    if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
+      property.value = this._parseObjectExpression()
+      property.end = property.value.end
+    }
+    return property
+  }
+  private _parseArrayExpression(): ArrayExpression {
+    const { start } = this._getCurrentToken()
+    const elements: Expression[] = []
+    const arrayExpression: ArrayExpression = {
+      type: NodeType.ArrayExpression,
+      elements,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftBracket)
+    while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseExpression()
+      elements.push(node)
+    }
+    arrayExpression.end = this._getCurrentToken().end
+    // Consumption "}"
+    this._goNext(TokenType.RightBracket)
+    return arrayExpression
   }
   /**
    * @description: Parse import declaration
@@ -397,6 +479,14 @@ export class Parser {
       // Analytic function expression
       return this._parseFunctionExpression()
     }
+    if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+      // Analytic array expression
+      return this._parseArrayExpression()
+    }
+    if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
+      // Analytic object expression
+      return this._parseObjectExpression()
+    }
     if (
       this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
     ) {
@@ -407,7 +497,9 @@ export class Parser {
     while (!this._isEnd()) {
       if (this._checkCurrentTokenType(TokenType.LeftParen)) {
         expression = this._parseCallExpression(expression)
-      } else if (this._checkCurrentTokenType(TokenType.Dot)) {
+      } else if (
+        this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
+      ) {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
       } else if (this._checkCurrentTokenType(TokenType.Operator)) {
@@ -441,15 +533,27 @@ export class Parser {
   private _parseMemberExpression(
     object: Identifier | MemberExpression,
   ): MemberExpression {
-    this._goNext(TokenType.Dot)
-    const property = this._parseIdentifier()
     const node: MemberExpression = {
       type: NodeType.MemberExpression,
       object,
-      property,
+      property: undefined,
       start: object.start,
-      end: property.end,
+      end: Infinity,
       computed: false,
+    }
+    if (this._checkCurrentTokenType(TokenType.Dot)) {
+      this._goNext(TokenType.Dot)
+      node.property = this._parseIdentifier()
+      node.end = node.property.end
+    }
+    if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+      this._goNext(TokenType.LeftBracket)
+      while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
+        // Recursive call to the Statement in the body of the _parseStatement parse function
+        node.property = this._parseExpression()
+        node.end = node.property.end
+      }
+      this._goNext(TokenType.RightBracket)
     }
     return node
   }

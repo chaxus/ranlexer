@@ -296,7 +296,6 @@ export class Tokenizer {
    * @description: Main program, scan string to generate token
    */
   tokenize(): Token[] {
-    debugger
     // scan
     while (this._currentIndex < this._source.length) {
       const currentChar = this._source[this._currentIndex]

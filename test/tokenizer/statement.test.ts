@@ -41,7 +41,7 @@ describe('statement', () => {
   })
   it('for (let key in obj) {}', () => {
     const result = [
-      { type: 'Identifier', value: 'for', start: 0, end: 3 },
+      { type: 'For', value: 'for', start: 0, end: 3 },
       { type: 'LeftParen', value: '(', start: 4, end: 5 },
       { type: 'Let', value: 'let', start: 5, end: 8 },
       { type: 'Identifier', value: 'key', start: 9, end: 12 },
@@ -56,7 +56,7 @@ describe('statement', () => {
   })
   it('for (let i = 0;i < 10;i ++) {}', () => {
     const result = [
-      { type: 'Identifier', value: 'for', start: 0, end: 3 },
+      { type: 'For', value: 'for', start: 0, end: 3 },
       { type: 'LeftParen', value: '(', start: 4, end: 5 },
       { type: 'Let', value: 'let', start: 5, end: 8 },
       { type: 'Identifier', value: 'i', start: 9, end: 10 },
@@ -68,8 +68,7 @@ describe('statement', () => {
       { type: 'Number', value: '10', start: 19, end: 21, raw: '10' },
       { type: 'Semicolon', value: ';', start: 21, end: 22 },
       { type: 'Identifier', value: 'i', start: 22, end: 23 },
-      { type: 'Operator', value: '+', start: 24, end: 25 },
-      { type: 'Operator', value: '+', start: 25, end: 26 },
+      { type: 'UpdateOperator', value: '++', start: 24, end: 26 },
       { type: 'RightParen', value: ')', start: 26, end: 27 },
       { type: 'LeftCurly', value: '{', start: 28, end: 29 },
       { type: 'RightCurly', value: '}', start: 29, end: 30 },

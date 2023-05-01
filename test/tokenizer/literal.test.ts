@@ -14,15 +14,15 @@ describe('Literal', () => {
   })
   it('RegExp literal', () => {
     const result = [
-      { type: 'Operator', value: '/', start: 0, end: 1 },
-      { type: 'Operator', value: '^', start: 1, end: 2 },
+      { type: 'BinaryOperator', value: '/', start: 0, end: 1 },
+      { type: 'BinaryOperator', value: '^', start: 1, end: 2 },
       { type: 'LeftBracket', value: '[', start: 2, end: 3 },
       { type: 'Identifier', value: 'a', start: 3, end: 4 },
-      { type: 'Operator', value: '-', start: 4, end: 5 },
+      { type: 'BinaryOperator', value: '-', start: 4, end: 5 },
       { type: 'Identifier', value: 'z', start: 5, end: 6 },
       { type: 'RightBracket', value: ']', start: 6, end: 7 },
-      { type: 'Operator', value: '+', start: 7, end: 8 },
-      { type: 'Operator', value: '/', start: 8, end: 9 },
+      { type: 'BinaryOperator', value: '+', start: 7, end: 8 },
+      { type: 'BinaryOperator', value: '/', start: 8, end: 9 },
       { type: 'Identifier', value: 'g', start: 9, end: 10 },
     ]
     const code = '/^[a-z]+/g'

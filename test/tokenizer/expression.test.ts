@@ -30,7 +30,7 @@ describe('Expression', () => {
   it('1 + 2;', () => {
     const result = [
       { type: 'Number', value: '1', start: 1, end: 2, raw: '1' },
-      { type: 'Operator', value: '+', start: 3, end: 4 },
+      { type: 'BinaryOperator', value: '+', start: 3, end: 4 },
       { type: 'Number', value: '2', start: 5, end: 6, raw: '2' },
       { type: 'Semicolon', value: ';', start: 6, end: 7 },
     ]
@@ -39,7 +39,7 @@ describe('Expression', () => {
   })
   it('-1;', () => {
     const result = [
-      { type: 'Operator', value: '-', start: 1, end: 2 },
+      { type: 'BinaryOperator', value: '-', start: 1, end: 2 },
       { type: 'Number', value: '1', start: 2, end: 3, raw: '1' },
       { type: 'Semicolon', value: ';', start: 3, end: 4 },
     ]

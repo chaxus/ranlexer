@@ -7,6 +7,8 @@ export enum NodeType {
   Identifier = 'Identifier',
   BlockStatement = 'BlockStatement',
   ExpressionStatement = 'ExpressionStatement',
+  UnaryExpression = 'UnaryExpression',
+  UpdateExpression = 'UpdateExpression',
   ReturnStatement = 'ReturnStatement',
   CallExpression = 'CallExpression',
   BinaryExpression = 'BinaryExpression',
@@ -14,6 +16,7 @@ export enum NodeType {
   FunctionExpression = 'FunctionExpression',
   ArrayExpression = 'ArrayExpression',
   ObjectExpression = 'ObjectExpression',
+  ForStatement = 'ForStatement',
   Literal = 'Literal',
   Property = '"Property"',
   ImportDeclaration = 'ImportDeclaration',
@@ -36,6 +39,7 @@ export type Statement =
   | ExpressionStatement
   | BlockStatement
   | ReturnStatement
+  | ForStatement
 
 // expression statement
 export type Expression =
@@ -69,6 +73,32 @@ export interface Literal extends Node {
   type: NodeType.Literal
   value: string
   raw: string
+}
+
+type UnaryOperator = '-' | '+' | '!' | '~' | 'typeof' | 'void' | 'delete'
+
+export interface UnaryExpression extends Node {
+  type: NodeType.UnaryExpression
+  operator: UnaryOperator
+  prefix: boolean
+  argument: Expression
+}
+
+type UpdateOperator = '++' | '--'
+
+export interface UpdateExpression extends Node {
+  type: NodeType.UpdateExpression
+  operator: UpdateOperator
+  argument: Expression
+  prefix: boolean
+}
+
+export interface ForStatement extends Node {
+  type: NodeType.ForStatement
+  init: VariableDeclaration | Expression | null
+  test: ExpressionStatement | null
+  update: ExpressionStatement | null
+  body: Statement | null
 }
 
 export interface Identifier extends Node {

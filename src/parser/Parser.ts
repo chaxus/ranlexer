@@ -9,6 +9,7 @@ import type {
   ExportSpecifier,
   Expression,
   ExpressionStatement,
+  ForStatement,
   FunctionDeclaration,
   FunctionExpression,
   Identifier,
@@ -76,6 +77,8 @@ export class Parser {
     // TokenType comes from the implementation of Tokenizer
     if (this._checkCurrentTokenType(TokenType.Function))
       return this._parseFunctionDeclaration()
+    if (this._checkCurrentTokenType(TokenType.For))
+      return this._parseForStatement()
     if (this._checkCurrentTokenType([TokenType.Identifier]))
       return this._parseExpressionStatement()
     if (this._checkCurrentTokenType(TokenType.LeftCurly))
@@ -96,6 +99,39 @@ export class Parser {
       return this._parseVariableDeclaration()
     console.log('Unexpected token:', this._getCurrentToken())
     throw new Error('Unexpected token')
+  }
+  private _parseForStatement(): ForStatement {
+    const { start } = this._getCurrentToken()
+    const forStatement: ForStatement = {
+      type: NodeType.ForStatement,
+      start,
+      end: Infinity,
+      init: null,
+      test: null,
+      update: null,
+      body: null,
+    }
+    this._goNext(TokenType.For)
+    this._goNext(TokenType.LeftParen)
+    while (!this._checkCurrentTokenType(TokenType.RightParen)) {
+      if (
+        this._checkCurrentTokenType([
+          TokenType.Let,
+          TokenType.Var,
+          TokenType.Const,
+        ])
+      ) {
+        forStatement.init = this._parseVariableDeclaration()
+      }
+      this._skipSemicolon()
+      forStatement.test = this._parseExpressionStatement()
+      this._skipSemicolon()
+      forStatement.update = this._parseExpressionStatement()
+    }
+    this._goNext(TokenType.RightParen)
+    forStatement.body = this._parseBlockStatement()
+    forStatement.end = this._getCurrentToken().end
+    return forStatement
   }
   private _parseObjectExpression(): ObjectExpression {
     const { start } = this._getCurrentToken()
@@ -471,7 +507,6 @@ export class Parser {
     }
     return expressionStatement
   }
-
   // Parse the a.b.c nested structure of the object
   private _parseExpression(): Expression {
     // Check to see if it is a function expression
@@ -502,7 +537,7 @@ export class Parser {
       ) {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
-      } else if (this._checkCurrentTokenType(TokenType.Operator)) {
+      } else if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
         // analyze a + b
         expression = this.__parseBinaryOperatorExpression(expression)
       } else {
@@ -517,7 +552,7 @@ export class Parser {
   ): BinaryExpression {
     const { start } = this._getCurrentToken()
     const operator = this._getCurrentToken().value!
-    this._goNext(TokenType.Operator)
+    this._goNext(TokenType.BinaryOperator)
     const right = this._parseExpression()
     const node: BinaryExpression = {
       type: NodeType.BinaryExpression,

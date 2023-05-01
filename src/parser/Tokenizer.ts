@@ -13,11 +13,13 @@ export enum TokenType {
   Function = 'Function',
   Class = 'Class',
   Number = 'Number',
-  Operator = 'Operator',
+  BinaryOperator = 'BinaryOperator',
+  UpdateOperator = 'UpdateOperator',
   Identifier = 'Identifier',
   LeftParen = 'LeftParen',
   RightParen = 'RightParen',
   LeftCurly = 'LeftCurly',
+  For = 'For',
   RightCurly = 'RightCurly',
   LeftBracket = 'LeftBracket',
   RightBracket = 'RightBracket',
@@ -64,6 +66,9 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   var(start: number) {
     return { type: TokenType.Var, value: 'var', start, end: start + 3 }
+  },
+  for(start: number) {
+    return { type: TokenType.For, value: 'for', start, end: start + 3 }
   },
   assign(start: number) {
     return { type: TokenType.Assign, value: '=', start, end: start + 1 }
@@ -149,9 +154,17 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
       end: start + 6,
     }
   },
-  operator(start: number, value: string) {
+  binaryOperator(start: number, value: string) {
     return {
-      type: TokenType.Operator,
+      type: TokenType.BinaryOperator,
+      value,
+      start,
+      end: start + value.length,
+    }
+  },
+  updateOperator(start: number, value: string) {
+    return {
+      type: TokenType.UpdateOperator,
       value,
       start,
       end: start + value.length,
@@ -257,7 +270,7 @@ const KNOWN_SINGLE_CHAR_TOKENS = new Map<
 // Quotation token
 const QUOTATION_TOKENS = ["'", '"', '`']
 // 操作符token
-const OPERATOR_TOKENS = [
+const BINARY_OPERATOR_TOKENS = [
   '+',
   '-',
   '*',
@@ -269,7 +282,19 @@ const OPERATOR_TOKENS = [
   '~',
   '<<',
   '>>',
+  'in',
+  'instanceof',
+  '==',
+  '!=',
+  '===',
+  '!==',
+  '>',
+  '<',
+  '>=',
+  '<=',
 ]
+
+const UPDATE_OPERATOR_TOKENS = ['++', '--']
 
 /**
  * @description: Lexical analyzer, word divider
@@ -305,6 +330,41 @@ export class Tokenizer {
         this._currentIndex++
         continue
       }
+      // instanceof
+      else if (
+        BINARY_OPERATOR_TOKENS.includes(
+          currentChar +
+            this._getNextChar() +
+            this._getNextChar(2) +
+            this._getNextChar(3) +
+            this._getNextChar(4) +
+            this._getNextChar(5) +
+            this._getNextChar(6) +
+            this._getNextChar(7) +
+            this._getNextChar(8) +
+            this._getNextChar(9),
+        ) &&
+        this._scanMode === ScanMode.Normal
+      ) {
+        this._tokens.push(
+          TOKENS_GENERATOR.binaryOperator(
+            startIndex,
+            currentChar +
+              this._getNextChar() +
+              this._getNextChar() +
+              this._getNextChar(2) +
+              this._getNextChar(3) +
+              this._getNextChar(4) +
+              this._getNextChar(5) +
+              this._getNextChar(6) +
+              this._getNextChar(7) +
+              this._getNextChar(8) +
+              this._getNextChar(9),
+          ),
+        )
+        this._currentIndex += 10
+        continue
+      }
       // 2. Tell if it's a letter
       else if (isAlpha(currentChar)) {
         // Scan identifier
@@ -313,20 +373,18 @@ export class Tokenizer {
       }
       // 3. Determine if it is a single character () {}.; *
       else if (KNOWN_SINGLE_CHAR_TOKENS.has(currentChar as SingleCharTokens)) {
+        const previousToken = this._getPreviousToken()
         // * Character special processing
-        if (currentChar === '*') {
-          // If it is not import/export, it is considered to be a binary operator to avoid miscalculation
-          const previousToken = this._getPreviousToken()
-          if (
-            previousToken.type !== TokenType.Import &&
-            previousToken.type !== TokenType.Export
-          ) {
-            this._tokens.push(
-              TOKENS_GENERATOR.operator(startIndex, currentChar),
-            )
-            this._currentIndex++
-            continue
-          }
+        if (
+          previousToken &&
+          currentChar === '*' &&
+          previousToken.type !== TokenType.Import &&
+          previousToken.type !== TokenType.Export
+        ) {
+          // If it is not import/export, it is considered to be a binary operator to avoid miscalculation {
+          this._tokens.push(TOKENS_GENERATOR.asterisk(startIndex, currentChar))
+          this._currentIndex++
+          continue
           // Otherwise, follow the * in import/export
         }
         const token = KNOWN_SINGLE_CHAR_TOKENS.get(
@@ -335,33 +393,61 @@ export class Tokenizer {
         this._tokens.push(token)
         this._currentIndex++
       }
+      // 5. Determine the binary operator
+      else if (
+        BINARY_OPERATOR_TOKENS.includes(
+          currentChar + this._getNextChar() + this._getNextChar(2),
+        ) &&
+        this._scanMode === ScanMode.Normal
+      ) {
+        this._tokens.push(
+          TOKENS_GENERATOR.binaryOperator(
+            startIndex,
+            currentChar + this._getNextChar() + this._getNextChar(2),
+          ),
+        )
+        this._currentIndex += 3
+        continue
+      } else if (
+        BINARY_OPERATOR_TOKENS.includes(currentChar + this._getNextChar()) &&
+        this._scanMode === ScanMode.Normal
+      ) {
+        this._tokens.push(
+          TOKENS_GENERATOR.binaryOperator(
+            startIndex,
+            currentChar + this._getNextChar(),
+          ),
+        )
+        this._currentIndex += 2
+        continue
+      } else if (
+        UPDATE_OPERATOR_TOKENS.includes(currentChar + this._getNextChar()) &&
+        this._scanMode === ScanMode.Normal
+      ) {
+        this._tokens.push(
+          TOKENS_GENERATOR.updateOperator(
+            startIndex,
+            currentChar + this._getNextChar(),
+          ),
+        )
+        this._currentIndex += 2
+        continue
+      } else if (
+        BINARY_OPERATOR_TOKENS.includes(currentChar) &&
+        this._scanMode === ScanMode.Normal
+      ) {
+        this._tokens.push(
+          TOKENS_GENERATOR.binaryOperator(startIndex, currentChar),
+        )
+        this._currentIndex++
+        continue
+      }
       // 4. Determine whether it is quoted
       else if (QUOTATION_TOKENS.includes(currentChar)) {
         // If it's quotes, scan the string variable
         this.scanStringLiteral()
         // Skip the closing quotes
         this._currentIndex++
-        continue
-      }
-      // 5. Determine the binary operator
-      else if (
-        OPERATOR_TOKENS.includes(currentChar) &&
-        this._scanMode === ScanMode.Normal
-      ) {
-        this._tokens.push(TOKENS_GENERATOR.operator(startIndex, currentChar))
-        this._currentIndex++
-        continue
-      } else if (
-        OPERATOR_TOKENS.includes(currentChar + this._getNextChar()) &&
-        this._scanMode === ScanMode.Normal
-      ) {
-        this._tokens.push(
-          TOKENS_GENERATOR.operator(
-            startIndex,
-            currentChar + this._getNextChar(),
-          ),
-        )
-        this._currentIndex += 2
         continue
       }
       // 6. Judge number
@@ -475,9 +561,9 @@ export class Tokenizer {
     return this._source[this._currentIndex]
   }
 
-  private _getNextChar() {
-    if (this._currentIndex + 1 < this._source.length) {
-      return this._source[this._currentIndex + 1]
+  private _getNextChar(index: number = 1) {
+    if (this._currentIndex + index < this._source.length) {
+      return this._source[this._currentIndex + index]
     }
     return ''
   }
@@ -498,6 +584,6 @@ export class Tokenizer {
     if (this._tokens.length > 0) {
       return this._tokens[this._tokens.length - 1]
     }
-    throw new Error('Previous token not found')
+    // throw new Error('Previous token not found')
   }
 }

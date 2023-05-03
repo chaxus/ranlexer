@@ -64,7 +64,7 @@ describe('statement', () => {
       { type: 'Number', value: '0', start: 13, end: 14, raw: '0' },
       { type: 'Semicolon', value: ';', start: 14, end: 15 },
       { type: 'Identifier', value: 'i', start: 15, end: 16 },
-      { type: 'LessSign', value: '<', start: 17, end: 18 },
+      { type: 'BinaryOperator', value: '<', start: 17, end: 18 },
       { type: 'Number', value: '10', start: 19, end: 21, raw: '10' },
       { type: 'Semicolon', value: ';', start: 21, end: 22 },
       { type: 'Identifier', value: 'i', start: 22, end: 23 },

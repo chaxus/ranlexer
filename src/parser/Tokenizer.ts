@@ -26,9 +26,7 @@ export enum TokenType {
   Comma = 'Comma',
   Dot = 'Dot',
   Semicolon = 'Semicolon',
-  LessSign = 'LessSign',
   Colon = 'Colon',
-  GreaterSign = 'GreaterSign',
   StringLiteral = 'StringLiteral',
   Return = 'Return',
   Import = 'Import',
@@ -205,12 +203,6 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   colon(start: number) {
     return { type: TokenType.Colon, value: ':', start, end: start + 1 }
   },
-  lessSign(start: number) {
-    return { type: TokenType.LessSign, value: '<', start, end: start + 1 }
-  },
-  greaterSign(start: number) {
-    return { type: TokenType.GreaterSign, value: '>', start, end: start + 1 }
-  },
   stringLiteral(start: number, value: string, raw: string) {
     return {
       type: TokenType.StringLiteral,
@@ -264,8 +256,6 @@ const KNOWN_SINGLE_CHAR_TOKENS = new Map<
   [',', TOKENS_GENERATOR.comma],
   ['*', TOKENS_GENERATOR.asterisk],
   ['=', TOKENS_GENERATOR.assign],
-  ['<', TOKENS_GENERATOR.lessSign],
-  ['>', TOKENS_GENERATOR.greaterSign],
 ])
 // Quotation token
 const QUOTATION_TOKENS = ["'", '"', '`']

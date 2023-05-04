@@ -63,7 +63,7 @@ describe('Expression', () => {
       { type: 'LeftParen', value: '(', start: 1, end: 2 },
       { type: 'RightParen', value: ')', start: 2, end: 3 },
       { type: 'Assign', value: '=', start: 4, end: 5 },
-      { type: 'GreaterSign', value: '>', start: 5, end: 6 },
+      { type: 'BinaryOperator', value: '>', start: 5, end: 6 },
       { type: 'LeftCurly', value: '{', start: 7, end: 8 },
       { type: 'RightCurly', value: '}', start: 8, end: 9 },
       { type: 'Semicolon', value: ';', start: 9, end: 10 },

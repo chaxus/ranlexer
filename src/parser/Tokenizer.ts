@@ -20,15 +20,16 @@ export enum TokenType {
   RightParen = 'RightParen',
   LeftCurly = 'LeftCurly',
   For = 'For',
+  Switch = 'Switch',
+  Case = 'Case',
+  If = 'if',
   RightCurly = 'RightCurly',
   LeftBracket = 'LeftBracket',
   RightBracket = 'RightBracket',
   Comma = 'Comma',
   Dot = 'Dot',
   Semicolon = 'Semicolon',
-  LessSign = 'LessSign',
   Colon = 'Colon',
-  GreaterSign = 'GreaterSign',
   StringLiteral = 'StringLiteral',
   Return = 'Return',
   Import = 'Import',
@@ -69,6 +70,15 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   for(start: number) {
     return { type: TokenType.For, value: 'for', start, end: start + 3 }
+  },
+  switch(start: number) {
+    return { type: TokenType.Switch, value: 'switch', start, end: start + 6 }
+  },
+  case(start: number) {
+    return { type: TokenType.Case, value: 'case', start, end: start + 4 }
+  },
+  if(start: number) {
+    return { type: TokenType.If, value: 'if', start, end: start + 2 }
   },
   assign(start: number) {
     return { type: TokenType.Assign, value: '=', start, end: start + 1 }
@@ -205,12 +215,6 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   colon(start: number) {
     return { type: TokenType.Colon, value: ':', start, end: start + 1 }
   },
-  lessSign(start: number) {
-    return { type: TokenType.LessSign, value: '<', start, end: start + 1 }
-  },
-  greaterSign(start: number) {
-    return { type: TokenType.GreaterSign, value: '>', start, end: start + 1 }
-  },
   stringLiteral(start: number, value: string, raw: string) {
     return {
       type: TokenType.StringLiteral,
@@ -264,8 +268,6 @@ const KNOWN_SINGLE_CHAR_TOKENS = new Map<
   [',', TOKENS_GENERATOR.comma],
   ['*', TOKENS_GENERATOR.asterisk],
   ['=', TOKENS_GENERATOR.assign],
-  ['<', TOKENS_GENERATOR.lessSign],
-  ['>', TOKENS_GENERATOR.greaterSign],
 ])
 // Quotation token
 const QUOTATION_TOKENS = ["'", '"', '`']

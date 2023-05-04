@@ -17,6 +17,11 @@ export enum NodeType {
   ArrayExpression = 'ArrayExpression',
   ObjectExpression = 'ObjectExpression',
   ForStatement = 'ForStatement',
+  ForInStatement = 'ForInStatement',
+  ForOfStatement = 'ForOfStatement',
+  SwitchStatement = 'SwitchStatement',
+  SwitchCase = 'SwitchCase',
+  IfStatement = 'IfStatement',
   Literal = 'Literal',
   Property = '"Property"',
   ImportDeclaration = 'ImportDeclaration',
@@ -40,6 +45,9 @@ export type Statement =
   | BlockStatement
   | ReturnStatement
   | ForStatement
+  | SwitchStatement
+  | IfStatement
+
 
 // expression statement
 export type Expression =
@@ -51,6 +59,7 @@ export type Expression =
   | FunctionExpression
   | ObjectExpression
   | ArrayExpression
+  | UpdateExpression
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -88,17 +97,41 @@ type UpdateOperator = '++' | '--'
 
 export interface UpdateExpression extends Node {
   type: NodeType.UpdateExpression
-  operator: UpdateOperator
+  operator: string
   argument: Expression
   prefix: boolean
 }
 
+export interface SwitchCase extends Node {
+  type: NodeType.SwitchCase
+  test: Expression | null
+  consequent: Statement[]
+}
+
+export interface SwitchStatement extends Node {
+  type: NodeType.SwitchStatement
+  discriminant: Expression
+  cases: SwitchCase[]
+}
+
+export interface IfStatement extends Node {
+  type: NodeType.IfStatement
+  test: Expression
+  consequent: Statement
+  alternate: Statement | null
+}
+
 export interface ForStatement extends Node {
-  type: NodeType.ForStatement
-  init: VariableDeclaration | Expression | null
-  test: ExpressionStatement | null
-  update: ExpressionStatement | null
-  body: Statement | null
+  type:
+    | NodeType.ForStatement
+    | NodeType.ForInStatement
+    | NodeType.ForOfStatement
+  init: VariableDeclaration | Expression | undefined
+  left: VariableDeclaration | Expression | undefined
+  right: Identifier | undefined
+  test: ExpressionStatement | undefined
+  update: ExpressionStatement | undefined
+  body: Statement | undefined
 }
 
 export interface Identifier extends Node {
@@ -245,5 +278,5 @@ export interface FunctionNode extends Node {
 
 export interface ReturnStatement extends Node {
   type: NodeType.ReturnStatement
-  argument: Expression
+  argument: Expression | null
 }

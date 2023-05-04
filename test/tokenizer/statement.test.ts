@@ -64,7 +64,7 @@ describe('statement', () => {
       { type: 'Number', value: '0', start: 13, end: 14, raw: '0' },
       { type: 'Semicolon', value: ';', start: 14, end: 15 },
       { type: 'Identifier', value: 'i', start: 15, end: 16 },
-      { type: 'LessSign', value: '<', start: 17, end: 18 },
+      { type: 'BinaryOperator', value: '<', start: 17, end: 18 },
       { type: 'Number', value: '10', start: 19, end: 21, raw: '10' },
       { type: 'Semicolon', value: ';', start: 21, end: 22 },
       { type: 'Identifier', value: 'i', start: 22, end: 23 },
@@ -103,12 +103,12 @@ describe('statement', () => {
   })
   it('switch (v){case 1: break;default:;}', () => {
     const result = [
-      { type: 'Identifier', value: 'switch', start: 0, end: 6 },
+      { type: 'Switch', value: 'switch', start: 0, end: 6 },
       { type: 'LeftParen', value: '(', start: 7, end: 8 },
       { type: 'Identifier', value: 'v', start: 8, end: 9 },
       { type: 'RightParen', value: ')', start: 9, end: 10 },
       { type: 'LeftCurly', value: '{', start: 10, end: 11 },
-      { type: 'Identifier', value: 'case', start: 11, end: 15 },
+      { type: 'Case', value: 'case', start: 11, end: 15 },
       { type: 'Number', value: '1', start: 16, end: 17, raw: '1' },
       { type: 'Colon', value: ':', start: 17, end: 18 },
       { type: 'Identifier', value: 'break', start: 19, end: 24 },

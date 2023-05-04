@@ -257,8 +257,8 @@ describe('statement', () => {
           cases: [
             {
               type: 'SwitchCase',
-              start: 0,
-              end: 25,
+              start: 11,
+              end: 24,
               test: {
                 type: 'Literal',
                 value: '1',
@@ -282,8 +282,8 @@ describe('statement', () => {
             },
             {
               type: 'SwitchCase',
-              start: 0,
-              end: 34,
+              start: 25,
+              end: 32,
               test: null,
               consequent: [],
             },
@@ -297,61 +297,182 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('label: console.log();', () => {
-    const result = [
-      { type: 'Identifier', value: 'label', start: 0, end: 5 },
-      { type: 'Colon', value: ':', start: 5, end: 6 },
-      { type: 'Identifier', value: 'console', start: 7, end: 14 },
-      { type: 'Dot', value: '.', start: 14, end: 15 },
-      { type: 'Identifier', value: 'log', start: 15, end: 18 },
-      { type: 'LeftParen', value: '(', start: 18, end: 19 },
-      { type: 'RightParen', value: ')', start: 19, end: 20 },
-      { type: 'Semicolon', value: ';', start: 20, end: 21 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'BinaryExpression',
+            operator: ':',
+            left: { type: 'Identifier', name: 'label', start: 0, end: 5 },
+            right: {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                object: {
+                  type: 'Identifier',
+                  name: 'console',
+                  start: 7,
+                  end: 14,
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log',
+                  start: 15,
+                  end: 18,
+                },
+                start: 7,
+                end: 18,
+                computed: false,
+              },
+              arguments: [],
+              start: 7,
+              end: 20,
+            },
+            start: 5,
+            end: 20,
+          },
+          start: 5,
+          end: 20,
+        },
+      ],
+      start: 0,
+      end: 20,
+    }
     const code = 'label: console.log();'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('with (a){}', () => {
-    const result = [
-      { type: 'Identifier', value: 'with', start: 0, end: 4 },
-      { type: 'LeftParen', value: '(', start: 5, end: 6 },
-      { type: 'Identifier', value: 'a', start: 6, end: 7 },
-      { type: 'RightParen', value: ')', start: 7, end: 8 },
-      { type: 'LeftCurly', value: '{', start: 8, end: 9 },
-      { type: 'RightCurly', value: '}', start: 9, end: 10 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'CallExpression',
+            callee: { type: 'Identifier', name: 'with', start: 0, end: 4 },
+            arguments: [{ type: 'Identifier', name: 'a', start: 6, end: 7 }],
+            start: 0,
+            end: 8,
+          },
+          start: 0,
+          end: 8,
+        },
+        { type: 'BlockStatement', body: [], start: 8, end: 10 },
+      ],
+      start: 0,
+      end: 10,
+    }
     const code = 'with (a){}'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('break;', () => {
-    const result = [
-      { type: 'Identifier', value: 'break', start: 0, end: 5 },
-      { type: 'Semicolon', value: ';', start: 5, end: 6 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: { type: 'Identifier', name: 'break', start: 0, end: 5 },
+          start: 0,
+          end: 5,
+        },
+      ],
+      start: 0,
+      end: 5,
+    }
     const code = 'break;'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('continue;', () => {
-    const result = [
-      { type: 'Identifier', value: 'continue', start: 0, end: 8 },
-      { type: 'Semicolon', value: ';', start: 8, end: 9 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'continue',
+            start: 0,
+            end: 8,
+          },
+          start: 0,
+          end: 8,
+        },
+      ],
+      start: 0,
+      end: 8,
+    }
     const code = 'continue;'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('return;', () => {
-    const result = [
-      { type: 'Return', value: 'return', start: 0, end: 6 },
-      { type: 'Semicolon', value: ';', start: 6, end: 7 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [{ type: 'ReturnStatement', argument: null, start: 0, end: 6 }],
+      start: 0,
+      end: 6,
+    }
     const code = 'return;'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('debugger;', () => {
-    const result = [
-      { type: 'Identifier', value: 'debugger', start: 0, end: 8 },
-      { type: 'Semicolon', value: ';', start: 8, end: 9 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'debugger',
+            start: 0,
+            end: 8,
+          },
+          start: 0,
+          end: 8,
+        },
+      ],
+      start: 0,
+      end: 8,
+    }
     const code = 'debugger;'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
+  })
+  it('if statement', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'IfStatement',
+          start: 0,
+          end: 12,
+          test: { type: 'Identifier', name: 'a', start: 4, end: 5 },
+          consequent: {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '=',
+              left: { type: 'Identifier', name: 'b', start: 7, end: 8 },
+              right: {
+                type: 'Literal',
+                value: '1',
+                start: 11,
+                end: 12,
+                raw: '1',
+              },
+              start: 9,
+              end: 12,
+            },
+            start: 9,
+            end: 12,
+          },
+          alternate: null,
+        },
+      ],
+      start: 0,
+      end: 12,
+    }
+    const code = 'if (a) b = 1'
+    expect(parse(code)).toEqual(result)
   })
 })

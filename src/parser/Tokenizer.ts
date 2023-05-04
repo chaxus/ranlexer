@@ -22,6 +22,7 @@ export enum TokenType {
   For = 'For',
   Switch = 'Switch',
   Case = 'Case',
+  If = 'if',
   RightCurly = 'RightCurly',
   LeftBracket = 'LeftBracket',
   RightBracket = 'RightBracket',
@@ -75,6 +76,9 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   case(start: number) {
     return { type: TokenType.Case, value: 'case', start, end: start + 4 }
+  },
+  if(start: number) {
+    return { type: TokenType.If, value: 'if', start, end: start + 2 }
   },
   assign(start: number) {
     return { type: TokenType.Assign, value: '=', start, end: start + 1 }

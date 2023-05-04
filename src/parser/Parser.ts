@@ -13,6 +13,7 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
   Identifier,
+  IfStatement,
   ImportDeclaration,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
@@ -82,12 +83,16 @@ export class Parser {
       return this._parseFunctionDeclaration()
     if (this._checkCurrentTokenType(TokenType.Switch))
       return this._parseSwitchStatement()
+    if (this._checkCurrentTokenType(TokenType.If))
+      return this._parseIfStatement()
     if (this._checkCurrentTokenType(TokenType.For))
       return this._parseForStatement()
     if (
       this._checkCurrentTokenType([
         TokenType.Identifier,
         TokenType.UpdateOperator,
+        TokenType.BinaryOperator,
+        TokenType.Colon,
       ])
     )
       return this._parseExpressionStatement()
@@ -110,6 +115,28 @@ export class Parser {
     console.log('Unexpected token:', this._getCurrentToken())
     throw new Error('Unexpected token')
   }
+  private _parseIfStatement(): IfStatement {
+    const { start } = this._getCurrentToken()
+    this._goNext(TokenType.If)
+    this._goNext(TokenType.LeftParen)
+    const test = this._parseExpression()
+    this._goNext(TokenType.RightParen)
+    let consequent = null
+    if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
+      consequent = this._parseBlockStatement()
+    } else {
+      consequent = this._parseStatement()
+    }
+    const ifStatement: IfStatement = {
+      type: NodeType.IfStatement,
+      start,
+      end: consequent.end,
+      test,
+      consequent,
+      alternate: null,
+    }
+    return ifStatement
+  }
   private _parseSwitchStatement(): SwitchStatement {
     const { start } = this._getCurrentToken()
     this._goNext(TokenType.Switch)
@@ -120,20 +147,28 @@ export class Parser {
     const cases = []
     while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
       let test = null
+      let end = Infinity
       const consequent = []
+      const { start } = this._getCurrentToken()
       if (this._checkCurrentTokenType(TokenType.Case)) {
         this._goNext(TokenType.Case)
         test = this._parseExpression()
       } else {
+        end = this._getCurrentToken().end
         this._goNext(TokenType.Default)
       }
       this._goNext(TokenType.Colon)
-      while (!this._checkCurrentTokenType(TokenType.Semicolon)) {
+      while (
+        !this._checkCurrentTokenType([
+          TokenType.Case,
+          TokenType.Default,
+          TokenType.Semicolon,
+        ])
+      ) {
         const caseStatement = this._parseStatement()
+        end = caseStatement.end
         consequent.push(caseStatement)
       }
-      const { end } = this._getCurrentToken()
-      this._goNext(TokenType.Semicolon)
       const switchCase: SwitchCase = {
         type: NodeType.SwitchCase,
         start,
@@ -142,6 +177,7 @@ export class Parser {
         consequent,
       }
       cases.push(switchCase)
+      this._skipSemicolon()
     }
     const { end } = this._getCurrentToken()
     this._goNext(TokenType.RightCurly)
@@ -564,14 +600,17 @@ export class Parser {
   }
 
   private _parseReturnStatement(): ReturnStatement {
-    const { start } = this._getCurrentToken()
+    const { start, end } = this._getCurrentToken()
     this._goNext(TokenType.Return)
-    const argument = this._parseExpression()
+    let argument = null
+    if (!this._checkCurrentTokenType(TokenType.Semicolon)) {
+      argument = this._parseExpression()
+    }
     const node: ReturnStatement = {
       type: NodeType.ReturnStatement,
       argument,
       start,
-      end: argument.end,
+      end: argument ? argument.end : end,
     }
     this._skipSemicolon()
     return node
@@ -585,6 +624,7 @@ export class Parser {
       start: expression.start,
       end: expression.end,
     }
+    this._skipSemicolon()
     return expressionStatement
   }
   // Parse the a.b.c nested structure of the object
@@ -621,7 +661,13 @@ export class Parser {
       ) {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
-      } else if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
+      } else if (
+        this._checkCurrentTokenType([
+          TokenType.BinaryOperator,
+          TokenType.Assign,
+          TokenType.Colon,
+        ])
+      ) {
         // analyze a + b
         expression = this._parseBinaryOperatorExpression(expression)
       } else if (this._checkCurrentTokenType(TokenType.UpdateOperator)) {
@@ -667,7 +713,13 @@ export class Parser {
   ): BinaryExpression {
     const { start } = this._getCurrentToken()
     const operator = this._getCurrentToken().value!
-    this._goNext(TokenType.BinaryOperator)
+    if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
+      this._goNext(TokenType.BinaryOperator)
+    } else if (this._checkCurrentTokenType(TokenType.Assign)) {
+      this._goNext(TokenType.Assign)
+    } else if (this._checkCurrentTokenType(TokenType.Colon)) {
+      this._goNext(TokenType.Colon)
+    }
     const right = this._parseExpression()
     const node: BinaryExpression = {
       type: NodeType.BinaryExpression,
@@ -677,6 +729,7 @@ export class Parser {
       start,
       end: right.end,
     }
+    this._skipSemicolon()
     return node
   }
 
@@ -705,6 +758,7 @@ export class Parser {
       }
       this._goNext(TokenType.RightBracket)
     }
+    this._skipSemicolon()
     return node
   }
 

@@ -21,6 +21,7 @@ export enum NodeType {
   ForOfStatement = 'ForOfStatement',
   SwitchStatement = 'SwitchStatement',
   SwitchCase = 'SwitchCase',
+  IfStatement = 'IfStatement',
   Literal = 'Literal',
   Property = '"Property"',
   ImportDeclaration = 'ImportDeclaration',
@@ -45,6 +46,7 @@ export type Statement =
   | ReturnStatement
   | ForStatement
   | SwitchStatement
+  | IfStatement
 
 // expression statement
 export type Expression =
@@ -109,6 +111,13 @@ export interface SwitchStatement extends Node {
   type: NodeType.SwitchStatement
   discriminant: Expression
   cases: SwitchCase[]
+}
+
+export interface IfStatement extends Node {
+  type: NodeType.IfStatement
+  test: Expression
+  consequent: Statement
+  alternate: Statement | null
 }
 
 export interface ForStatement extends Node {
@@ -268,5 +277,5 @@ export interface FunctionNode extends Node {
 
 export interface ReturnStatement extends Node {
   type: NodeType.ReturnStatement
-  argument: Expression
+  argument: Expression | null
 }

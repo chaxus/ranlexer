@@ -17,6 +17,8 @@ export enum NodeType {
   ArrayExpression = 'ArrayExpression',
   ObjectExpression = 'ObjectExpression',
   ForStatement = 'ForStatement',
+  ForInStatement = 'ForInStatement',
+  ForOfStatement = 'ForOfStatement',
   Literal = 'Literal',
   Property = '"Property"',
   ImportDeclaration = 'ImportDeclaration',
@@ -51,6 +53,7 @@ export type Expression =
   | FunctionExpression
   | ObjectExpression
   | ArrayExpression
+  | UpdateExpression
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -88,17 +91,22 @@ type UpdateOperator = '++' | '--'
 
 export interface UpdateExpression extends Node {
   type: NodeType.UpdateExpression
-  operator: UpdateOperator
+  operator: string
   argument: Expression
   prefix: boolean
 }
 
 export interface ForStatement extends Node {
-  type: NodeType.ForStatement
-  init: VariableDeclaration | Expression | null
-  test: ExpressionStatement | null
-  update: ExpressionStatement | null
-  body: Statement | null
+  type:
+    | NodeType.ForStatement
+    | NodeType.ForInStatement
+    | NodeType.ForOfStatement
+  init: VariableDeclaration | Expression | undefined
+  left: VariableDeclaration | Expression | undefined
+  right: Identifier | undefined
+  test: ExpressionStatement | undefined
+  update: ExpressionStatement | undefined
+  body: Statement | undefined
 }
 
 export interface Identifier extends Node {

@@ -20,6 +20,8 @@ export enum TokenType {
   RightParen = 'RightParen',
   LeftCurly = 'LeftCurly',
   For = 'For',
+  Switch = 'Switch',
+  Case = 'Case',
   RightCurly = 'RightCurly',
   LeftBracket = 'LeftBracket',
   RightBracket = 'RightBracket',
@@ -67,6 +69,12 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   for(start: number) {
     return { type: TokenType.For, value: 'for', start, end: start + 3 }
+  },
+  switch(start: number) {
+    return { type: TokenType.Switch, value: 'switch', start, end: start + 6 }
+  },
+  case(start: number) {
+    return { type: TokenType.Case, value: 'case', start, end: start + 4 }
   },
   assign(start: number) {
     return { type: TokenType.Assign, value: '=', start, end: start + 1 }

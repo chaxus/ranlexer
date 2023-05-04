@@ -122,7 +122,6 @@ describe('Parser', () => {
       start: 0,
       end: 11,
     }
-
     expect(parse(input)).toEqual(ast)
   })
 

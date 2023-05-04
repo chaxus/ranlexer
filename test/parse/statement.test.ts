@@ -246,24 +246,55 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('switch (v){case 1: break;default:;}', () => {
-    const result = [
-      { type: 'Identifier', value: 'switch', start: 0, end: 6 },
-      { type: 'LeftParen', value: '(', start: 7, end: 8 },
-      { type: 'Identifier', value: 'v', start: 8, end: 9 },
-      { type: 'RightParen', value: ')', start: 9, end: 10 },
-      { type: 'LeftCurly', value: '{', start: 10, end: 11 },
-      { type: 'Identifier', value: 'case', start: 11, end: 15 },
-      { type: 'Number', value: '1', start: 16, end: 17, raw: '1' },
-      { type: 'Colon', value: ':', start: 17, end: 18 },
-      { type: 'Identifier', value: 'break', start: 19, end: 24 },
-      { type: 'Semicolon', value: ';', start: 24, end: 25 },
-      { type: 'Default', value: 'default', start: 25, end: 32 },
-      { type: 'Colon', value: ':', start: 32, end: 33 },
-      { type: 'Semicolon', value: ';', start: 33, end: 34 },
-      { type: 'RightCurly', value: '}', start: 34, end: 35 },
-    ]
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'SwitchStatement',
+          start: 0,
+          end: 35,
+          discriminant: { type: 'Identifier', name: 'v', start: 8, end: 9 },
+          cases: [
+            {
+              type: 'SwitchCase',
+              start: 0,
+              end: 25,
+              test: {
+                type: 'Literal',
+                value: '1',
+                start: 16,
+                end: 17,
+                raw: '1',
+              },
+              consequent: [
+                {
+                  type: 'ExpressionStatement',
+                  expression: {
+                    type: 'Identifier',
+                    name: 'break',
+                    start: 19,
+                    end: 24,
+                  },
+                  start: 19,
+                  end: 24,
+                },
+              ],
+            },
+            {
+              type: 'SwitchCase',
+              start: 0,
+              end: 34,
+              test: null,
+              consequent: [],
+            },
+          ],
+        },
+      ],
+      start: 0,
+      end: 35,
+    }
     const code = 'switch (v){case 1: break;default:;}'
-    expect(tokenize(code)).toEqual(result)
+    expect(parse(code)).toEqual(result)
   })
   it('label: console.log();', () => {
     const result = [

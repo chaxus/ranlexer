@@ -25,6 +25,8 @@ import type {
   Property,
   ReturnStatement,
   Statement,
+  SwitchCase,
+  SwitchStatement,
   UpdateExpression,
   VariableDeclaration,
   VariableDeclarator,
@@ -78,6 +80,8 @@ export class Parser {
     // TokenType comes from the implementation of Tokenizer
     if (this._checkCurrentTokenType(TokenType.Function))
       return this._parseFunctionDeclaration()
+    if (this._checkCurrentTokenType(TokenType.Switch))
+      return this._parseSwitchStatement()
     if (this._checkCurrentTokenType(TokenType.For))
       return this._parseForStatement()
     if (
@@ -105,6 +109,50 @@ export class Parser {
       return this._parseVariableDeclaration()
     console.log('Unexpected token:', this._getCurrentToken())
     throw new Error('Unexpected token')
+  }
+  private _parseSwitchStatement(): SwitchStatement {
+    const { start } = this._getCurrentToken()
+    this._goNext(TokenType.Switch)
+    this._goNext(TokenType.LeftParen)
+    const discriminant = this._parseExpression()
+    this._goNext(TokenType.RightParen)
+    this._goNext(TokenType.LeftCurly)
+    const cases = []
+    while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
+      let test = null
+      const consequent = []
+      if (this._checkCurrentTokenType(TokenType.Case)) {
+        this._goNext(TokenType.Case)
+        test = this._parseExpression()
+      } else {
+        this._goNext(TokenType.Default)
+      }
+      this._goNext(TokenType.Colon)
+      while (!this._checkCurrentTokenType(TokenType.Semicolon)) {
+        const caseStatement = this._parseStatement()
+        consequent.push(caseStatement)
+      }
+      const { end } = this._getCurrentToken()
+      this._goNext(TokenType.Semicolon)
+      const switchCase: SwitchCase = {
+        type: NodeType.SwitchCase,
+        start,
+        end,
+        test,
+        consequent,
+      }
+      cases.push(switchCase)
+    }
+    const { end } = this._getCurrentToken()
+    this._goNext(TokenType.RightCurly)
+    const switchStatement: SwitchStatement = {
+      type: NodeType.SwitchStatement,
+      start,
+      end,
+      discriminant,
+      cases,
+    }
+    return switchStatement
   }
   private _parseForStatement(): ForStatement {
     const { start } = this._getCurrentToken()

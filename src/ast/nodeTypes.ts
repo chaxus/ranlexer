@@ -47,6 +47,8 @@ export type Statement =
   | ForStatement
   | SwitchStatement
   | IfStatement
+  | ForInStatement
+  | ForOfStatement
 
 // expression statement
 export type Expression =
@@ -120,17 +122,25 @@ export interface IfStatement extends Node {
   alternate: Statement | null
 }
 
-export interface ForStatement extends Node {
-  type:
-    | NodeType.ForStatement
-    | NodeType.ForInStatement
-    | NodeType.ForOfStatement
-  init: VariableDeclaration | Expression | undefined
-  left: VariableDeclaration | Expression | undefined
+export interface ForInStatement extends Node {
+  type: NodeType.ForInStatement
+  left: VariableDeclaration
   right: Identifier | undefined
+  body: Statement
+}
+export interface ForOfStatement extends Node {
+  type: NodeType.ForOfStatement
+  left: VariableDeclaration
+  right: Identifier | undefined
+  body: Statement
+}
+
+export interface ForStatement extends Node {
+  type: NodeType.ForStatement
+  init: VariableDeclaration | Expression
   test: ExpressionStatement | undefined
   update: ExpressionStatement | undefined
-  body: Statement | undefined
+  body: Statement
 }
 
 export interface Identifier extends Node {

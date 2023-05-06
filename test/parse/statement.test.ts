@@ -283,7 +283,7 @@ describe('statement', () => {
             {
               type: 'SwitchCase',
               start: 25,
-              end: 32,
+              end: 33,
               test: null,
               consequent: [],
             },
@@ -473,6 +473,50 @@ describe('statement', () => {
       end: 12,
     }
     const code = 'if (a) b = 1'
+    expect(parse(code)).toEqual(result)
+  })
+  it('if BlockStatement', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'IfStatement',
+          start: 0,
+          end: 12,
+          test: { type: 'Identifier', name: 'a', start: 4, end: 5 },
+          consequent: {
+            type: 'BlockStatement',
+            body: [
+              {
+                type: 'ExpressionStatement',
+                expression: {
+                  type: 'BinaryExpression',
+                  operator: '=',
+                  left: { type: 'Identifier', name: 'b', start: 8, end: 9 },
+                  right: {
+                    type: 'Literal',
+                    value: '1',
+                    start: 10,
+                    end: 11,
+                    raw: '1',
+                  },
+                  start: 9,
+                  end: 11,
+                },
+                start: 9,
+                end: 11,
+              },
+            ],
+            start: 7,
+            end: 12,
+          },
+          alternate: null,
+        },
+      ],
+      start: 0,
+      end: 12,
+    }
+    const code = 'if (a) {b=1}'
     expect(parse(code)).toEqual(result)
   })
 })

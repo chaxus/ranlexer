@@ -5,8 +5,8 @@ Tiny JavaScript generator and compiler.
 ---
 
 <a href="https://github.com/chaxus/ranlexer/actions"><img src="https://img.shields.io/github/actions/workflow/status/chaxus/ranlexer/main.yml" alt="Build Status"></a>
-<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/v/ranlexer.svg" alt="npm-v"></a>
-<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/dt/ranlexer.svg" alt="npm-d"></a>
+<a href="https://npmjs.com/package/ranlexer"><img src="https://img.shields.io/npm/v/ranlexer.svg" alt="npm-v"></a>
+<a href="https://npmjs.com/package/ranlexer"><img src="https://img.shields.io/npm/dt/ranlexer.svg" alt="npm-d"></a>
 <a href="https://bundlephobia.com/result?p=ranlexer"><img src="https://img.badgesize.io/https:/unpkg.com/ranlexer/dist/index.umd.js?label=brotli&compression=brotli" alt="brotli"></a>
 <a href="#alternative-installation-methods"><img src="https://img.shields.io/badge/module%20formats-umd%2C%20esm-green.svg" alt="module formats: umd, esm"></a>
 

@@ -8,6 +8,7 @@ import { keys } from '@/utils/object'
 interface GraphOptions {
   entry: string
   bundle: Bundle
+  external: Array<string>
 }
 
 /**
@@ -25,11 +26,11 @@ export class Graph {
   orderedModules: Module[] = []
   bundle: Bundle
   constructor(options: GraphOptions) {
-    const { entry, bundle } = options
+    const { entry, bundle, external } = options
     this.entryPath = resolve(entry)
     this.basedir = dirname(this.entryPath)
     this.bundle = bundle
-    this.moduleLoader = new ModuleLoader(bundle)
+    this.moduleLoader = new ModuleLoader({ bundle, external })
   }
 
   async build(): Promise<void> {

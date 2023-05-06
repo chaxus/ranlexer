@@ -22,11 +22,11 @@ interface Build {
 interface WriteFileInfo {
   success: boolean
   data:
-  | {
-    path: string
-    content: string
-  }
-  | Error
+    | {
+        path: string
+        content: string
+      }
+    | Error
 }
 
 const existsSync = (dirname: string) => fs.existsSync(dirname)
@@ -74,9 +74,14 @@ export const writeFile = (
   })
 
 export function build(options: Options): Promise<Build> {
-  const { input = './index.js', output = './dist/index.js', external = [] } = options
+  const {
+    input = './index.js',
+    output = './dist/index.js',
+    external = [],
+  } = options
   const bundle = new Bundle({
     entry: input,
+    external,
   })
   const generate = () => bundle.render()
   const write = async () => {

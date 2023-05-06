@@ -52,10 +52,10 @@ There are two options：
 import type { Types } from 'ranlexer'
 
 const opts = {
-  enter: (node: types.Node) => {
+  enter: (node: Types.Node) => {
     // Enter the processing of the node
   },
-  leave: (node: types.Node) => {
+  leave: (node: Types.Node) => {
     // Leave the node processing
   }
 walk(ast, opts)

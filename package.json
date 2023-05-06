@@ -1,6 +1,6 @@
 {
   "name": "ranlexer",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Tiny JavaScript parser and generator",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.mjs",
@@ -34,6 +34,9 @@
   "types": "./dist/index.d.ts",
   "author": "chaxus",
   "license": "MIT",
+  "files": [
+    "/dist"
+  ],
   "dependencies": {
     "magic-string": "^0.30.0"
   },

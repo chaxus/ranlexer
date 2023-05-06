@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   build: {
-    sourcemap: true,
     minify: true,
     rollupOptions: {
       external: ['node:fs', 'node:path', 'node:fs/promises'],

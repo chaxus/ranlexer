@@ -1,22 +1,35 @@
 import { describe, expect, it } from 'vitest'
+import { generate } from '@/generate'
 import { parse } from '@/parser'
+import type { Program } from '@/ast/nodeTypes'
+import { NodeType } from '@/ast/nodeTypes'
 
 describe('statement', () => {
   it('throw Error();', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
-          expression: { type: 'Identifier', name: 'throw', start: 0, end: 5 },
+          type: NodeType.ExpressionStatement,
+          expression: {
+            type: NodeType.Identifier,
+            name: 'throw',
+            start: 0,
+            end: 5,
+          },
           start: 0,
           end: 5,
         },
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'CallExpression',
-            callee: { type: 'Identifier', name: 'Error', start: 6, end: 11 },
+            type: NodeType.CallExpression,
+            callee: {
+              type: NodeType.Identifier,
+              name: 'Error',
+              start: 6,
+              end: 11,
+            },
             arguments: [],
             start: 6,
             end: 13,
@@ -29,46 +42,58 @@ describe('statement', () => {
       end: 13,
     }
     const code = 'throw Error();'
-    expect(parse(code)).toEqual(result)
+    expect(generate(result)).toEqual(code)
   })
   it('{}', () => {
-    const result = {
-      type: 'Program',
-      body: [{ type: 'BlockStatement', body: [], start: 0, end: 2 }],
+    const result: Program = {
+      type: NodeType.Program,
+      body: [{ type: NodeType.BlockStatement, body: [], start: 0, end: 2 }],
       start: 0,
       end: 2,
     }
     const code = '{}'
-    expect(parse(code)).toEqual(result)
+    expect(generate(result)).toEqual(code)
   })
   it('try {} catch(e) {} finally{}', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
-          expression: { type: 'Identifier', name: 'try', start: 0, end: 3 },
+          type: NodeType.ExpressionStatement,
+          expression: {
+            type: NodeType.Identifier,
+            name: 'try',
+            start: 0,
+            end: 3,
+          },
           start: 0,
           end: 3,
         },
-        { type: 'BlockStatement', body: [], start: 4, end: 6 },
+        { type: NodeType.BlockStatement, body: [], start: 4, end: 6 },
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'CallExpression',
-            callee: { type: 'Identifier', name: 'catch', start: 7, end: 12 },
-            arguments: [{ type: 'Identifier', name: 'e', start: 13, end: 14 }],
+            type: NodeType.CallExpression,
+            callee: {
+              type: NodeType.Identifier,
+              name: 'catch',
+              start: 7,
+              end: 12,
+            },
+            arguments: [
+              { type: NodeType.Identifier, name: 'e', start: 13, end: 14 },
+            ],
             start: 7,
             end: 15,
           },
           start: 7,
           end: 15,
         },
-        { type: 'BlockStatement', body: [], start: 16, end: 18 },
+        { type: NodeType.BlockStatement, body: [], start: 16, end: 18 },
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'Identifier',
+            type: NodeType.Identifier,
             name: 'finally',
             start: 19,
             end: 26,
@@ -76,13 +101,13 @@ describe('statement', () => {
           start: 19,
           end: 26,
         },
-        { type: 'BlockStatement', body: [], start: 26, end: 28 },
+        { type: NodeType.BlockStatement, body: [], start: 26, end: 28 },
       ],
       start: 0,
       end: 28,
     }
-    const code = 'try {} catch(e) {} finally{}'
-    expect(parse(code)).toEqual(result)
+    const code = 'try {} catch(e) {} finally{} '
+    expect(generate(result)).toEqual(code)
   })
   it('for (let key in obj) {}', () => {
     const result = {

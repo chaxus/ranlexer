@@ -48,7 +48,6 @@ export type Statement =
   | SwitchStatement
   | IfStatement
 
-
 // expression statement
 export type Expression =
   | CallExpression

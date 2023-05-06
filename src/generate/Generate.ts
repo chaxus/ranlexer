@@ -146,6 +146,9 @@ export class Generate {
     const { start, end } = node
     if (node.callee.type === NodeType.MemberExpression) {
       this.generateMemberExpression(node.callee)
+    } else if (node.callee.type === NodeType.Identifier) {
+      this.generateIdentifier(node.callee)
+      this.code.update(node.callee.end, node.callee.end + 2, '();')
     }
     if (node.arguments) {
       this.generateFunctionParams(node.arguments)
@@ -153,7 +156,7 @@ export class Generate {
   }
   generateReturnStatement(node: ReturnStatement): void {
     const { start, end, argument } = node
-    if (argument.type === NodeType.CallExpression) {
+    if (argument?.type === NodeType.CallExpression) {
       this.code.update(start, start + 7, 'return ')
       this.generateCallExpression(argument)
     }
@@ -169,7 +172,7 @@ export class Generate {
         }
       })
     } else {
-      this.code.update(start, end, ' {}')
+      this.code.update(start, end, '{}')
     }
   }
   generateFunctionParams(params: Expression[] | Identifier[] = []): void {
@@ -231,7 +234,15 @@ export class Generate {
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { type, start, end, expression } = node
-    this.generateMemberExpression(expression)
+    if (expression.type === NodeType.MemberExpression) {
+      return this.generateMemberExpression(expression)
+    }
+    if (expression.type === NodeType.Identifier) {
+      return this.generateIdentifier(expression)
+    }
+    if (expression.type === NodeType.CallExpression) {
+      return this.generateCallExpression(expression)
+    }
   }
   generateArrayExpression(node: ArrayExpression): void {
     this.code.update(node.start, node.start + 1, '[')
@@ -344,6 +355,9 @@ export class Generate {
       }
       if (type === NodeType.ExportDefaultDeclaration) {
         return this.generateExportDefaultDeclaration(node)
+      }
+      if (type === NodeType.BlockStatement) {
+        return this.generateBlockStatement(node)
       }
     })
     return this.code.toString()

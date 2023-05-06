@@ -409,36 +409,48 @@ describe('statement', () => {
     expect(generate(result)).toEqual(code)
   })
   it('with (a){}', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'CallExpression',
-            callee: { type: 'Identifier', name: 'with', start: 0, end: 4 },
-            arguments: [{ type: 'Identifier', name: 'a', start: 6, end: 7 }],
+            type: NodeType.CallExpression,
+            callee: {
+              type: NodeType.Identifier,
+              name: 'with',
+              start: 0,
+              end: 4,
+            },
+            arguments: [
+              { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+            ],
             start: 0,
             end: 8,
           },
           start: 0,
           end: 8,
         },
-        { type: 'BlockStatement', body: [], start: 8, end: 10 },
+        { type: NodeType.BlockStatement, body: [], start: 8, end: 10 },
       ],
       start: 0,
       end: 10,
     }
     const code = 'with (a){}'
-    expect(parse(code)).toEqual(result)
+    expect(generate(result)).toEqual(code)
   })
-  it('break;', () => {
-    const result = {
-      type: 'Program',
+  it('break', () => {
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
-          expression: { type: 'Identifier', name: 'break', start: 0, end: 5 },
+          type: NodeType.ExpressionStatement,
+          expression: {
+            type: NodeType.Identifier,
+            name: 'break',
+            start: 0,
+            end: 5,
+          },
           start: 0,
           end: 5,
         },
@@ -446,17 +458,17 @@ describe('statement', () => {
       start: 0,
       end: 5,
     }
-    const code = 'break;'
-    expect(parse(code)).toEqual(result)
+    const code = 'break'
+    expect(generate(result)).toEqual(code)
   })
   it('continue;', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'Identifier',
+            type: NodeType.Identifier,
             name: 'continue',
             start: 0,
             end: 8,
@@ -468,27 +480,29 @@ describe('statement', () => {
       start: 0,
       end: 8,
     }
-    const code = 'continue;'
-    expect(parse(code)).toEqual(result)
+    const code = 'continue'
+    expect(generate(result)).toEqual(code)
   })
-  it('return;', () => {
-    const result = {
-      type: 'Program',
-      body: [{ type: 'ReturnStatement', argument: null, start: 0, end: 6 }],
+  it('return', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        { type: NodeType.ReturnStatement, argument: null, start: 0, end: 6 },
+      ],
       start: 0,
       end: 6,
     }
-    const code = 'return;'
-    expect(parse(code)).toEqual(result)
+    const code = 'return'
+    expect(generate(result)).toEqual(code)
   })
-  it('debugger;', () => {
-    const result = {
-      type: 'Program',
+  it('debugger', () => {
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'ExpressionStatement',
+          type: NodeType.ExpressionStatement,
           expression: {
-            type: 'Identifier',
+            type: NodeType.Identifier,
             name: 'debugger',
             start: 0,
             end: 8,
@@ -500,26 +514,26 @@ describe('statement', () => {
       start: 0,
       end: 8,
     }
-    const code = 'debugger;'
-    expect(parse(code)).toEqual(result)
+    const code = 'debugger'
+    expect(generate(result)).toEqual(code)
   })
   it('if statement', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'IfStatement',
+          type: NodeType.IfStatement,
           start: 0,
           end: 12,
-          test: { type: 'Identifier', name: 'a', start: 4, end: 5 },
+          test: { type: NodeType.Identifier, name: 'a', start: 4, end: 5 },
           consequent: {
-            type: 'ExpressionStatement',
+            type: NodeType.ExpressionStatement,
             expression: {
-              type: 'BinaryExpression',
+              type: NodeType.BinaryExpression,
               operator: '=',
-              left: { type: 'Identifier', name: 'b', start: 7, end: 8 },
+              left: { type: NodeType.Identifier, name: 'b', start: 7, end: 8 },
               right: {
-                type: 'Literal',
+                type: NodeType.Literal,
                 value: '1',
                 start: 11,
                 end: 12,
@@ -541,25 +555,30 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('if BlockStatement', () => {
-    const result = {
-      type: 'Program',
+    const result: Program = {
+      type: NodeType.Program,
       body: [
         {
-          type: 'IfStatement',
+          type: NodeType.IfStatement,
           start: 0,
           end: 12,
-          test: { type: 'Identifier', name: 'a', start: 4, end: 5 },
+          test: { type: NodeType.Identifier, name: 'a', start: 4, end: 5 },
           consequent: {
-            type: 'BlockStatement',
+            type: NodeType.BlockStatement,
             body: [
               {
-                type: 'ExpressionStatement',
+                type: NodeType.ExpressionStatement,
                 expression: {
-                  type: 'BinaryExpression',
+                  type: NodeType.BinaryExpression,
                   operator: '=',
-                  left: { type: 'Identifier', name: 'b', start: 8, end: 9 },
+                  left: {
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    start: 8,
+                    end: 9,
+                  },
                   right: {
-                    type: 'Literal',
+                    type: NodeType.Literal,
                     value: '1',
                     start: 10,
                     end: 11,
@@ -582,6 +601,59 @@ describe('statement', () => {
       end: 12,
     }
     const code = 'if (a) {b=1}'
-    expect(parse(code)).toEqual(result)
+    expect(generate(result)).toEqual(code)
+  })
+  it('member expression computed', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.ExpressionStatement,
+          expression: {
+            type: NodeType.MemberExpression,
+            object: {
+              type: NodeType.MemberExpression,
+              object: {
+                type: NodeType.Identifier,
+                name: 'a',
+                start: 0,
+                end: 1,
+              },
+              property: {
+                type: NodeType.CallExpression,
+                callee: {
+                  type: NodeType.Identifier,
+                  name: 'b',
+                  start: 2,
+                  end: 3,
+                },
+                arguments: [],
+                start: 2,
+                end: 5,
+              },
+              start: 0,
+              end: 5,
+              computed: true,
+            },
+            property: {
+              type: NodeType.Literal,
+              value: '12',
+              start: 7,
+              end: 9,
+              raw: '12',
+            },
+            start: 0,
+            end: 9,
+            computed: true,
+          },
+          start: 0,
+          end: 9,
+        },
+      ],
+      start: 0,
+      end: 9,
+    }
+    const code = 'a[b()][12]'
+    expect(generate(result)).toEqual(code)
   })
 })

@@ -19,6 +19,7 @@ import type {
   ImportNamespaceSpecifier,
   ImportSpecifier,
   Literal,
+  MemberExpression,
   ObjectExpression,
   Program,
   ReturnStatement,
@@ -166,12 +167,14 @@ export class Generate {
     if (argument?.type === NodeType.CallExpression) {
       this.code.update(start, start + 7, 'return ')
       this.generateCallExpression(argument)
+    } else {
+      this.code.update(start, end, 'return')
     }
   }
   generateBlockStatement(node: BlockStatement): void {
     const { start, end, body = [] } = node
     if (body.length > 0) {
-      this.code.update(start - 1, start, '{')
+      this.code.update(start, start + 1, '{')
       body.forEach((item) => {
         if (item.type === NodeType.ReturnStatement) {
           this.generateReturnStatement(item)
@@ -180,7 +183,7 @@ export class Generate {
           this.generateExpressionStatement(item)
         }
       })
-      this.code.update(end, end - 1, '}')
+      this.code.update(end - 1, end, '}')
     } else {
       this.code.update(start, end, '{}')
     }
@@ -223,8 +226,8 @@ export class Generate {
     const { start, end, type, name } = node
     this.code.update(start, end, name)
   }
-  generateMemberExpression(node: Expression): void {
-    const { type, start, end } = node
+  generateMemberExpression(node: MemberExpression): void {
+    const { type, start, end, computed } = node
     if (type === NodeType.MemberExpression) {
       const { object, property } = node
       if (object.type === NodeType.MemberExpression) {
@@ -239,25 +242,40 @@ export class Generate {
       if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)
       }
-      this.code.update(start, end, '.', /\s/g)
+      if (property?.type === NodeType.CallExpression) {
+        this.generateCallExpression(property)
+      }
+      if (computed && property) {
+        this.code.update(property.start - 1, property.start, '[')
+        this.code.update(property.end, property.end + 1, ']')
+      } else {
+        this.code.update(start, end, '.', /\s/g)
+      }
     }
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { type, start, end, expression } = node
     if (expression.type === NodeType.MemberExpression) {
-      return this.generateMemberExpression(expression)
+      this.generateMemberExpression(expression)
     }
     if (expression.type === NodeType.Identifier) {
-      return this.generateIdentifier(expression)
+      this.generateIdentifier(expression)
     }
     if (expression.type === NodeType.CallExpression) {
-      return this.generateCallExpression(expression)
+      this.generateCallExpression(expression)
     }
     if (expression.type === NodeType.BinaryExpression) {
-      return this.generateBinaryExpression(expression)
+      this.generateBinaryExpression(expression)
     }
     if (expression.type === NodeType.UpdateExpression) {
-      return this.generateUpdateExpression(expression)
+      this.generateUpdateExpression(expression)
+    }
+    if (this.code.toString().length < end - start) {
+      let str = ';'
+      while (str.length + this.code.toString().length < end - start) {
+        str += ' '
+      }
+      this.code.update(this.code.toString().length, end, str)
     }
   }
   generateUpdateExpression(node: UpdateExpression): void {
@@ -498,6 +516,9 @@ export class Generate {
       }
       if (type === NodeType.IfStatement) {
         return this.generateIfStatement(node)
+      }
+      if (type === NodeType.ReturnStatement) {
+        return this.generateReturnStatement(node)
       }
     })
     return this.code.toString()

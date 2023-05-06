@@ -761,8 +761,10 @@ export class Parser {
       this._goNext(TokenType.Dot)
       node.property = this._parseIdentifier()
       node.end = node.property.end
+      node.computed = false
     }
     if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+      node.computed = true
       this._goNext(TokenType.LeftBracket)
       while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
         // Recursive call to the Statement in the body of the _parseStatement parse function

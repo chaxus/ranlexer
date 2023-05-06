@@ -519,4 +519,47 @@ describe('statement', () => {
     const code = 'if (a) {b=1}'
     expect(parse(code)).toEqual(result)
   })
+  it('member expression computed', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'MemberExpression',
+            object: {
+              type: 'MemberExpression',
+              object: { type: 'Identifier', name: 'a', start: 0, end: 1 },
+              property: {
+                type: 'CallExpression',
+                callee: { type: 'Identifier', name: 'b', start: 2, end: 3 },
+                arguments: [],
+                start: 2,
+                end: 5,
+              },
+              start: 0,
+              end: 5,
+              computed: true,
+            },
+            property: {
+              type: 'Literal',
+              value: '12',
+              start: 7,
+              end: 9,
+              raw: '12',
+            },
+            start: 0,
+            end: 9,
+            computed: true,
+          },
+          start: 0,
+          end: 9,
+        },
+      ],
+      start: 0,
+      end: 9,
+    }
+    const code = 'a[b()][12]'
+    expect(parse(code)).toEqual(result)
+  })
 })

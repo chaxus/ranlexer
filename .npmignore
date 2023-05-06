@@ -15,5 +15,12 @@ dist/index.umd.js.map
 .eslintrc.cjs
 .gitignore
 .prettierignore
-.prettierignore
 .prettierrc.json
+.eslintcache
+vite.config.ts.timestamp*
+config.ts.timestamp*
+.temp
+.DS_Store
+package-lock.json
+pnpm-lock.yaml
+test.ts

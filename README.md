@@ -1,6 +1,6 @@
 # ranlexer
 
-Tiny JavaScript generator and compiler.
+Tiny JavaScript parser and generator.
 
 ---
 

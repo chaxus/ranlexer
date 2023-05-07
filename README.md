@@ -1,13 +1,13 @@
 # ranlexer
 
-Tiny JavaScript generator and compiler.
+Tiny JavaScript parser and generator.
 
 ---
 
 <a href="https://github.com/chaxus/ranlexer/actions"><img src="https://img.shields.io/github/actions/workflow/status/chaxus/ranlexer/main.yml" alt="Build Status"></a>
-<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/v/ranlexer.svg" alt="npm-v"></a>
-<a href="https://npmjs.com/package/fre"><img src="https://img.shields.io/npm/dt/ranlexer.svg" alt="npm-d"></a>
-<a href="https://bundlephobia.com/result?p=fre"><img src="https://img.badgesize.io/https:/unpkg.com/ranlexer/dist/index.umd.js?label=brotli&compression=brotli" alt="brotli"></a>
+<a href="https://npmjs.com/package/ranlexer"><img src="https://img.shields.io/npm/v/ranlexer.svg" alt="npm-v"></a>
+<a href="https://npmjs.com/package/ranlexer"><img src="https://img.shields.io/npm/dt/ranlexer.svg" alt="npm-d"></a>
+<a href="https://bundlephobia.com/result?p=ranlexer"><img src="https://img.badgesize.io/https:/unpkg.com/ranlexer/dist/index.umd.js?label=brotli&compression=brotli" alt="brotli"></a>
 <a href="#alternative-installation-methods"><img src="https://img.shields.io/badge/module%20formats-umd%2C%20esm-green.svg" alt="module formats: umd, esm"></a>
 
 ## Install
@@ -52,10 +52,10 @@ There are two options：
 import type { Types } from 'ranlexer'
 
 const opts = {
-  enter: (node: types.Node) => {
+  enter: (node: Types.Node) => {
     // Enter the processing of the node
   },
-  leave: (node: types.Node) => {
+  leave: (node: Types.Node) => {
     // Leave the node processing
   }
 walk(ast, opts)
@@ -119,6 +119,7 @@ Generate a bundle by passing in options，All options are well, optional:
 
 - **input**: Build entry, if not set, the default value is `./index.js`
 - **output**: Path to the build output file. If not set, the default value is `./dist/index.js`
+- **external**: String array，the modules in the array are not packaged.
 
 The bundle has two methods:
 

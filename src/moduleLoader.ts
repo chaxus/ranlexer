@@ -2,6 +2,12 @@ import { readFile } from 'node:fs/promises'
 import { Module } from '@/module'
 import { defaultResolver } from '@/utils/resolve'
 import type { Bundle } from '@/bundle'
+
+interface ModuleLoaderOptions {
+  bundle: Bundle
+  external: Array<string>
+}
+
 /**
  * @description: Call resolveId to resolve the Module path. 2. Initialize the module instance (Module object) and parse AST 3. Recursively initializes all dependent modules of a module
  * @return {ModuleLoader}
@@ -9,8 +15,11 @@ import type { Bundle } from '@/bundle'
 export class ModuleLoader {
   bundle: Bundle
   resolveIdsMap: Map<string, string | false> = new Map()
-  constructor(bundle: Bundle) {
+  external: string[]
+  constructor(options: ModuleLoaderOptions) {
+    const { bundle, external } = options
     this.bundle = bundle
+    this.external = external
   }
   /**
    * @description: Analytic module logic
@@ -54,6 +63,7 @@ export class ModuleLoader {
       bundle,
       loader,
       isEntry,
+      external: this.external,
     })
     this.bundle.addModule(module)
     await this.fetchAllDependencies(module)

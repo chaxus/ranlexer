@@ -16,6 +16,7 @@ export interface ModuleOptions {
   loader: ModuleLoader
   code: string
   isEntry: boolean
+  external: Array<string>
 }
 
 interface ImportOrExportInfo {
@@ -61,7 +62,15 @@ export class Module {
   dependencies: string[] = []
   dependencyModules: Module[] = []
   referencedModules: Module[] = []
-  constructor({ path, bundle, code, loader, isEntry = false }: ModuleOptions) {
+  external: string[]
+  constructor({
+    path,
+    bundle,
+    code,
+    loader,
+    isEntry = false,
+    external,
+  }: ModuleOptions) {
     this.id = path
     this.bundle = bundle
     this.moduleLoader = loader
@@ -73,6 +82,7 @@ export class Module {
     this.exports = {}
     this.reexports = {}
     this.declarations = {}
+    this.external = external
     try {
       const ast = parse(code)
       const nodes = ast.body
@@ -118,6 +128,10 @@ export class Module {
   addImports(statement: Statement): void {
     const node = statement.node as any
     const source = node.source.value
+    // external module
+    if (this.external.includes(source)) {
+      return
+    }
     // import
     node.specifiers.forEach((specifier: Specifier) => {
       const isDefault = specifier.type === 'ImportDefaultSpecifier'
@@ -308,6 +322,11 @@ export class Module {
   render(): MagicString {
     const source = this.magicString.clone().trim()
     this.statements.forEach((statement) => {
+      const node = statement.node as any
+      // Additional modules that do not need to be removed from the configuration
+      if (node?.source?.value && this.external.includes(node?.source?.value)) {
+        return
+      }
       if (!statement.isIncluded) {
         source.remove(statement.start, statement.next)
         return

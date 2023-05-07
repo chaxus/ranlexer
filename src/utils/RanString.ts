@@ -2,12 +2,14 @@ type HandleString = (s: string) => string
 
 export class RanString {
   str: string
+  length: number
   constructor(size: number | string = 0) {
     if (typeof size === 'string') {
       this.str = size
     } else {
       this.str = new Array(size).fill(' ').join('')
     }
+    this.length = this.str.length
   }
   update(
     start: number = 0,

@@ -1,5 +1,6 @@
 import type {
   ArrayExpression,
+  BinaryExpression,
   BlockStatement,
   CallExpression,
   ExportAllDeclaration,
@@ -8,16 +9,22 @@ import type {
   ExportSpecifier,
   Expression,
   ExpressionStatement,
+  ForInStatement,
+  ForStatement,
   FunctionDeclaration,
   Identifier,
+  IfStatement,
   ImportDeclaration,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
   Literal,
+  MemberExpression,
   ObjectExpression,
   Program,
   ReturnStatement,
+  SwitchStatement,
+  UpdateExpression,
   VariableDeclaration,
   VariableDeclarator,
 } from '@/ast/nodeTypes'
@@ -148,10 +155,11 @@ export class Generate {
       this.generateMemberExpression(node.callee)
     } else if (node.callee.type === NodeType.Identifier) {
       this.generateIdentifier(node.callee)
-      this.code.update(node.callee.end, node.callee.end + 2, '();')
     }
-    if (node.arguments) {
+    if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)
+    } else {
+      this.code.update(node.callee.end, node.callee.end + 2, '();')
     }
   }
   generateReturnStatement(node: ReturnStatement): void {
@@ -159,18 +167,23 @@ export class Generate {
     if (argument?.type === NodeType.CallExpression) {
       this.code.update(start, start + 7, 'return ')
       this.generateCallExpression(argument)
+    } else {
+      this.code.update(start, end, 'return')
     }
   }
   generateBlockStatement(node: BlockStatement): void {
     const { start, end, body = [] } = node
     if (body.length > 0) {
+      this.code.update(start, start + 1, '{')
       body.forEach((item) => {
         if (item.type === NodeType.ReturnStatement) {
-          this.code.update(start - 1, start, '{')
-          this.code.update(end, end - 1, '}')
           this.generateReturnStatement(item)
         }
+        if (item.type === NodeType.ExpressionStatement) {
+          this.generateExpressionStatement(item)
+        }
       })
+      this.code.update(end - 1, end, '}')
     } else {
       this.code.update(start, end, '{}')
     }
@@ -213,8 +226,8 @@ export class Generate {
     const { start, end, type, name } = node
     this.code.update(start, end, name)
   }
-  generateMemberExpression(node: Expression): void {
-    const { type, start, end } = node
+  generateMemberExpression(node: MemberExpression): void {
+    const { type, start, end, computed } = node
     if (type === NodeType.MemberExpression) {
       const { object, property } = node
       if (object.type === NodeType.MemberExpression) {
@@ -229,20 +242,73 @@ export class Generate {
       if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)
       }
-      this.code.update(start, end, '.', /\s/g)
+      if (property?.type === NodeType.CallExpression) {
+        this.generateCallExpression(property)
+      }
+      if (computed && property) {
+        this.code.update(property.start - 1, property.start, '[')
+        this.code.update(property.end, property.end + 1, ']')
+      } else {
+        this.code.update(start, end, '.', /\s/g)
+      }
     }
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { type, start, end, expression } = node
     if (expression.type === NodeType.MemberExpression) {
-      return this.generateMemberExpression(expression)
+      this.generateMemberExpression(expression)
     }
     if (expression.type === NodeType.Identifier) {
-      return this.generateIdentifier(expression)
+      this.generateIdentifier(expression)
     }
     if (expression.type === NodeType.CallExpression) {
-      return this.generateCallExpression(expression)
+      this.generateCallExpression(expression)
     }
+    if (expression.type === NodeType.BinaryExpression) {
+      this.generateBinaryExpression(expression)
+    }
+    if (expression.type === NodeType.UpdateExpression) {
+      this.generateUpdateExpression(expression)
+    }
+    if (this.code.toString().length < end - start) {
+      let str = ';'
+      while (str.length + this.code.toString().length < end - start) {
+        str += ' '
+      }
+      this.code.update(this.code.toString().length, end, str)
+    }
+  }
+  generateUpdateExpression(node: UpdateExpression): void {
+    const { type, operator, argument, prefix, start, end } = node
+    if (argument.type === NodeType.Identifier) {
+      this.generateIdentifier(argument)
+    }
+    if (prefix) {
+      this.code.update(start, start + operator.length, operator)
+    } else {
+      this.code.update(argument.end, argument.end + operator.length, operator)
+    }
+  }
+  generateBinaryExpression(node: BinaryExpression): void {
+    const { type, operator, left, right, start, end } = node
+    if (left.type === NodeType.Identifier) {
+      this.generateIdentifier(left)
+    }
+    if (right.type === NodeType.Literal) {
+      this.code.update(right.start, right.end, right.raw)
+    }
+    if (right.type === NodeType.CallExpression) {
+      this.generateCallExpression(right)
+    }
+    const distance = right.start - left.end
+    let str = `${operator}`
+    while (str.length + 2 <= distance) {
+      str = ' ' + str + ' '
+    }
+    while (str.length < distance) {
+      str = str + ' '
+    }
+    this.code.update(left.end, right.start, str)
   }
   generateArrayExpression(node: ArrayExpression): void {
     this.code.update(node.start, node.start + 1, '[')
@@ -322,7 +388,7 @@ export class Generate {
    */
   generateVariableDeclaration(node: VariableDeclaration): void {
     const { start, declarations, kind, end } = node
-    this.code.update(start, kind.length, kind)
+    this.code.update(start, start + kind.length, kind)
     this.code.update(end, end + 1, ';')
     declarations.forEach((declaration) => {
       const { type } = declaration
@@ -330,6 +396,86 @@ export class Generate {
         return this.generateLiteral(declaration)
       }
     })
+  }
+  generateForInStatement(node: ForInStatement): void {
+    const { type, left, right, body, start, end } = node
+    this.code.update(start, start + 4, 'for(')
+    if (type === NodeType.ForInStatement) {
+      const { declarations = [] } = left
+      this.code.update(left.start, left.start + left.kind.length, left.kind)
+      declarations.forEach((item: VariableDeclarator) => {
+        if (item.type === NodeType.VariableDeclarator) {
+          this.generateLiteral(item)
+        }
+      })
+      this.code.update(left.end, left.end + 4, ' in ')
+      if (right?.type === NodeType.Identifier) {
+        this.generateIdentifier(right)
+        this.code.update(right.end, right.end + 1, ')')
+      }
+      if (body.type === NodeType.BlockStatement) {
+        this.generateBlockStatement(body)
+      }
+    }
+  }
+  generateForStatement(node: ForStatement): void {
+    const { type, init, update, test, body, start, end } = node
+    this.code.update(start, start + 4, 'for(')
+    if (init.type === NodeType.VariableDeclaration) {
+      this.generateVariableDeclaration(init)
+    }
+    if (update?.type === NodeType.ExpressionStatement) {
+      this.generateExpressionStatement(update)
+      this.code.update(update.end, update.end + 1, ')')
+    }
+    if (test?.type === NodeType.ExpressionStatement) {
+      this.generateExpressionStatement(test)
+      this.code.update(test.end, test.end + 1, ';')
+    }
+    if (body.type === NodeType.BlockStatement) {
+      this.generateBlockStatement(body)
+    }
+  }
+  generateSwitchStatement(node: SwitchStatement): void {
+    const { start, end, type, discriminant, cases = [] } = node
+    this.code.update(start, start + 6, 'switch')
+    this.code.update(discriminant.start - 1, discriminant.start, '(')
+    if (discriminant.type === NodeType.Identifier) {
+      this.generateIdentifier(discriminant)
+    }
+    this.code.update(discriminant.end, discriminant.end + 2, '){')
+    cases.forEach((item) => {
+      const { type, start, end, test, consequent = [] } = item
+      if (test?.type === NodeType.Literal) {
+        this.code.update(start, start + 4, 'case')
+        this.code.update(test.start, test.end, test.raw)
+        this.code.update(test.end, test.end + 1, ':')
+      } else {
+        this.code.update(start, start + 8, 'default:')
+      }
+      consequent.forEach((exp) => {
+        if (exp.type === NodeType.ExpressionStatement) {
+          this.generateExpressionStatement(exp)
+        }
+      })
+      this.code.update(end, end + 1, ';')
+    })
+    this.code.update(end - 1, end, '}')
+  }
+  generateIfStatement(node: IfStatement): void {
+    const { start, end, test, consequent, alternate } = node
+    this.code.update(start, start + 2, 'if')
+    this.code.update(test.start - 1, test.start, '(')
+    if (test.type === NodeType.Identifier) {
+      this.generateIdentifier(test)
+    }
+    this.code.update(test.end, test.end + 1, ')')
+    if (consequent.type === NodeType.ExpressionStatement) {
+      this.generateExpressionStatement(consequent)
+    }
+    if (consequent.type === NodeType.BlockStatement) {
+      this.generateBlockStatement(consequent)
+    }
   }
   render(): string {
     const nodes = this.ast.body
@@ -358,6 +504,21 @@ export class Generate {
       }
       if (type === NodeType.BlockStatement) {
         return this.generateBlockStatement(node)
+      }
+      if (type === NodeType.ForInStatement) {
+        return this.generateForInStatement(node)
+      }
+      if (type === NodeType.ForStatement) {
+        return this.generateForStatement(node)
+      }
+      if (type === NodeType.SwitchStatement) {
+        return this.generateSwitchStatement(node)
+      }
+      if (type === NodeType.IfStatement) {
+        return this.generateIfStatement(node)
+      }
+      if (type === NodeType.ReturnStatement) {
+        return this.generateReturnStatement(node)
       }
     })
     return this.code.toString()

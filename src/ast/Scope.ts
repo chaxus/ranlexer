@@ -47,14 +47,8 @@ export class Scope {
       return
     }
     // Otherwise, create a new Declaration node in the current scope.
-    // Variable declaration Function declaration
-    // if (
-    //   node.type === 'VariableDeclaration' ||
-    //   node.type === 'FunctionDeclaration'
-    // ) {
     const key = node.id && node.id.name
     this.declarations[key] = new Declaration(node, false, this.statement)
-    // }
   }
   /**
    * @description: Traversal Declaration node

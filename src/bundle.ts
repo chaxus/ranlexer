@@ -4,6 +4,7 @@ import { Graph } from '@/graph'
 
 interface BundleOptions {
   entry: string
+  external: Array<string>
 }
 
 export class Bundle {
@@ -12,6 +13,7 @@ export class Bundle {
     this.graph = new Graph({
       entry: options.entry,
       bundle: this,
+      external: options.external,
     })
   }
 

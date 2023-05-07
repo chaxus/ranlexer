@@ -6,6 +6,7 @@ import { Bundle } from '@/bundle'
 export interface Options {
   input?: string
   output?: string
+  external?: Array<string>
 }
 
 type Error = NodeJS.ErrnoException | null
@@ -15,7 +16,7 @@ interface Build {
     code: string
     map: SourceMap
   }
-  write: () => void
+  write: () => Promise<[WriteFileInfo, WriteFileInfo] | undefined>
 }
 
 interface WriteFileInfo {
@@ -73,9 +74,14 @@ export const writeFile = (
   })
 
 export function build(options: Options): Promise<Build> {
-  const { input = './index.js', output = './dist/index.js' } = options
+  const {
+    input = './index.js',
+    output = './dist/index.js',
+    external = [],
+  } = options
   const bundle = new Bundle({
     entry: input,
+    external,
   })
   const generate = () => bundle.render()
   const write = async () => {

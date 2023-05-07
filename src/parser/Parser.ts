@@ -9,6 +9,8 @@ import type {
   ExportSpecifier,
   Expression,
   ExpressionStatement,
+  ForInStatement,
+  ForOfStatement,
   ForStatement,
   FunctionDeclaration,
   FunctionExpression,
@@ -154,8 +156,8 @@ export class Parser {
         this._goNext(TokenType.Case)
         test = this._parseExpression()
       } else {
-        end = this._getCurrentToken().end
         this._goNext(TokenType.Default)
+        end = this._getCurrentToken().end
       }
       this._goNext(TokenType.Colon)
       while (
@@ -190,50 +192,61 @@ export class Parser {
     }
     return switchStatement
   }
-  private _parseForStatement(): ForStatement {
+  private _parseForStatement(): ForStatement | ForInStatement | ForOfStatement {
     const { start } = this._getCurrentToken()
-    const forStatement: ForStatement = {
-      type: NodeType.ForStatement,
-      start,
-      end: Infinity,
-      init: undefined,
-      left: undefined,
-      right: undefined,
-      test: undefined,
-      update: undefined,
-      body: undefined,
-    }
-    let init = undefined
+    let test: ExpressionStatement, update: ExpressionStatement, right, type
     this._goNext(TokenType.For)
     this._goNext(TokenType.LeftParen)
-    if (
-      this._checkCurrentTokenType([
-        TokenType.Let,
-        TokenType.Var,
-        TokenType.Const,
-      ])
-    ) {
-      init = this._parseVariableDeclaration()
-    }
+    const init: VariableDeclaration = this._parseVariableDeclaration()
     if (init?.declarations[0].init) {
-      forStatement.test = this._parseExpressionStatement()
+      test = this._parseExpressionStatement()
       this._skipSemicolon()
-      forStatement.update = this._parseExpressionStatement()
-      forStatement.init = init
+      update = this._parseExpressionStatement()
     } else if (this._checkCurrentTokenType(TokenType.Identifier)) {
       const token = this._getCurrentToken()
       if (token.value === 'in') {
-        forStatement.type = NodeType.ForInStatement
+        type = NodeType.ForInStatement
       } else if (token.value === 'of') {
-        forStatement.type = NodeType.ForOfStatement
+        type = NodeType.ForOfStatement
+      } else {
+        type = NodeType.ForStatement
       }
       this._goNext(TokenType.Identifier)
-      forStatement.left = init
-      forStatement.right = this._parseIdentifier()
+      right = this._parseIdentifier()
     }
     this._goNext(TokenType.RightParen)
-    forStatement.body = this._parseBlockStatement()
-    forStatement.end = forStatement.body.end
+    const body = this._parseBlockStatement()
+    if (type === NodeType.ForInStatement) {
+      const forInStatement: ForInStatement = {
+        type: NodeType.ForInStatement,
+        start,
+        end: body.end,
+        right,
+        left: init,
+        body,
+      }
+      return forInStatement
+    }
+    if (type === NodeType.ForOfStatement) {
+      const forOfStatement: ForOfStatement = {
+        type: NodeType.ForOfStatement,
+        start,
+        end: body.end,
+        right,
+        left: init,
+        body,
+      }
+      return forOfStatement
+    }
+    const forStatement: ForStatement = {
+      type: NodeType.ForStatement,
+      start,
+      end: body.end,
+      init,
+      test: test!,
+      update: update!,
+      body,
+    }
     return forStatement
   }
   private _parseObjectExpression(): ObjectExpression {
@@ -748,8 +761,10 @@ export class Parser {
       this._goNext(TokenType.Dot)
       node.property = this._parseIdentifier()
       node.end = node.property.end
+      node.computed = false
     }
     if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+      node.computed = true
       this._goNext(TokenType.LeftBracket)
       while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
         // Recursive call to the Statement in the body of the _parseStatement parse function

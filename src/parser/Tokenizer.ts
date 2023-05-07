@@ -353,7 +353,6 @@ export class Tokenizer {
             startIndex,
             currentChar +
               this._getNextChar() +
-              this._getNextChar() +
               this._getNextChar(2) +
               this._getNextChar(3) +
               this._getNextChar(4) +

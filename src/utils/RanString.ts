@@ -40,5 +40,4 @@ export class RanString {
     this.str = this.str.replace(rule, char)
     return this.str
   }
-
 }

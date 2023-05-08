@@ -20,7 +20,7 @@ npm install ranlexer --save
 
 ## Usage
 
-ranlexer can export three methods
+ranlexer can export the following methods
 
 - **parse**: Parse the code into an ast
 - **walk**: Walk through the structure of the ast to perform custom operations

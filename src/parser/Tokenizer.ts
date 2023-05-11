@@ -334,33 +334,13 @@ export class Tokenizer {
       }
       // instanceof
       else if (
-        BINARY_OPERATOR_TOKENS.includes(
-          currentChar +
-            this._getNextChar() +
-            this._getNextChar(2) +
-            this._getNextChar(3) +
-            this._getNextChar(4) +
-            this._getNextChar(5) +
-            this._getNextChar(6) +
-            this._getNextChar(7) +
-            this._getNextChar(8) +
-            this._getNextChar(9),
-        ) &&
+        BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar(9)) &&
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
             startIndex,
-            currentChar +
-              this._getNextChar() +
-              this._getNextChar(2) +
-              this._getNextChar(3) +
-              this._getNextChar(4) +
-              this._getNextChar(5) +
-              this._getNextChar(6) +
-              this._getNextChar(7) +
-              this._getNextChar(8) +
-              this._getNextChar(9),
+            this._getNextNumberChar(9),
           ),
         )
         this._currentIndex += 10
@@ -565,6 +545,18 @@ export class Tokenizer {
   private _getNextChar(index: number = 1) {
     if (this._currentIndex + index < this._source.length) {
       return this._source[this._currentIndex + index]
+    }
+    return ''
+  }
+
+  private _getNextNumberChar(index: number = 1) {
+    const size = this._currentIndex + index
+    if (size < this._source.length) {
+      let str = ''
+      for (let i = this._currentIndex; i <= size; i++) {
+        str += this._source[i]
+      }
+      return str
     }
     return ''
   }

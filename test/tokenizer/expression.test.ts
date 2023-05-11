@@ -116,4 +116,21 @@ describe('Expression', () => {
     const code = 'a::b;'
     expect(tokenize(code)).toEqual(result)
   })
+  it('instanceof', () => {
+    const result = [
+      { type: 'Function', value: 'function', start: 0, end: 8 },
+      { type: 'Identifier', value: 'a', start: 9, end: 10 },
+      { type: 'LeftParen', value: '(', start: 10, end: 11 },
+      { type: 'RightParen', value: ')', start: 11, end: 12 },
+      { type: 'LeftCurly', value: '{', start: 12, end: 13 },
+      { type: 'RightCurly', value: '}', start: 13, end: 14 },
+      { type: 'Semicolon', value: ';', start: 14, end: 15 },
+      { type: 'Identifier', value: 'a', start: 16, end: 17 },
+      { type: 'BinaryOperator', value: 'instanceof', start: 18, end: 28 },
+      { type: 'Identifier', value: 'Function', start: 29, end: 37 },
+      { type: 'Semicolon', value: ';', start: 37, end: 38 },
+    ]
+    const code = 'function a(){}; a instanceof Function;'
+    expect(tokenize(code)).toEqual(result)
+  })
 })

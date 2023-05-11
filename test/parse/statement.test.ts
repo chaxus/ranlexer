@@ -562,4 +562,36 @@ describe('statement', () => {
     const code = 'a[b()][12]'
     expect(parse(code)).toEqual(result)
   })
+  it('instanceof', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'FunctionDeclaration',
+          id: { type: 'Identifier', name: 'a', start: 9, end: 10 },
+          params: [],
+          body: { type: 'BlockStatement', body: [], start: 12, end: 14 },
+          start: 0,
+          end: 14,
+        },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'BinaryExpression',
+            operator: 'instanceof',
+            left: { type: 'Identifier', name: 'a', start: 16, end: 17 },
+            right: { type: 'Identifier', name: 'Function', start: 29, end: 37 },
+            start: 18,
+            end: 37,
+          },
+          start: 18,
+          end: 37,
+        },
+      ],
+      start: 0,
+      end: 37,
+    }
+    const code = 'function a(){}; a instanceof Function;'
+    expect(parse(code)).toEqual(result)
+  })
 })

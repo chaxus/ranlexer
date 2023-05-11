@@ -86,4 +86,41 @@ describe('expression', () => {
     }
     expect(generate(ast)).to.be.equal(result)
   })
+  it('instanceof', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.FunctionDeclaration,
+          id: { type: NodeType.Identifier, name: 'a', start: 9, end: 10 },
+          params: [],
+          body: { type: NodeType.BlockStatement, body: [], start: 12, end: 14 },
+          start: 0,
+          end: 14,
+        },
+        {
+          type: NodeType.ExpressionStatement,
+          expression: {
+            type: NodeType.BinaryExpression,
+            operator: 'instanceof',
+            left: { type: NodeType.Identifier, name: 'a', start: 16, end: 17 },
+            right: {
+              type: NodeType.Identifier,
+              name: 'Function',
+              start: 29,
+              end: 37,
+            },
+            start: 18,
+            end: 37,
+          },
+          start: 18,
+          end: 37,
+        },
+      ],
+      start: 0,
+      end: 37,
+    }
+    const code = 'function a(){}  a instanceof Function;'
+    expect(generate(result)).toEqual(code)
+  })
 })

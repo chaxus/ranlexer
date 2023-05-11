@@ -216,7 +216,11 @@ export class Generate {
     if (params.length > 0) {
       this.generateFunctionParams(params)
     } else {
-      this.code.update(start + 8, start + 13, '()')
+      if (id) {
+        this.code.update(id.end, id.end + 2, '()')
+      } else {
+        this.code.update(start + 8, start + 13, '()')
+      }
     }
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
@@ -294,6 +298,9 @@ export class Generate {
     if (left.type === NodeType.Identifier) {
       this.generateIdentifier(left)
     }
+    if (right.type === NodeType.Identifier) {
+      this.generateIdentifier(right)
+    }
     if (right.type === NodeType.Literal) {
       this.code.update(right.start, right.end, right.raw)
     }
@@ -309,6 +316,7 @@ export class Generate {
       str = str + ' '
     }
     this.code.update(left.end, right.start, str)
+    this.code.update(end, end + 1, ';')
   }
   generateArrayExpression(node: ArrayExpression): void {
     this.code.update(node.start, node.start + 1, '[')

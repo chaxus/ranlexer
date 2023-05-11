@@ -918,6 +918,7 @@ export class Parser {
     blockStatement.end = this._getCurrentToken().end
     // Consumption "}"
     this._goNext(TokenType.RightCurly)
+    this._skipSemicolon()
     return blockStatement
   }
 

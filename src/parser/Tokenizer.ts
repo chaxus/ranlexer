@@ -316,7 +316,7 @@ export class Tokenizer {
    * @description: Parameters are snippets of code
    * @param {string} input
    */
-  constructor(input: string) {
+  constructor(input: string, options = {}) {
     this._source = input // Obtain source code
   }
   /**

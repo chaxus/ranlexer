@@ -14,10 +14,7 @@ const getFileType = (val: string): string => {
  * @param {string} id
  * @param {string} importer
  */
-export function defaultResolver(
-  id: string,
-  importer: string | null,
-): string | false {
+export function defaultResolver(id: string,importer: string | null): string | false {
   if (getFileType(id) !== 'js') {
     id += '.js'
   }

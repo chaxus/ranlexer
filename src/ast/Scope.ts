@@ -1,4 +1,4 @@
-import type { Statement } from '@/statement'
+import type { Statement } from '@/ast/statement'
 import { keys } from '@/utils/object'
 import { Declaration } from '@/ast/Declaration'
 

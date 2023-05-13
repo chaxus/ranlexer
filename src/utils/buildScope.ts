@@ -1,5 +1,5 @@
 import { Scope } from '@/ast/Scope'
-import type { Statement } from '@/statement'
+import type { Statement } from '@/ast/statement'
 import type {
   FunctionDeclaration,
   Node,

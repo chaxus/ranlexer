@@ -1,5 +1,10 @@
 import type { Scope } from '@/ast/Scope'
 
+export enum NodeTypeStatement {
+  BlockStatement = 'BlockStatement',
+  ExpressionStatement = 'ExpressionStatement',
+}
+
 export enum NodeType {
   Program = 'Program',
   VariableDeclaration = 'VariableDeclaration',
@@ -35,6 +40,7 @@ export enum NodeType {
   ExportAllDeclaration = 'ExportAllDeclaration',
   VariableDeclarator = 'VariableDeclarator',
 }
+
 // Declaration statement
 export type Statement =
   | ImportDeclaration

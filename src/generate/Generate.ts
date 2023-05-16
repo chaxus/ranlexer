@@ -32,7 +32,6 @@ import type {
 import { NodeType, NodeTypeStatements } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
 
-
 type IsEqual<A, B> = (A extends B ? true : false) & (B extends A ? true : false)
 
 type StatementFunction<T extends Statement = Statement> = IsEqual<

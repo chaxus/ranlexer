@@ -117,7 +117,7 @@ describe('declaration', () => {
         },
       ],
     }
-    const result = 'function foo(a,b)  { return a.add(b)  }'
+    const result = 'function foo(a,b)  { return a.add(b)  };'
     expect(generate(ast)).to.be.equal(result)
   })
   it('import namespace specifier declaration', () => {

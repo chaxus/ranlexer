@@ -120,7 +120,7 @@ describe('expression', () => {
       start: 0,
       end: 37,
     }
-    const code = 'function a(){}  a instanceof Function;'
+    const code = 'function a(){}; a instanceof Function;'
     expect(generate(result)).toEqual(code)
   })
 })

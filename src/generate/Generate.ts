@@ -23,6 +23,7 @@ import type {
   ObjectExpression,
   Program,
   ReturnStatement,
+  Statement,
   SwitchStatement,
   UpdateExpression,
   VariableDeclaration,
@@ -30,6 +31,19 @@ import type {
 } from '@/ast/nodeTypes'
 import { NodeType } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
+
+type IsEqual<A, B> = (A extends B ? true : false) & (B extends A ? true : false)
+
+type StatementFunction<T extends Statement = Statement> = IsEqual<
+  T,
+  Statement
+> extends true
+  ? T extends T
+    ? (node: T) => void
+    : never
+  : (node: T) => void
+
+type GenerateStatement = StatementFunction<Statement>
 
 export class Generate {
   ast: Program
@@ -225,6 +239,7 @@ export class Generate {
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
+    this.code.update(end, end + 1, ';')
   }
   generateIdentifier(node: Identifier): void {
     const { start, end, type, name } = node
@@ -484,6 +499,18 @@ export class Generate {
     if (consequent.type === NodeType.BlockStatement) {
       this.generateBlockStatement(consequent)
     }
+  }
+  generateStatement(node: Statement): GenerateStatement {
+    const statementMap: Record<string, GenerateStatement> = {
+      [NodeType.IfStatement]: this.generateIfStatement,
+      [NodeType.SwitchStatement]: this.generateSwitchStatement,
+      [NodeType.ForStatement]: this.generateForStatement,
+      [NodeType.ForInStatement]: this.generateForInStatement,
+      [NodeType.ExpressionStatement]: this.generateExpressionStatement,
+      [NodeType.ReturnStatement]: this.generateReturnStatement,
+      [NodeType.BlockStatement]: this.generateBlockStatement,
+    }
+    return statementMap[node.type]
   }
   render(): string {
     const nodes = this.ast.body

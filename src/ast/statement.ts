@@ -37,7 +37,6 @@ export class Statement {
   modifies: Set<string> = new Set()
   dependsOn: Set<string> = new Set()
   references: Reference[] = []
-  type: any
   constructor(node: StatementNode, magicString: MagicString, module: Module) {
     this.magicString = magicString
     this.node = node

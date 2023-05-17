@@ -1,45 +1,62 @@
 import type { Scope } from '@/ast/Scope'
 
-export enum NodeTypeStatement {
-  BlockStatement = 'BlockStatement',
-  ExpressionStatement = 'ExpressionStatement',
-}
-
 export enum NodeType {
   Program = 'Program',
-  VariableDeclaration = 'VariableDeclaration',
-  FunctionDeclaration = 'FunctionDeclaration',
   Identifier = 'Identifier',
-  BlockStatement = 'BlockStatement',
-  ExpressionStatement = 'ExpressionStatement',
+  Literal = 'Literal',
+  SwitchCase = 'SwitchCase',
+  Property = '"Property"',
   UnaryExpression = 'UnaryExpression',
   UpdateExpression = 'UpdateExpression',
-  ReturnStatement = 'ReturnStatement',
   CallExpression = 'CallExpression',
   BinaryExpression = 'BinaryExpression',
   MemberExpression = 'MemberExpression',
   FunctionExpression = 'FunctionExpression',
   ArrayExpression = 'ArrayExpression',
   ObjectExpression = 'ObjectExpression',
-  ForStatement = 'ForStatement',
-  ForInStatement = 'ForInStatement',
-  ForOfStatement = 'ForOfStatement',
-  SwitchStatement = 'SwitchStatement',
-  SwitchCase = 'SwitchCase',
-  IfStatement = 'IfStatement',
-  Literal = 'Literal',
-  Property = '"Property"',
-  ImportDeclaration = 'ImportDeclaration',
-  ImportSpecifier = 'ImportSpecifier', // import {c, d} from 'c';
-  ImportDefaultSpecifier = 'ImportDefaultSpecifier', // import a from 'a';
-  ImportNamespaceSpecifier = 'ImportNamespaceSpecifier', // import * as b from 'b';
+  VariableDeclaration = 'VariableDeclaration',
+  FunctionDeclaration = 'FunctionDeclaration',
   ExportDeclaration = 'ExportDeclaration',
-  ExportSpecifier = 'ExportSpecifier',
+  ImportDeclaration = 'ImportDeclaration',
   ExportDefaultDeclaration = 'ExportDefaultDeclaration',
   ExportNamedDeclaration = 'ExportNamedDeclaration',
   ExportAllDeclaration = 'ExportAllDeclaration',
   VariableDeclarator = 'VariableDeclarator',
+  BlockStatement = 'BlockStatement',
+  ExpressionStatement = 'ExpressionStatement',
+  ReturnStatement = 'ReturnStatement',
+  ForStatement = 'ForStatement',
+  ForInStatement = 'ForInStatement',
+  ForOfStatement = 'ForOfStatement',
+  SwitchStatement = 'SwitchStatement',
+  IfStatement = 'IfStatement',
+  ImportSpecifier = 'ImportSpecifier', // import {c, d} from 'c';
+  ImportDefaultSpecifier = 'ImportDefaultSpecifier', // import a from 'a';
+  ImportNamespaceSpecifier = 'ImportNamespaceSpecifier', // import * as b from 'b';
+  ExportSpecifier = 'ExportSpecifier',
 }
+
+export const NodeTypeStatements = [
+  NodeType.BlockStatement,
+  NodeType.ExpressionStatement,
+  NodeType.ReturnStatement,
+  NodeType.ForStatement,
+  NodeType.ForInStatement,
+  NodeType.ForOfStatement,
+  NodeType.SwitchStatement,
+  NodeType.IfStatement,
+]
+
+export const NodeTypeExpressions = [
+  NodeType.ArrayExpression,
+  NodeType.BinaryExpression,
+  NodeType.CallExpression,
+  NodeType.FunctionExpression,
+  NodeType.MemberExpression,
+  NodeType.ObjectExpression,
+  NodeType.UnaryExpression,
+  NodeType.UpdateExpression,
+]
 
 // Declaration statement
 export type Statement =

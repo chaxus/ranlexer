@@ -29,7 +29,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@/ast/nodeTypes'
-import { NodeType } from '@/ast/nodeTypes'
+import { NodeType, NodeTypeStatements } from '@/ast/nodeTypes'
 import { RanString } from '@/utils/RanString'
 
 type IsEqual<A, B> = (A extends B ? true : false) & (B extends A ? true : false)
@@ -500,7 +500,7 @@ export class Generate {
       this.generateBlockStatement(consequent)
     }
   }
-  generateStatement(node: Statement): GenerateStatement {
+  generateStatement(type: NodeType): GenerateStatement {
     const statementMap: Record<string, GenerateStatement> = {
       [NodeType.IfStatement]: this.generateIfStatement,
       [NodeType.SwitchStatement]: this.generateSwitchStatement,
@@ -510,7 +510,7 @@ export class Generate {
       [NodeType.ReturnStatement]: this.generateReturnStatement,
       [NodeType.BlockStatement]: this.generateBlockStatement,
     }
-    return statementMap[node.type]
+    return statementMap[type]
   }
   render(): string {
     const nodes = this.ast.body

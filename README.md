@@ -1,6 +1,6 @@
 # ranlexer
 
-Tiny JavaScript parser and generator.
+Tiny JavaScript parser and generator
 
 ---
 
@@ -119,19 +119,27 @@ Generate a bundle by passing in options，All options are well, optional:
 
 - **input**: Build entry, if not set, the default value is `./index.js`
 - **output**: Path to the build output file. If not set, the default value is `./dist/index.js`
-- **external**: String array，the modules in the array are not packaged.
+- **external**: String array，the modules in the array are not built.
 
 The bundle has two methods:
 
 - **generate**: generate is to output the built code directly,
 
 ```ts
+import { build } from 'ranlexer'
+
+const bundle = await build(option)
+
 const code = bundle.generate()
 ```
 
 - **write**: write is to output the file to a directory.
 
 ```ts
+import { build } from 'ranlexer'
+
+const bundle = await build(option)
+
 bundle.write()
 ```
 

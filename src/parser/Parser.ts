@@ -198,7 +198,7 @@ export class Parser {
     this._goNext(TokenType.For)
     this._goNext(TokenType.LeftParen)
     const init: VariableDeclaration = this._parseVariableDeclaration()
-    if (init?.declarations[0].init) {
+    if (init?.declarations.length > 0 && init?.declarations[0].init) {
       test = this._parseExpressionStatement()
       this._skipSemicolon()
       update = this._parseExpressionStatement()

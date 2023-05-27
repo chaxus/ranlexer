@@ -187,6 +187,39 @@ describe('statement', () => {
     const code = 'for (let i = 0;i < 10;i ++) {}'
     expect(parse(code)).toEqual(result)
   })
+  it('for (const key of obj) {}', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ForOfStatement',
+          start: 0,
+          end: 25,
+          right: { type: 'Identifier', name: 'obj', start: 18, end: 21 },
+          left: {
+            type: 'VariableDeclaration',
+            kind: 'const',
+            declarations: [
+              {
+                type: 'VariableDeclarator',
+                id: { type: 'Identifier', name: 'key', start: 11, end: 14 },
+                init: null,
+                start: 11,
+                end: 14,
+              },
+            ],
+            start: 5,
+            end: 14,
+          },
+          body: { type: 'BlockStatement', body: [], start: 23, end: 25 },
+        },
+      ],
+      start: 0,
+      end: 25,
+    }
+    const code = 'for (const key of obj) {}'
+    expect(parse(code)).toEqual(result)
+  })
   it('while (true) {}', () => {
     const result = {
       type: 'Program',

@@ -144,7 +144,7 @@ describe('statement', () => {
       start: 0,
       end: 23,
     }
-    const code = 'for( let key in obj) {}'
+    const code = 'for( let key in obj) {} '
     expect(generate(result)).toEqual(code)
   })
   it('for (let i = 0;i < 10;i ++) {}', () => {
@@ -225,6 +225,44 @@ describe('statement', () => {
       end: 30,
     }
     const code = 'for( let i = 0;i < 10;i++ ) {}'
+    expect(generate(result)).toEqual(code)
+  })
+  it('for (const key of obj) {}', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.ForOfStatement,
+          start: 0,
+          end: 25,
+          right: { type: NodeType.Identifier, name: 'obj', start: 18, end: 21 },
+          left: {
+            type: NodeType.VariableDeclaration,
+            kind: 'const',
+            declarations: [
+              {
+                type: NodeType.VariableDeclarator,
+                id: {
+                  type: NodeType.Identifier,
+                  name: 'key',
+                  start: 11,
+                  end: 14,
+                },
+                init: null,
+                start: 11,
+                end: 14,
+              },
+            ],
+            start: 5,
+            end: 14,
+          },
+          body: { type: NodeType.BlockStatement, body: [], start: 23, end: 25 },
+        },
+      ],
+      start: 0,
+      end: 25,
+    }
+    const code = 'for( const key of obj) {}'
     expect(generate(result)).toEqual(code)
   })
   it('while (true) {}', () => {

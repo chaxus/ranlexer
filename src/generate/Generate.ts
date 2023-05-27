@@ -10,6 +10,7 @@ import type {
   Expression,
   ExpressionStatement,
   ForInStatement,
+  ForOfStatement,
   ForStatement,
   FunctionDeclaration,
   Identifier,
@@ -18,7 +19,6 @@ import type {
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
-  Literal,
   MemberExpression,
   ObjectExpression,
   Program,
@@ -422,7 +422,7 @@ export class Generate {
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, start, end } = node
-    this.code.update(start, start + 4, 'for(')
+    this.code.update(start, start + 3, 'for(')
     if (type === NodeType.ForInStatement) {
       const { declarations = [] } = left
       this.code.update(left.start, left.start + left.kind.length, left.kind)
@@ -500,17 +500,26 @@ export class Generate {
       this.generateBlockStatement(consequent)
     }
   }
-  generateStatement(type: NodeType): GenerateStatement {
-    const statementMap: Record<string, GenerateStatement> = {
-      [NodeType.IfStatement]: this.generateIfStatement,
-      [NodeType.SwitchStatement]: this.generateSwitchStatement,
-      [NodeType.ForStatement]: this.generateForStatement,
-      [NodeType.ForInStatement]: this.generateForInStatement,
-      [NodeType.ExpressionStatement]: this.generateExpressionStatement,
-      [NodeType.ReturnStatement]: this.generateReturnStatement,
-      [NodeType.BlockStatement]: this.generateBlockStatement,
+  generateForOfStatement(node: ForOfStatement): void {
+    const { type, left, right, body, start, end } = node
+    this.code.update(start, start + 4, 'for(')
+    if (type === NodeType.ForOfStatement) {
+      const { declarations = [] } = left
+      this.code.update(left.start, left.start + left.kind.length, left.kind)
+      declarations.forEach((item: VariableDeclarator) => {
+        if (item.type === NodeType.VariableDeclarator) {
+          this.generateLiteral(item)
+        }
+      })
+      this.code.update(left.end, left.end + 4, ' of ')
+      if (right?.type === NodeType.Identifier) {
+        this.generateIdentifier(right)
+        this.code.update(right.end, right.end + 1, ')')
+      }
+      if (body.type === NodeType.BlockStatement) {
+        this.generateBlockStatement(body)
+      }
     }
-    return statementMap[type]
   }
   render(): string {
     const nodes = this.ast.body
@@ -518,9 +527,6 @@ export class Generate {
       const { type } = node
       if (type === NodeType.VariableDeclaration) {
         return this.generateVariableDeclaration(node)
-      }
-      if (type === NodeType.ExpressionStatement) {
-        return this.generateExpressionStatement(node)
       }
       if (type === NodeType.FunctionDeclaration) {
         return this.generateFunctionDeclaration(node)
@@ -537,11 +543,17 @@ export class Generate {
       if (type === NodeType.ExportDefaultDeclaration) {
         return this.generateExportDefaultDeclaration(node)
       }
+      if (type === NodeType.ExpressionStatement) {
+        return this.generateExpressionStatement(node)
+      }
       if (type === NodeType.BlockStatement) {
         return this.generateBlockStatement(node)
       }
       if (type === NodeType.ForInStatement) {
         return this.generateForInStatement(node)
+      }
+      if (type === NodeType.ForOfStatement) {
+        return this.generateForOfStatement(node)
       }
       if (type === NodeType.ForStatement) {
         return this.generateForStatement(node)

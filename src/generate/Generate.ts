@@ -1,5 +1,6 @@
 import type {
   ArrayExpression,
+  ArrayPattern,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -381,6 +382,20 @@ export class Generate {
     })
     this.code.update(end - 1, end, '}')
   }
+  generateArrayPattern(node: ArrayPattern) {
+    this.code.update(node.start, node.start + 1, '[')
+    const size = node.elements?.length || 0
+    node.elements?.forEach((element, index) => {
+      const { type } = element
+      if (type === NodeType.Identifier) {
+        this.code.update(element.start, element.end, element.name)
+      }
+      if (index + 1 < size) {
+        this.code.update(element.end, element.end + 1, ',')
+      }
+    })
+    this.code.update(node.end - 1, node.end, ']')
+  }
   /**
    * @description: Parse literals
    * @param {VariableDeclarator} node
@@ -388,9 +403,13 @@ export class Generate {
   generateLiteral(node: VariableDeclarator): void {
     const { start, end, id, init } = node
     if (id?.type === NodeType.Identifier) {
-      this.code.update(id.start, id.end + 3, `${id.name} = `)
+      this.code.update(id.start, id.end, id.name)
     }
-    if (init) {
+    if (id?.type === NodeType.ArrayPattern) {
+      this.generateArrayPattern(id)
+    }
+    if (init && id) {
+      this.code.addSpaceBothSlide(id.end, init?.start, '=')
       if (init.type === NodeType.Literal) {
         this.code.update(init.start, init.end, init.raw)
       }

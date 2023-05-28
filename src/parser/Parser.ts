@@ -2,6 +2,7 @@ import type { Token } from '@/parser/Tokenizer'
 import { TokenType } from '@/parser/Tokenizer'
 import type {
   ArrayExpression,
+  ArrayPattern,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -24,6 +25,7 @@ import type {
   Literal,
   MemberExpression,
   ObjectExpression,
+  Pattern,
   Program,
   Property,
   ReturnStatement,
@@ -324,9 +326,34 @@ export class Parser {
       elements.push(node)
     }
     arrayExpression.end = this._getCurrentToken().end
-    // Consumption "}"
+    // Consumption "]"
     this._goNext(TokenType.RightBracket)
     return arrayExpression
+  }
+  private _parseArrayPattern(): ArrayPattern {
+    const { start } = this._getCurrentToken()
+    const elements: Identifier[] = []
+    const arrayPattern: ArrayPattern = {
+      type: NodeType.ArrayPattern,
+      elements,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftBracket)
+    while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseIdentifier()
+      elements.push(node)
+    }
+    arrayPattern.end = this._getCurrentToken().end
+    // Consumption "]"
+    this._goNext(TokenType.RightBracket)
+    return arrayPattern
   }
   /**
    * @description: Parse import declaration
@@ -555,6 +582,9 @@ export class Parser {
       if (currentToken && currentToken.type === TokenType.Assign) {
         return false
       }
+      if (currentToken && currentToken.type === TokenType.LeftBracket) {
+        return false
+      }
       if (currentToken && currentToken.type === TokenType.Identifier) {
         return false
       }
@@ -567,23 +597,15 @@ export class Parser {
       if (currentToken && currentToken.type === TokenType.Comma) {
         return false
       }
-      // if (this._checkCurrentTokenType(TokenType.Identifier)) {
-      //   const id = this._parseIdentifier()
-      //   const declarator: VariableDeclarator = {
-      //     type: NodeType.VariableDeclarator,
-      //     id,
-      //     init: null,
-      //     start: id.start,
-      //     end: id.end,
-      //   }
-      //   declarations.push(declarator)
-      // }
       return true
     }
     while (!isVariableDeclarationEnded()) {
       // Parse the variable name foo
       if (this._checkCurrentTokenType(TokenType.Identifier)) {
         id = this._parseIdentifier()
+      }
+      if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+        id = this._parseArrayPattern()
       }
       if (this._checkCurrentTokenType(TokenType.Assign)) {
         this._goNext(TokenType.Assign)

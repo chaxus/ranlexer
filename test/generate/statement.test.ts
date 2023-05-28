@@ -694,4 +694,43 @@ describe('statement', () => {
     const code = 'a[b()][12]'
     expect(generate(result)).toEqual(code)
   })
+  it('const [a,b] = c;', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: {
+                type: NodeType.ArrayPattern,
+                elements: [
+                  { type: NodeType.Identifier, name: 'a', start: 7, end: 8 },
+                  { type: NodeType.Identifier, name: 'b', start: 9, end: 10 },
+                ],
+                start: 6,
+                end: 11,
+              },
+              init: {
+                type: NodeType.Identifier,
+                name: 'c',
+                start: 14,
+                end: 15,
+              },
+              start: 6,
+              end: 15,
+            },
+          ],
+          start: 0,
+          end: 15,
+        },
+      ],
+      start: 0,
+      end: 15,
+    }
+    const code = 'const [a,b] = c;'
+    expect(generate(result)).toEqual(code)
+  })
 })

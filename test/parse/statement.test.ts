@@ -627,4 +627,38 @@ describe('statement', () => {
     const code = 'function a(){}; a instanceof Function;'
     expect(parse(code)).toEqual(result)
   })
+  it('const [a,b] = c;', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'VariableDeclaration',
+          kind: 'const',
+          declarations: [
+            {
+              type: 'VariableDeclarator',
+              id: {
+                type: 'ArrayPattern',
+                elements: [
+                  { type: 'Identifier', name: 'a', start: 7, end: 8 },
+                  { type: 'Identifier', name: 'b', start: 9, end: 10 },
+                ],
+                start: 6,
+                end: 11,
+              },
+              init: { type: 'Identifier', name: 'c', start: 14, end: 15 },
+              start: 6,
+              end: 15,
+            },
+          ],
+          start: 0,
+          end: 15,
+        },
+      ],
+      start: 0,
+      end: 15,
+    }
+    const code = 'const [a,b] = c;'
+    expect(parse(code)).toEqual(result)
+  })
 })

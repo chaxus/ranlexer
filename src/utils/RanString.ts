@@ -1,3 +1,5 @@
+import { start } from 'node:repl'
+
 type HandleString = (s: string) => string
 
 export class RanString {
@@ -39,5 +41,18 @@ export class RanString {
   replace(rule: RegExp | string, char: string): string {
     this.str = this.str.replace(rule, char)
     return this.str
+  }
+  addSpaceBothSlide(start: number, end: number, str: string) {
+    let left = true
+    while (str.length < end - start) {
+      if (left) {
+        str = ' ' + str
+        left = false
+      } else {
+        left = true
+        str += ' '
+      }
+    }
+    this.update(start, end, str)
   }
 }

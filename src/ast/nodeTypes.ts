@@ -4,6 +4,7 @@ export enum NodeType {
   Program = 'Program',
   Identifier = 'Identifier',
   Literal = 'Literal',
+  ArrayPattern = 'ArrayPattern',
   SwitchCase = 'SwitchCase',
   Property = '"Property"',
   UnaryExpression = 'UnaryExpression',
@@ -222,9 +223,18 @@ export interface FunctionDeclaration extends FunctionNode {
 
 export type VariableKind = 'var' | 'let' | 'const'
 
+export interface ArrayPattern {
+  type: NodeType.ArrayPattern
+  start: number
+  end: number
+  elements: Array<Identifier>
+}
+
+export type Pattern = ArrayPattern
+
 export interface VariableDeclarator extends Node {
   type: NodeType.VariableDeclarator
-  id: Identifier | null
+  id: Identifier | Pattern | null
   init: Expression | Literal | null
 }
 

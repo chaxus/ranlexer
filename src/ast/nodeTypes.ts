@@ -224,7 +224,7 @@ export type VariableKind = 'var' | 'let' | 'const'
 
 export interface VariableDeclarator extends Node {
   type: NodeType.VariableDeclarator
-  id: Identifier
+  id: Identifier | null
   init: Expression | Literal | null
 }
 

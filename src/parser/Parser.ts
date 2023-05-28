@@ -202,7 +202,7 @@ export class Parser {
       test = this._parseExpressionStatement()
       this._skipSemicolon()
       update = this._parseExpressionStatement()
-    } else if (this._checkCurrentTokenType(TokenType.Identifier)) {
+    } else if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
       const token = this._getCurrentToken()
       if (token.value === 'in') {
         type = NodeType.ForInStatement
@@ -211,7 +211,7 @@ export class Parser {
       } else {
         type = NodeType.ForStatement
       }
-      this._goNext(TokenType.Identifier)
+      this._goNext(TokenType.BinaryOperator)
       right = this._parseIdentifier()
     }
     this._goNext(TokenType.RightParen)
@@ -548,52 +548,59 @@ export class Parser {
     this._goNext([TokenType.Let, TokenType.Var, TokenType.Const])
     const declarations = []
     let init = null
+    let id = null
     const isVariableDeclarationEnded = (): boolean => {
-      if (this._checkCurrentTokenType(TokenType.Semicolon)) {
-        return true
-      }
-      const nextToken = this._getNextToken()
+      const currentToken = this._getCurrentToken()
       // Looking back at a token, if it is =, it means there is no end
-      if (nextToken && nextToken.type === TokenType.Assign) {
+      if (currentToken && currentToken.type === TokenType.Assign) {
         return false
       }
-      // for in and for of
-      if (this._checkCurrentTokenType(TokenType.Identifier)) {
-        const id = this._parseIdentifier()
-        const declarator: VariableDeclarator = {
-          type: NodeType.VariableDeclarator,
-          id,
-          init: null,
-          start: id.start,
-          end: id.end,
-        }
-        declarations.push(declarator)
+      if (currentToken && currentToken.type === TokenType.Identifier) {
+        return false
       }
-
+      if (currentToken && currentToken.type === TokenType.Number) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.StringLiteral) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.Comma) {
+        return false
+      }
+      // if (this._checkCurrentTokenType(TokenType.Identifier)) {
+      //   const id = this._parseIdentifier()
+      //   const declarator: VariableDeclarator = {
+      //     type: NodeType.VariableDeclarator,
+      //     id,
+      //     init: null,
+      //     start: id.start,
+      //     end: id.end,
+      //   }
+      //   declarations.push(declarator)
+      // }
       return true
     }
     while (!isVariableDeclarationEnded()) {
       // Parse the variable name foo
-      const id = this._parseIdentifier()
+      if (this._checkCurrentTokenType(TokenType.Identifier)) {
+        id = this._parseIdentifier()
+      }
       if (this._checkCurrentTokenType(TokenType.Assign)) {
         this._goNext(TokenType.Assign)
-        if (
-          this._checkCurrentTokenType([
-            TokenType.Number,
-            TokenType.StringLiteral,
-          ])
-        ) {
-          init = this._parseLiteral()
-        } else {
-          init = this._parseExpression()
-        }
+      }
+      if (
+        this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
+      ) {
+        init = this._parseLiteral()
+      } else {
+        init = this._parseExpression()
       }
       const declarator: VariableDeclarator = {
         type: NodeType.VariableDeclarator,
         id,
         init,
-        start: id.start,
-        end: init ? init.end : id.end,
+        start: id!.start,
+        end: init ? init.end : id!.end,
       }
       declarations.push(declarator)
       if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -665,9 +672,12 @@ export class Parser {
       return this._parseUpdateOperatorExpression()
     }
     // Get an identifier, such as a
-    let expression: Expression = this._parseIdentifier()
+    let expression: Expression | null = null
+    if (this._checkCurrentTokenType(TokenType.Identifier)) {
+      expression = this._parseIdentifier()
+    }
     while (!this._isEnd()) {
-      if (this._checkCurrentTokenType(TokenType.LeftParen)) {
+      if (expression && this._checkCurrentTokenType(TokenType.LeftParen)) {
         expression = this._parseCallExpression(expression)
       } else if (
         this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
@@ -675,6 +685,7 @@ export class Parser {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
       } else if (
+        expression &&
         this._checkCurrentTokenType([
           TokenType.BinaryOperator,
           TokenType.Assign,
@@ -683,7 +694,10 @@ export class Parser {
       ) {
         // analyze a + b
         expression = this._parseBinaryOperatorExpression(expression)
-      } else if (this._checkCurrentTokenType(TokenType.UpdateOperator)) {
+      } else if (
+        expression &&
+        this._checkCurrentTokenType(TokenType.UpdateOperator)
+      ) {
         // analyze i++
         expression = this._parseUpdateOperatorExpression(expression)
       } else {
@@ -691,7 +705,7 @@ export class Parser {
       }
     }
 
-    return expression
+    return expression!
   }
   private _parseUpdateOperatorExpression(
     expression?: Expression,

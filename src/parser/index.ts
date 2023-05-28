@@ -1,10 +1,10 @@
 import type { Program } from '@/ast/nodeTypes'
 import { Parser } from '@/parser/Parser'
-import type { Token } from '@/parser/Tokenizer'
+import type { Token, TokenizerOption } from '@/parser/Tokenizer'
 import { Tokenizer } from '@/parser/Tokenizer'
 
-export function tokenize(code: string): Token[] {
-  const tokenizer = new Tokenizer(code)
+export function tokenize(code: string, options: TokenizerOption = {}): Token[] {
+  const tokenizer = new Tokenizer(code, options)
   const tokens = tokenizer.tokenize()
   return tokens
 }

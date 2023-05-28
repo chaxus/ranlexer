@@ -422,7 +422,7 @@ export class Generate {
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, start, end } = node
-    this.code.update(start, start + 3, 'for(')
+    this.code.update(start, start + 4, 'for(')
     if (type === NodeType.ForInStatement) {
       const { declarations = [] } = left
       this.code.update(left.start, left.start + left.kind.length, left.kind)

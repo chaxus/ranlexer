@@ -144,7 +144,7 @@ describe('statement', () => {
       start: 0,
       end: 23,
     }
-    const code = 'for( let key in obj) {} '
+    const code = 'for( let key in obj) {}'
     expect(generate(result)).toEqual(code)
   })
   it('for (let i = 0;i < 10;i ++) {}', () => {

@@ -22,6 +22,7 @@ import type {
   ImportSpecifier,
   MemberExpression,
   ObjectExpression,
+  ObjectPattern,
   Program,
   ReturnStatement,
   Statement,
@@ -396,6 +397,31 @@ export class Generate {
     })
     this.code.update(node.end - 1, node.end, ']')
   }
+  generateObjectPattern(node: ObjectPattern) {
+    const { properties = [], start, end } = node
+    this.code.update(start, start + 1, '{')
+    const size = properties.length
+    properties.forEach((property, index) => {
+      const { start, end, key, value } = property
+      if (key?.type === NodeType.Identifier) {
+        this.code.update(key.start, key.end, key.name)
+        this.code.update(key.end, key.end + 1, ':')
+      }
+      if (value?.type === NodeType.Literal) {
+        this.code.update(value.start, value.end, value.raw)
+      }
+      if (value?.type === NodeType.Identifier) {
+        this.code.update(value.start, value.end, value.name)
+      }
+      if (value?.type === NodeType.ObjectExpression) {
+        this.generateObjectExpression(value)
+      }
+      if (index + 1 < size) {
+        this.code.update(end, end + 1, ',')
+      }
+    })
+    this.code.update(end - 1, end, '}')
+  }
   /**
    * @description: Parse literals
    * @param {VariableDeclarator} node
@@ -407,6 +433,9 @@ export class Generate {
     }
     if (id?.type === NodeType.ArrayPattern) {
       this.generateArrayPattern(id)
+    }
+    if (id?.type === NodeType.ObjectPattern) {
+      this.generateObjectPattern(id)
     }
     if (init && id) {
       this.code.addSpaceBothSlide(id.end, init?.start, '=')

@@ -25,6 +25,7 @@ import type {
   Literal,
   MemberExpression,
   ObjectExpression,
+  ObjectPattern,
   Pattern,
   Program,
   Property,
@@ -276,6 +277,31 @@ export class Parser {
     this._goNext(TokenType.RightCurly)
     return objectExpression
   }
+  private _parseObjectPattern(): ObjectPattern {
+    const { start } = this._getCurrentToken()
+    const properties: Property[] = []
+    const objectPattern: ObjectPattern = {
+      type: NodeType.ObjectPattern,
+      properties,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftCurly)
+    while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseProperty()
+      properties.push(node)
+    }
+    objectPattern.end = this._getCurrentToken().end
+    // Consumption "}"
+    this._goNext(TokenType.RightCurly)
+    return objectPattern
+  }
   private _parseProperty(): Property {
     const { start } = this._getCurrentToken()
     const property: Property = {
@@ -297,10 +323,14 @@ export class Parser {
       this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
     ) {
       property.value = this._parseLiteral()
-      property.end = property.value.end
     }
     if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
       property.value = this._parseObjectExpression()
+    }
+    if (!property.value) {
+      property.value = property.key
+    }
+    if (property.value) {
       property.end = property.value.end
     }
     return property
@@ -585,6 +615,9 @@ export class Parser {
       if (currentToken && currentToken.type === TokenType.LeftBracket) {
         return false
       }
+      if (currentToken && currentToken.type === TokenType.LeftCurly) {
+        return false
+      }
       if (currentToken && currentToken.type === TokenType.Identifier) {
         return false
       }
@@ -606,6 +639,9 @@ export class Parser {
       }
       if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
         id = this._parseArrayPattern()
+      }
+      if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
+        id = this._parseObjectPattern()
       }
       if (this._checkCurrentTokenType(TokenType.Assign)) {
         this._goNext(TokenType.Assign)

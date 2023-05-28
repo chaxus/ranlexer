@@ -5,8 +5,9 @@ export enum NodeType {
   Identifier = 'Identifier',
   Literal = 'Literal',
   ArrayPattern = 'ArrayPattern',
+  ObjectPattern = 'ObjectPattern',
   SwitchCase = 'SwitchCase',
-  Property = '"Property"',
+  Property = 'Property',
   UnaryExpression = 'UnaryExpression',
   UpdateExpression = 'UpdateExpression',
   CallExpression = 'CallExpression',
@@ -229,8 +230,14 @@ export interface ArrayPattern {
   end: number
   elements: Array<Identifier>
 }
+export interface ObjectPattern {
+  type: NodeType.ObjectPattern
+  start: number
+  end: number
+  properties: Property[]
+}
 
-export type Pattern = ArrayPattern
+export type Pattern = ArrayPattern | ObjectPattern
 
 export interface VariableDeclarator extends Node {
   type: NodeType.VariableDeclarator

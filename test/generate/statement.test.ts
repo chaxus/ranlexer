@@ -733,4 +733,77 @@ describe('statement', () => {
     const code = 'const [a,b] = c;'
     expect(generate(result)).toEqual(code)
   })
+  it('const {a,b} = c;', () => {
+    const result: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: {
+                type: NodeType.ObjectPattern,
+                properties: [
+                  {
+                    start: 7,
+                    end: 8,
+                    type: NodeType.Property,
+                    kind: 'init',
+                    key: {
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      start: 7,
+                      end: 8,
+                    },
+                    value: {
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      start: 7,
+                      end: 8,
+                    },
+                  },
+                  {
+                    start: 9,
+                    end: 10,
+                    type: NodeType.Property,
+                    kind: 'init',
+                    key: {
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      start: 9,
+                      end: 10,
+                    },
+                    value: {
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      start: 9,
+                      end: 10,
+                    },
+                  },
+                ],
+                start: 6,
+                end: 11,
+              },
+              init: {
+                type: NodeType.Identifier,
+                name: 'c',
+                start: 14,
+                end: 15,
+              },
+              start: 6,
+              end: 15,
+            },
+          ],
+          start: 0,
+          end: 15,
+        },
+      ],
+      start: 0,
+      end: 15,
+    }
+    const code = 'const {a,b} = c;'
+    expect(generate(result)).toEqual(code)
+  })
 })

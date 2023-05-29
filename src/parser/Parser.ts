@@ -2,6 +2,7 @@ import type { Token } from '@/parser/Tokenizer'
 import { TokenType } from '@/parser/Tokenizer'
 import type {
   ArrayExpression,
+  ArrayPattern,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -24,6 +25,8 @@ import type {
   Literal,
   MemberExpression,
   ObjectExpression,
+  ObjectPattern,
+  Pattern,
   Program,
   Property,
   ReturnStatement,
@@ -202,7 +205,7 @@ export class Parser {
       test = this._parseExpressionStatement()
       this._skipSemicolon()
       update = this._parseExpressionStatement()
-    } else if (this._checkCurrentTokenType(TokenType.Identifier)) {
+    } else if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
       const token = this._getCurrentToken()
       if (token.value === 'in') {
         type = NodeType.ForInStatement
@@ -211,7 +214,7 @@ export class Parser {
       } else {
         type = NodeType.ForStatement
       }
-      this._goNext(TokenType.Identifier)
+      this._goNext(TokenType.BinaryOperator)
       right = this._parseIdentifier()
     }
     this._goNext(TokenType.RightParen)
@@ -274,6 +277,31 @@ export class Parser {
     this._goNext(TokenType.RightCurly)
     return objectExpression
   }
+  private _parseObjectPattern(): ObjectPattern {
+    const { start } = this._getCurrentToken()
+    const properties: Property[] = []
+    const objectPattern: ObjectPattern = {
+      type: NodeType.ObjectPattern,
+      properties,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftCurly)
+    while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseProperty()
+      properties.push(node)
+    }
+    objectPattern.end = this._getCurrentToken().end
+    // Consumption "}"
+    this._goNext(TokenType.RightCurly)
+    return objectPattern
+  }
   private _parseProperty(): Property {
     const { start } = this._getCurrentToken()
     const property: Property = {
@@ -295,10 +323,14 @@ export class Parser {
       this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
     ) {
       property.value = this._parseLiteral()
-      property.end = property.value.end
     }
     if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
       property.value = this._parseObjectExpression()
+    }
+    if (!property.value) {
+      property.value = property.key
+    }
+    if (property.value) {
       property.end = property.value.end
     }
     return property
@@ -324,9 +356,34 @@ export class Parser {
       elements.push(node)
     }
     arrayExpression.end = this._getCurrentToken().end
-    // Consumption "}"
+    // Consumption "]"
     this._goNext(TokenType.RightBracket)
     return arrayExpression
+  }
+  private _parseArrayPattern(): ArrayPattern {
+    const { start } = this._getCurrentToken()
+    const elements: Identifier[] = []
+    const arrayPattern: ArrayPattern = {
+      type: NodeType.ArrayPattern,
+      elements,
+      start,
+      end: Infinity,
+    }
+    // Consumption "{"
+    this._goNext(TokenType.LeftBracket)
+    while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
+      if (this._checkCurrentTokenType(TokenType.Comma)) {
+        // analyze ,
+        this._goNext(TokenType.Comma)
+      }
+      // Recursive call to the Statement in the body of the _parseStatement parse function
+      const node = this._parseIdentifier()
+      elements.push(node)
+    }
+    arrayPattern.end = this._getCurrentToken().end
+    // Consumption "]"
+    this._goNext(TokenType.RightBracket)
+    return arrayPattern
   }
   /**
    * @description: Parse import declaration
@@ -548,52 +605,60 @@ export class Parser {
     this._goNext([TokenType.Let, TokenType.Var, TokenType.Const])
     const declarations = []
     let init = null
+    let id = null
     const isVariableDeclarationEnded = (): boolean => {
-      if (this._checkCurrentTokenType(TokenType.Semicolon)) {
-        return true
-      }
-      const nextToken = this._getNextToken()
+      const currentToken = this._getCurrentToken()
       // Looking back at a token, if it is =, it means there is no end
-      if (nextToken && nextToken.type === TokenType.Assign) {
+      if (currentToken && currentToken.type === TokenType.Assign) {
         return false
       }
-      // for in and for of
-      if (this._checkCurrentTokenType(TokenType.Identifier)) {
-        const id = this._parseIdentifier()
-        const declarator: VariableDeclarator = {
-          type: NodeType.VariableDeclarator,
-          id,
-          init: null,
-          start: id.start,
-          end: id.end,
-        }
-        declarations.push(declarator)
+      if (currentToken && currentToken.type === TokenType.LeftBracket) {
+        return false
       }
-
+      if (currentToken && currentToken.type === TokenType.LeftCurly) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.Identifier) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.Number) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.StringLiteral) {
+        return false
+      }
+      if (currentToken && currentToken.type === TokenType.Comma) {
+        return false
+      }
       return true
     }
     while (!isVariableDeclarationEnded()) {
       // Parse the variable name foo
-      const id = this._parseIdentifier()
+      if (this._checkCurrentTokenType(TokenType.Identifier)) {
+        id = this._parseIdentifier()
+      }
+      if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+        id = this._parseArrayPattern()
+      }
+      if (this._checkCurrentTokenType(TokenType.LeftCurly)) {
+        id = this._parseObjectPattern()
+      }
       if (this._checkCurrentTokenType(TokenType.Assign)) {
         this._goNext(TokenType.Assign)
-        if (
-          this._checkCurrentTokenType([
-            TokenType.Number,
-            TokenType.StringLiteral,
-          ])
-        ) {
-          init = this._parseLiteral()
-        } else {
-          init = this._parseExpression()
-        }
+      }
+      if (
+        this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
+      ) {
+        init = this._parseLiteral()
+      } else {
+        init = this._parseExpression()
       }
       const declarator: VariableDeclarator = {
         type: NodeType.VariableDeclarator,
         id,
         init,
-        start: id.start,
-        end: init ? init.end : id.end,
+        start: id!.start,
+        end: init ? init.end : id!.end,
       }
       declarations.push(declarator)
       if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -665,9 +730,12 @@ export class Parser {
       return this._parseUpdateOperatorExpression()
     }
     // Get an identifier, such as a
-    let expression: Expression = this._parseIdentifier()
+    let expression: Expression | null = null
+    if (this._checkCurrentTokenType(TokenType.Identifier)) {
+      expression = this._parseIdentifier()
+    }
     while (!this._isEnd()) {
-      if (this._checkCurrentTokenType(TokenType.LeftParen)) {
+      if (expression && this._checkCurrentTokenType(TokenType.LeftParen)) {
         expression = this._parseCallExpression(expression)
       } else if (
         this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
@@ -675,6 +743,7 @@ export class Parser {
         // Continue to analyze, a.b
         expression = this._parseMemberExpression(expression as MemberExpression)
       } else if (
+        expression &&
         this._checkCurrentTokenType([
           TokenType.BinaryOperator,
           TokenType.Assign,
@@ -683,7 +752,10 @@ export class Parser {
       ) {
         // analyze a + b
         expression = this._parseBinaryOperatorExpression(expression)
-      } else if (this._checkCurrentTokenType(TokenType.UpdateOperator)) {
+      } else if (
+        expression &&
+        this._checkCurrentTokenType(TokenType.UpdateOperator)
+      ) {
         // analyze i++
         expression = this._parseUpdateOperatorExpression(expression)
       } else {
@@ -691,7 +763,7 @@ export class Parser {
       }
     }
 
-    return expression
+    return expression!
   }
   private _parseUpdateOperatorExpression(
     expression?: Expression,

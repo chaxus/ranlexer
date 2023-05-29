@@ -57,6 +57,10 @@ export type Token = {
   raw?: string
 }
 
+export interface TokenizerOption {
+  plugins?: Array<any>
+}
+
 // Token generator object, keyword mapping
 const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   let(start: number) {
@@ -285,6 +289,8 @@ const BINARY_OPERATOR_TOKENS = [
   '<<',
   '>>',
   'in',
+  'of',
+  '**',
   'instanceof',
   '==',
   '!=',
@@ -316,7 +322,8 @@ export class Tokenizer {
    * @description: Parameters are snippets of code
    * @param {string} input
    */
-  constructor(input: string, options = {}) {
+  constructor(input: string, options: TokenizerOption = {}) {
+    const { plugins = [] } = options
     this._source = input // Obtain source code
   }
   /**
@@ -346,12 +353,6 @@ export class Tokenizer {
         this._currentIndex += 10
         continue
       }
-      // 2. Tell if it's a letter
-      else if (isAlpha(currentChar)) {
-        // Scan identifier
-        this.scanIdentifier()
-        continue
-      }
       // 3. Determine if it is a single character () {}.; *
       else if (KNOWN_SINGLE_CHAR_TOKENS.has(currentChar as SingleCharTokens)) {
         const previousToken = this._getPreviousToken()
@@ -376,39 +377,37 @@ export class Tokenizer {
       }
       // 5. Determine the binary operator
       else if (
-        BINARY_OPERATOR_TOKENS.includes(
-          currentChar + this._getNextChar() + this._getNextChar(2),
-        ) &&
+        BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar(2)) &&
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
             startIndex,
-            currentChar + this._getNextChar() + this._getNextChar(2),
+            this._getNextNumberChar(2),
           ),
         )
         this._currentIndex += 3
         continue
       } else if (
-        BINARY_OPERATOR_TOKENS.includes(currentChar + this._getNextChar()) &&
+        BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar()) &&
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
             startIndex,
-            currentChar + this._getNextChar(),
+            this._getNextNumberChar(1),
           ),
         )
         this._currentIndex += 2
         continue
       } else if (
-        UPDATE_OPERATOR_TOKENS.includes(currentChar + this._getNextChar()) &&
+        UPDATE_OPERATOR_TOKENS.includes(this._getNextNumberChar()) &&
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.updateOperator(
             startIndex,
-            currentChar + this._getNextChar(),
+            this._getNextNumberChar(),
           ),
         )
         this._currentIndex += 2
@@ -429,6 +428,12 @@ export class Tokenizer {
         this.scanStringLiteral()
         // Skip the closing quotes
         this._currentIndex++
+        continue
+      }
+      // 2. Tell if it's a letter
+      else if (isAlpha(currentChar)) {
+        // Scan identifier
+        this.scanIdentifier()
         continue
       }
       // 6. Judge number

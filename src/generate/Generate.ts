@@ -1,5 +1,6 @@
 import type {
   ArrayExpression,
+  ArrayPattern,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -21,6 +22,7 @@ import type {
   ImportSpecifier,
   MemberExpression,
   ObjectExpression,
+  ObjectPattern,
   Program,
   ReturnStatement,
   Statement,
@@ -381,6 +383,45 @@ export class Generate {
     })
     this.code.update(end - 1, end, '}')
   }
+  generateArrayPattern(node: ArrayPattern) {
+    this.code.update(node.start, node.start + 1, '[')
+    const size = node.elements?.length || 0
+    node.elements?.forEach((element, index) => {
+      const { type } = element
+      if (type === NodeType.Identifier) {
+        this.code.update(element.start, element.end, element.name)
+      }
+      if (index + 1 < size) {
+        this.code.update(element.end, element.end + 1, ',')
+      }
+    })
+    this.code.update(node.end - 1, node.end, ']')
+  }
+  generateObjectPattern(node: ObjectPattern) {
+    const { properties = [], start, end } = node
+    this.code.update(start, start + 1, '{')
+    const size = properties.length
+    properties.forEach((property, index) => {
+      const { start, end, key, value } = property
+      if (key?.type === NodeType.Identifier) {
+        this.code.update(key.start, key.end, key.name)
+        this.code.update(key.end, key.end + 1, ':')
+      }
+      if (value?.type === NodeType.Literal) {
+        this.code.update(value.start, value.end, value.raw)
+      }
+      if (value?.type === NodeType.Identifier) {
+        this.code.update(value.start, value.end, value.name)
+      }
+      if (value?.type === NodeType.ObjectExpression) {
+        this.generateObjectExpression(value)
+      }
+      if (index + 1 < size) {
+        this.code.update(end, end + 1, ',')
+      }
+    })
+    this.code.update(end - 1, end, '}')
+  }
   /**
    * @description: Parse literals
    * @param {VariableDeclarator} node
@@ -388,9 +429,16 @@ export class Generate {
   generateLiteral(node: VariableDeclarator): void {
     const { start, end, id, init } = node
     if (id?.type === NodeType.Identifier) {
-      this.code.update(id.start, id.end + 3, `${id.name} = `)
+      this.code.update(id.start, id.end, id.name)
     }
-    if (init) {
+    if (id?.type === NodeType.ArrayPattern) {
+      this.generateArrayPattern(id)
+    }
+    if (id?.type === NodeType.ObjectPattern) {
+      this.generateObjectPattern(id)
+    }
+    if (init && id) {
+      this.code.addSpaceBothSlide(id.end, init?.start, '=')
       if (init.type === NodeType.Literal) {
         this.code.update(init.start, init.end, init.raw)
       }
@@ -422,7 +470,7 @@ export class Generate {
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, start, end } = node
-    this.code.update(start, start + 3, 'for(')
+    this.code.update(start, start + 4, 'for(')
     if (type === NodeType.ForInStatement) {
       const { declarations = [] } = left
       this.code.update(left.start, left.start + left.kind.length, left.kind)

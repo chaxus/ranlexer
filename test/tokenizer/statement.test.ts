@@ -45,7 +45,7 @@ describe('statement', () => {
       { type: 'LeftParen', value: '(', start: 4, end: 5 },
       { type: 'Let', value: 'let', start: 5, end: 8 },
       { type: 'Identifier', value: 'key', start: 9, end: 12 },
-      { type: 'Identifier', value: 'in', start: 13, end: 15 },
+      { type: 'BinaryOperator', value: 'in', start: 13, end: 15 },
       { type: 'Identifier', value: 'obj', start: 16, end: 19 },
       { type: 'RightParen', value: ')', start: 19, end: 20 },
       { type: 'LeftCurly', value: '{', start: 21, end: 22 },

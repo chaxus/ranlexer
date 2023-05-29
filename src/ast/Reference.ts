@@ -1,4 +1,4 @@
-import type { Statement } from '@/ast/Statement'
+import type { Statement } from '@/ast/Statements'
 import type { Scope } from '@/ast/Scope'
 import type { Declaration } from '@/ast/Declaration'
 /**

@@ -1,6 +1,6 @@
 import { keys, values } from '@/utils/object'
 import type { Module } from '@/module'
-import type { Statement } from '@/ast/Statement'
+import type { Statement } from '@/ast/Statements'
 import { Reference } from '@/ast/Reference'
 
 export class Declaration {

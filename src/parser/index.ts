@@ -1,4 +1,4 @@
-import type { Program } from '@/ast/NodeTypes'
+import type { Program } from '@/ast/NodeType'
 import { Parser } from '@/parser/Parser'
 import type { Token, TokenizerOption } from '@/parser/Tokenizer'
 import { Tokenizer } from '@/parser/Tokenizer'

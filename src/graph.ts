@@ -1,6 +1,6 @@
 import { dirname, resolve } from 'node:path'
 import type { Module } from '@/module'
-import type { Statement } from '@/ast/Statement'
+import type { Statement } from '@/ast/Statements'
 import { ModuleLoader } from '@/moduleLoader'
 import type { Bundle } from '@/bundle'
 import { keys } from '@/utils/object'

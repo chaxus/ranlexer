@@ -5,7 +5,7 @@ import type {
   ExportNamedDeclaration,
   FunctionDeclaration,
   Statement as StatementNode,
-} from '@/ast/NodeTypes'
+} from '@/ast/NodeType'
 import type { Reference } from '@/ast/Reference'
 import { findReference } from '@/utils/findReference'
 import { buildScope } from '@/utils/buildScope'

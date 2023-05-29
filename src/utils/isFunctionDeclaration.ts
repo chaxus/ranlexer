@@ -1,5 +1,5 @@
-import type { Declaration, ExportDeclaration } from '@/ast/NodeTypes'
-import { NodeType } from '@/ast/NodeTypes'
+import type { Declaration, ExportDeclaration } from '@/ast/NodeType'
+import { NodeType } from '@/ast/NodeType'
 /**
  * @description: Whether it is a function node
  * @param {Declaration} node

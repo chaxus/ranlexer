@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { generate } from '@/generate'
-import { NodeType } from '@/ast/NodeTypes'
-import type { MemberExpression, Program } from '@/ast/NodeTypes'
+import { NodeType } from '@/ast/NodeType'
+import type { MemberExpression, Program } from '@/ast/NodeType'
 
 describe('expression', () => {
   it('member expression', () => {

@@ -1,11 +1,11 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-05-28 20:05:41
+ * @LastEditTime: 2023-05-29 08:43:22
  * @Description: https://github.com/facebook/jsx/blob/main/AST.md
  */
 
-import type { Expression, Literal, Node } from '@/ast/NodeTypes'
+import type { Expression, Literal, Node } from '@/ast/NodeType'
 
 export enum JSXNodeType {
   JSXIdentifier = 'JSXIdentifier',

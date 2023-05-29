@@ -30,9 +30,9 @@ import type {
   UpdateExpression,
   VariableDeclaration,
   VariableDeclarator,
-} from '@/ast/nodeTypes'
-import { NodeType, NodeTypeStatements } from '@/ast/nodeTypes'
-import { RanString } from '@/utils/RanString'
+} from '@/ast/NodeTypes'
+import { NodeType, NodeTypeStatements } from '@/ast/NodeTypes'
+import { RanString } from '@/utils/betterString'
 
 type IsEqual<A, B> = (A extends B ? true : false) & (B extends A ? true : false)
 

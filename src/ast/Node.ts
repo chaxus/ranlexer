@@ -1,4 +1,4 @@
-import type { Node as ASTNode } from '@/ast/nodeTypes'
+import type { Node as ASTNode } from '@/ast/NodeTypes'
 import type { Scope } from '@/ast/Scope'
 
 export interface Node extends ASTNode {

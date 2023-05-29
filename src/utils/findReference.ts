@@ -1,4 +1,4 @@
-import type { Statement } from '@/ast/statement'
+import type { Statement } from '@/ast/Statement'
 import { Reference } from '@/ast/Declaration'
 import type { Node } from '@/ast/Node'
 import { walk } from '@/utils/walk'

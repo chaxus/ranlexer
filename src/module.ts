@@ -1,7 +1,7 @@
 import MagicString from 'magic-string'
 import { parse } from '@/parser'
 import type { Bundle } from '@/bundle'
-import { Statement } from '@/ast/statement'
+import { Statement } from '@/ast/Statement'
 import type { ModuleLoader } from '@/moduleLoader'
 import type { Declaration } from '@/ast/Declaration'
 import {

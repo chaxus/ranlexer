@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { generate } from '@/generate'
 import { parse } from '@/parser'
-import type { Program } from '@/ast/nodeTypes'
-import { NodeType } from '@/ast/nodeTypes'
+import type { Program } from '@/ast/NodeTypes'
+import { NodeType } from '@/ast/NodeTypes'
 
 describe('statement', () => {
   it('throw Error();', () => {

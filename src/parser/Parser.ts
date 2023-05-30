@@ -37,8 +37,8 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
   VariableKind,
-} from '@/ast/nodeTypes'
-import { FunctionType, NodeType } from '@/ast/nodeTypes'
+} from '@/ast/NodeType'
+import { FunctionType, NodeType } from '@/ast/NodeType'
 
 /**
  * @description: parser

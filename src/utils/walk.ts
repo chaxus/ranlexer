@@ -1,4 +1,4 @@
-import type { Statement } from '@/ast/nodeTypes'
+import type { Statement } from '@/ast/NodeType'
 import type { Node } from '@/ast/Node'
 
 let shouldSkip

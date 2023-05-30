@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { generate } from '@/generate'
-import { NodeType } from '@/ast/nodeTypes'
-import type { Program } from '@/ast/nodeTypes'
+import { NodeType } from '@/ast/NodeType'
+import type { Program } from '@/ast/NodeType'
 
 describe('export', () => {
   it('export ExportNamedDeclaration declaration', () => {

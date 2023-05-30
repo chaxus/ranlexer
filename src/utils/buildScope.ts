@@ -1,12 +1,12 @@
 import { Scope } from '@/ast/Scope'
-import type { Statement } from '@/ast/statement'
+import type { Statement } from '@/ast/Statements'
 import type {
   FunctionDeclaration,
   Node,
   VariableDeclaration,
   VariableDeclarator,
-} from '@/ast/nodeTypes'
-import { NodeType } from '@/ast/nodeTypes'
+} from '@/ast/NodeType'
+import { NodeType } from '@/ast/NodeType'
 import { walk } from '@/utils/walk'
 /**
  * @description: Build the scope chain

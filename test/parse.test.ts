@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { MemberExpression, Program } from '@/ast/nodeTypes'
-import { NodeType } from '@/ast/nodeTypes'
+import type { MemberExpression, Program } from '@/ast/NodeType'
+import { NodeType } from '@/ast/NodeType'
 import { parse } from '@/parser'
 
 describe('Parser', () => {

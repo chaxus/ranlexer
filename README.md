@@ -119,7 +119,7 @@ Generate a bundle by passing in options，All options are well, optional:
 
 - **input**: Build entry, if not set, the default value is `./index.js`
 - **output**: Path to the build output file. If not set, the default value is `./dist/index.js`
-- **external**: String array，the modules in the array are not built.
+- **external**: String array，the modules in the array are not built
 
 The bundle has two methods:
 

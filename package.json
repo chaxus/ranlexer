@@ -17,6 +17,7 @@
     "build": "tsc --noEmit && vite build",
     "test": "npm run format && vitest",
     "lint": "sh ./bin/lint.sh",
+    "clean": "sh ./bin/clean.sh",
     "lint:ts": "eslint --cache .",
     "lint:fix": "eslint --cache --fix",
     "lint:prettier": "prettier --check --cache .",

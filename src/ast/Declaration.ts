@@ -2,6 +2,7 @@ import { keys, values } from '@/utils/object'
 import type { Module } from '@/module'
 import type { Statement } from '@/ast/Statements'
 import { Reference } from '@/ast/Reference'
+import { NodeType } from '@/ast/NodeType'
 
 export class Declaration {
   isFunctionDeclaration: boolean = false
@@ -14,11 +15,11 @@ export class Declaration {
   constructor(node: any, isParam: boolean, statement: Statement | null) {
     // Consider function and variable declarations
     if (node) {
-      if (node.type === 'FunctionDeclaration') {
+      if (node.type === NodeType.FunctionDeclaration) {
         this.isFunctionDeclaration = true
         this.functionNode = node
       } else if (
-        node.type === 'VariableDeclarator' &&
+        node.type === NodeType.VariableDeclarator &&
         node.init &&
         /FunctionExpression/.test(node.init.type)
       ) {

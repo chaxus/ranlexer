@@ -1,6 +1,7 @@
 import type { Statement } from '@/ast/Statements'
 import type { Scope } from '@/ast/Scope'
 import type { Declaration } from '@/ast/Declaration'
+import { NodeType } from '@/ast/NodeType'
 /**
  * @description: Records reference relationships between other nodes and Declaration nodes
  */
@@ -22,7 +23,7 @@ export class Reference {
     this.end = node.end
     let root = node
     this.objectPaths = []
-    while (root.type === 'MemberExpression') {
+    while (root.type === NodeType.MemberExpression) {
       this.objectPaths.unshift(root.property)
       root = root.object
     }

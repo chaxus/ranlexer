@@ -8,6 +8,7 @@ import {
   SyntheticDefaultDeclaration,
   SyntheticNamespaceDeclaration,
 } from '@/ast/Declaration'
+import { NodeType } from '@/ast/NodeType'
 import { keys } from '@/utils/object'
 
 export interface ModuleOptions {
@@ -134,8 +135,8 @@ export class Module {
     }
     // import
     node.specifiers.forEach((specifier: Specifier) => {
-      const isDefault = specifier.type === 'ImportDefaultSpecifier'
-      const isNamespace = specifier.type === 'ImportNamespaceSpecifier'
+      const isDefault = specifier.type === NodeType.ImportDefaultSpecifier
+      const isNamespace = specifier.type === NodeType.ImportNamespaceSpecifier
       const localName = specifier.local.name
       const name = isDefault
         ? 'default'
@@ -150,7 +151,7 @@ export class Module {
   addExports(statement: Statement): void {
     const node = statement.node as any
     const source = node.source && node.source.value
-    if (node.type === 'ExportNamedDeclaration') {
+    if (node.type === NodeType.ExportNamedDeclaration) {
       // export { a, b } from 'mod'
       if (node.specifiers.length) {
         node.specifiers.forEach((specifier: Specifier) => {
@@ -179,7 +180,7 @@ export class Module {
       } else {
         const declaration = node.declaration
         let name
-        if (declaration.type === 'VariableDeclaration') {
+        if (declaration.type === NodeType.VariableDeclaration) {
           // export const foo = 2;
           name = declaration.declarations[0].id.name
         } else {
@@ -192,7 +193,7 @@ export class Module {
           name,
         }
       }
-    } else if (node.type === 'ExportDefaultDeclaration') {
+    } else if (node.type === NodeType.ExportDefaultDeclaration) {
       const identifier =
         // export default foo;
         (node.declaration.id && node.declaration.id.name) ||
@@ -209,7 +210,7 @@ export class Module {
         identifier,
         statement,
       )
-    } else if (node.type === 'ExportAllDeclaration') {
+    } else if (node.type === NodeType.ExportAllDeclaration) {
       // export * from 'mod'
       if (source) {
         this.exportAllSources.push(source)
@@ -342,30 +343,30 @@ export class Module {
       if (statement.isExportDeclaration && !this.isEntry) {
         // export { foo, bar }
         if (
-          statement.node.type === 'ExportNamedDeclaration' &&
+          statement.node.type === NodeType.ExportNamedDeclaration &&
           statement.node.specifiers.length
         ) {
           source.remove(statement.start, statement.next)
         }
         // remove `export` from `export const foo = 42`
         else if (
-          statement.node.type === 'ExportNamedDeclaration' &&
-          (statement.node.declaration!.type === 'VariableDeclaration' ||
-            statement.node.declaration!.type === 'FunctionDeclaration')
+          statement.node.type === NodeType.ExportNamedDeclaration &&
+          (statement.node.declaration!.type === NodeType.VariableDeclaration ||
+            statement.node.declaration!.type === NodeType.FunctionDeclaration)
         ) {
           source.remove(statement.node.start, statement.node.declaration!.start)
         }
         // remove `export * from './mod'`
-        else if (statement.node.type === 'ExportAllDeclaration') {
+        else if (statement.node.type === NodeType.ExportAllDeclaration) {
           source.remove(statement.start, statement.next)
         }
         // export default
-        else if (statement.node.type === 'ExportDefaultDeclaration') {
+        else if (statement.node.type === NodeType.ExportDefaultDeclaration) {
           const defaultDeclaration = this.declarations['default']
           const defaultName = defaultDeclaration.render()
 
           // export default function() {}  -> function a() {}
-          if (statement.node.declaration.type === 'FunctionDeclaration') {
+          if (statement.node.declaration.type === NodeType.FunctionDeclaration) {
             if (statement.node.declaration.id) {
               // export default function foo() {} -> const a = function foo() {}
               source.overwrite(

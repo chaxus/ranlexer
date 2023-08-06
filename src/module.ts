@@ -366,7 +366,9 @@ export class Module {
           const defaultName = defaultDeclaration.render()
 
           // export default function() {}  -> function a() {}
-          if (statement.node.declaration.type === NodeType.FunctionDeclaration) {
+          if (
+            statement.node.declaration.type === NodeType.FunctionDeclaration
+          ) {
             if (statement.node.declaration.id) {
               // export default function foo() {} -> const a = function foo() {}
               source.overwrite(

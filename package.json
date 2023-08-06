@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc --noEmit && vite build",
-    "test": "npm run format && vitest",
+    "test": "npm run format && vitest run",
     "lint": "sh ./bin/lint.sh",
     "clean": "sh ./bin/clean.sh",
     "lint:ts": "eslint --cache .",

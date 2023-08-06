@@ -123,4 +123,3 @@ export interface JSXOpeningFragment extends Node {
 export interface JSXClosingFragment extends Node {
   type: JSXNodeType.JSXClosingFragment
 }
-

@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-05-29 08:43:22
+ * @LastEditTime: 2023-08-06 16:27:52
  * @Description: https://github.com/facebook/jsx/blob/main/AST.md
  */
 
@@ -123,3 +123,4 @@ export interface JSXOpeningFragment extends Node {
 export interface JSXClosingFragment extends Node {
   type: JSXNodeType.JSXClosingFragment
 }
+

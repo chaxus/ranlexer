@@ -339,7 +339,7 @@ export class Tokenizer {
         this._currentIndex++
         continue
       }
-      // instanceof
+      // 2. instanceof
       else if (
         BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar(9)) &&
         this._scanMode === ScanMode.Normal

@@ -30,7 +30,11 @@
     "transpiler",
     "es6",
     "transpile",
-    "compiler"
+    "compiler",
+    "ast",
+    "parser",
+    "tokenizer",
+    "token"
   ],
   "types": "./dist/index.d.ts",
   "author": "chaxus",

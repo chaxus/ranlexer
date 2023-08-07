@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
- * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-05-29 08:38:59
+ * @LastEditors: ran
+ * @LastEditTime: 2023-08-07 20:47:20
  * @Description: https://github.com/estree/estree
  */
 
@@ -21,6 +21,7 @@ export enum NodeType {
   BinaryExpression = 'BinaryExpression',
   MemberExpression = 'MemberExpression',
   FunctionExpression = 'FunctionExpression',
+  ArrowFunctionExpression = 'ArrowFunctionExpression',
   ArrayExpression = 'ArrayExpression',
   ObjectExpression = 'ObjectExpression',
   VariableDeclaration = 'VariableDeclaration',
@@ -93,6 +94,7 @@ export type Expression =
   | ObjectExpression
   | ArrayExpression
   | UpdateExpression
+  | ArrowFunctionExpression
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -204,7 +206,14 @@ export interface ExpressionStatement extends Node {
 }
 
 export interface FunctionExpression extends FunctionNode {
-  type: NodeType.FunctionExpression
+  type: NodeType.FunctionExpression | NodeType.ArrowFunctionExpression
+  async: boolean
+  generator: boolean
+}
+export interface ArrowFunctionExpression extends FunctionNode {
+  type: NodeType.ArrowFunctionExpression
+  async: boolean
+  generator: boolean
 }
 
 export interface Property extends Node {
@@ -227,6 +236,8 @@ export interface ArrayExpression extends Node {
 export interface FunctionDeclaration extends FunctionNode {
   type: NodeType.FunctionDeclaration
   id: Identifier | null
+  async: boolean
+  generator: boolean
 }
 
 export type VariableKind = 'var' | 'let' | 'const'

@@ -2,6 +2,7 @@
   "name": "ranlexer",
   "version": "0.0.9",
   "description": "Tiny JavaScript parser and generator",
+  "type": "module",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.mjs",
   "exports": {

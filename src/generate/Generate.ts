@@ -1,6 +1,7 @@
 import type {
   ArrayExpression,
   ArrayPattern,
+  ArrowFunctionExpression,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -14,6 +15,7 @@ import type {
   ForOfStatement,
   ForStatement,
   FunctionDeclaration,
+  FunctionExpression,
   Identifier,
   IfStatement,
   ImportDeclaration,
@@ -224,9 +226,16 @@ export class Generate {
     })
   }
   generateFunctionDeclaration(node: FunctionDeclaration): void {
-    const { start, end, id, params = [], body } = node
-    this.code.update(start, start + 8, 'function')
+    const { start, end, id, params = [], body, async, generator } = node
+    if (async) {
+      this.code.update(start, start + 14, 'async function')
+    } else {
+      this.code.update(start, start + 8, 'function')
+    }
     if (id) {
+      if (generator) {
+        this.code.update(id?.start - 1, id?.start, '*')
+      }
       this.generateIdentifier(id)
     }
     if (params.length > 0) {
@@ -451,7 +460,67 @@ export class Generate {
       if (init.type === NodeType.ObjectExpression) {
         this.generateObjectExpression(init)
       }
+      if (init.type === NodeType.ArrowFunctionExpression) {
+        this.generateArrowFunctionExpressionExpression(init)
+      }
+      if (init.type === NodeType.FunctionExpression) {
+        this.generateFunctionExpression(init)
+      }
     }
+  }
+  generateFunctionExpression(node: FunctionExpression): void {
+    const { start, end, id, params = [], body, async, generator } = node
+    if (async) {
+      this.code.update(start, start + 14, 'async function')
+    } else {
+      this.code.update(start, start + 8, 'function')
+    }
+    if (id) {
+      if (generator) {
+        this.code.update(id?.start - 1, id?.start, '*')
+      }
+      this.generateIdentifier(id)
+    }
+    if (params.length > 0) {
+      this.generateFunctionParams(params)
+    } else {
+      if (id) {
+        this.code.update(id.end, id.end + 2, '()')
+      } else {
+        this.code.update(start + 8, start + 13, '()')
+      }
+    }
+    if (body.type === NodeType.BlockStatement) {
+      this.generateBlockStatement(body)
+    }
+    this.code.update(end, end + 1, ';')
+  }
+  generateArrowFunctionExpressionExpression(
+    node: ArrowFunctionExpression | FunctionExpression,
+  ): void {
+    const { params = [], id, start, end, body, async } = node
+    if (async) {
+      this.code.update(start, start + 5, 'async')
+    }
+    let arrowStart = start
+    if (params.length > 0) {
+      this.generateFunctionParams(params)
+      arrowStart = params[params.length - 1].end + 1
+    } else {
+      if (id) {
+        this.code.update(id.end, id.end + 2, '()')
+        arrowStart = id.end + 3
+      } else {
+        this.code.update(start + 8, start + 13, '()')
+        arrowStart = start + 14
+      }
+    }
+    const arrowEnd = body.start
+    this.code.addSpaceBothSlide(arrowStart, arrowEnd, '=>')
+    if (body.type === NodeType.BlockStatement) {
+      this.generateBlockStatement(body)
+    }
+    this.code.update(end, end + 1, ';')
   }
   /**
    * @description: Analytic variable declaration

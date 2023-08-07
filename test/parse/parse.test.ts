@@ -126,86 +126,6 @@ describe('Parser', () => {
     expect(parse(input)).toEqual(ast)
   })
 
-  it('function', () => {
-    const input = 'function foo(a, b) { return a.add(b); }'
-    const ast: Program = {
-      type: NodeType.Program,
-      start: 0,
-      end: 39,
-      body: [
-        {
-          start: 0,
-          end: 39,
-          type: NodeType.FunctionDeclaration,
-          id: {
-            start: 9,
-            end: 12,
-            type: NodeType.Identifier,
-            name: 'foo',
-          },
-          params: [
-            {
-              start: 13,
-              end: 14,
-              type: NodeType.Identifier,
-              name: 'a',
-            },
-            {
-              start: 16,
-              end: 17,
-              type: NodeType.Identifier,
-              name: 'b',
-            },
-          ],
-          body: {
-            type: NodeType.BlockStatement,
-            start: 19,
-            end: 39,
-            body: [
-              {
-                type: NodeType.ReturnStatement,
-                start: 21,
-                end: 36,
-                argument: {
-                  type: NodeType.CallExpression,
-                  start: 28,
-                  end: 36,
-                  callee: {
-                    type: NodeType.MemberExpression,
-                    object: {
-                      type: NodeType.Identifier,
-                      name: 'a',
-                      start: 28,
-                      end: 29,
-                    },
-                    property: {
-                      type: NodeType.Identifier,
-                      name: 'add',
-                      start: 30,
-                      end: 33,
-                    },
-                    start: 28,
-                    end: 33,
-                    computed: false,
-                  },
-                  arguments: [
-                    {
-                      type: NodeType.Identifier,
-                      name: 'b',
-                      start: 34,
-                      end: 35,
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    }
-    expect(parse(input)).toEqual(ast)
-  })
-
   it('import declaration', () => {
     const input = `import foo, { name1, name2 as bar } from 'foo';
       import * as mod from 'mod';`
@@ -382,35 +302,6 @@ describe('Parser', () => {
             raw: "'foo'",
           },
           exported: null,
-        },
-      ],
-    }
-    expect(parse(input)).toEqual(ast)
-  })
-  it('export ExportDefaultDeclaration', () => {
-    const input = 'export default function() {}'
-    const ast = {
-      type: NodeType.Program,
-      start: 0,
-      end: 28,
-      body: [
-        {
-          type: NodeType.ExportDefaultDeclaration,
-          start: 0,
-          end: 28,
-          declaration: {
-            type: NodeType.FunctionDeclaration,
-            start: 15,
-            end: 28,
-            id: null,
-            params: [],
-            body: {
-              type: NodeType.BlockStatement,
-              start: 26,
-              end: 28,
-              body: [],
-            },
-          },
         },
       ],
     }

@@ -129,46 +129,23 @@ describe('Parser', () => {
     const input = 'function foo(a, b) { return a.add(b); }'
     const ast: Program = {
       type: NodeType.Program,
-      start: 0,
-      end: 39,
       body: [
         {
-          start: 0,
-          end: 39,
           type: NodeType.FunctionDeclaration,
-          id: {
-            start: 9,
-            end: 12,
-            type: NodeType.Identifier,
-            name: 'foo',
-          },
+          id: { type: NodeType.Identifier, name: 'foo', start: 9, end: 12 },
+          async: false,
+          generator: false,
           params: [
-            {
-              start: 13,
-              end: 14,
-              type: NodeType.Identifier,
-              name: 'a',
-            },
-            {
-              start: 16,
-              end: 17,
-              type: NodeType.Identifier,
-              name: 'b',
-            },
+            { type: NodeType.Identifier, name: 'a', start: 13, end: 14 },
+            { type: NodeType.Identifier, name: 'b', start: 16, end: 17 },
           ],
           body: {
             type: NodeType.BlockStatement,
-            start: 19,
-            end: 39,
             body: [
               {
                 type: NodeType.ReturnStatement,
-                start: 21,
-                end: 36,
                 argument: {
                   type: NodeType.CallExpression,
-                  start: 28,
-                  end: 36,
                   callee: {
                     type: NodeType.MemberExpression,
                     object: {
@@ -195,12 +172,389 @@ describe('Parser', () => {
                       end: 35,
                     },
                   ],
+                  start: 28,
+                  end: 36,
                 },
+                start: 21,
+                end: 36,
               },
             ],
+            start: 19,
+            end: 39,
           },
+          start: 0,
+          end: 39,
         },
       ],
+      start: 0,
+      end: 39,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+
+  it('async function', () => {
+    const input = 'async function foo(a, b) { return a.add(b); }'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.FunctionDeclaration,
+          id: { type: NodeType.Identifier, name: 'foo', start: 15, end: 18 },
+          async: true,
+          generator: false,
+          params: [
+            { type: NodeType.Identifier, name: 'a', start: 19, end: 20 },
+            { type: NodeType.Identifier, name: 'b', start: 22, end: 23 },
+          ],
+          body: {
+            type: NodeType.BlockStatement,
+            body: [
+              {
+                type: NodeType.ReturnStatement,
+                argument: {
+                  type: NodeType.CallExpression,
+                  callee: {
+                    type: NodeType.MemberExpression,
+                    object: {
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      start: 34,
+                      end: 35,
+                    },
+                    property: {
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      start: 36,
+                      end: 39,
+                    },
+                    start: 34,
+                    end: 39,
+                    computed: false,
+                  },
+                  arguments: [
+                    {
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      start: 40,
+                      end: 41,
+                    },
+                  ],
+                  start: 34,
+                  end: 42,
+                },
+                start: 27,
+                end: 42,
+              },
+            ],
+            start: 25,
+            end: 45,
+          },
+          start: 0,
+          end: 45,
+        },
+      ],
+      start: 0,
+      end: 45,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+  it('generator function', () => {
+    const input = 'function *foo(a, b) { return a.add(b); }'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.FunctionDeclaration,
+          id: { type: NodeType.Identifier, name: 'foo', start: 10, end: 13 },
+          async: false,
+          generator: true,
+          params: [
+            { type: NodeType.Identifier, name: 'a', start: 14, end: 15 },
+            { type: NodeType.Identifier, name: 'b', start: 17, end: 18 },
+          ],
+          body: {
+            type: NodeType.BlockStatement,
+            body: [
+              {
+                type: NodeType.ReturnStatement,
+                argument: {
+                  type: NodeType.CallExpression,
+                  callee: {
+                    type: NodeType.MemberExpression,
+                    object: {
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      start: 29,
+                      end: 30,
+                    },
+                    property: {
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      start: 31,
+                      end: 34,
+                    },
+                    start: 29,
+                    end: 34,
+                    computed: false,
+                  },
+                  arguments: [
+                    {
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      start: 35,
+                      end: 36,
+                    },
+                  ],
+                  start: 29,
+                  end: 37,
+                },
+                start: 22,
+                end: 37,
+              },
+            ],
+            start: 20,
+            end: 40,
+          },
+          start: 0,
+          end: 40,
+        },
+      ],
+      start: 0,
+      end: 40,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+
+  it('arrow function', () => {
+    const input = 'const a = (a,b) => {}'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              init: {
+                type: NodeType.ArrowFunctionExpression,
+                id: null,
+                params: [
+                  { type: NodeType.Identifier, name: 'a', start: 11, end: 12 },
+                  { type: NodeType.Identifier, name: 'b', start: 13, end: 14 },
+                ],
+                async: false,
+                generator: false,
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 19,
+                  end: 21,
+                },
+                start: 10,
+                end: 21,
+              },
+              start: 6,
+              end: 21,
+            },
+          ],
+          start: 0,
+          end: 21,
+        },
+      ],
+      start: 0,
+      end: 21,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+
+  it('arrow async function', () => {
+    const input = 'const a = async(a,b) => {}'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              init: {
+                type: NodeType.ArrowFunctionExpression,
+                id: null,
+                params: [
+                  { type: NodeType.Identifier, name: 'a', start: 16, end: 17 },
+                  { type: NodeType.Identifier, name: 'b', start: 18, end: 19 },
+                ],
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 24,
+                  end: 26,
+                },
+                async: true,
+                generator: false,
+                start: 10,
+                end: 26,
+              },
+              start: 6,
+              end: 26,
+            },
+          ],
+          start: 0,
+          end: 26,
+        },
+      ],
+      start: 0,
+      end: 26,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+
+  it('variable function', () => {
+    const input = 'const a = function async(a,b) {}'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              init: {
+                type: NodeType.FunctionExpression,
+                id: {
+                  type: NodeType.Identifier,
+                  name: 'async',
+                  start: 19,
+                  end: 24,
+                },
+                params: [
+                  { type: NodeType.Identifier, name: 'a', start: 25, end: 26 },
+                  { type: NodeType.Identifier, name: 'b', start: 27, end: 28 },
+                ],
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 30,
+                  end: 32,
+                },
+                async: false,
+                generator: false,
+                start: 10,
+                end: 32,
+              },
+              start: 6,
+              end: 32,
+            },
+          ],
+          start: 0,
+          end: 32,
+        },
+      ],
+      start: 0,
+      end: 32,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+
+  it('variable async function', () => {
+    const input = 'const a = async function async(a,b) {}'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              init: {
+                type: NodeType.FunctionExpression,
+                id: {
+                  type: NodeType.Identifier,
+                  name: 'async',
+                  start: 25,
+                  end: 30,
+                },
+                params: [
+                  { type: NodeType.Identifier, name: 'a', start: 31, end: 32 },
+                  { type: NodeType.Identifier, name: 'b', start: 33, end: 34 },
+                ],
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 36,
+                  end: 38,
+                },
+                async: true,
+                generator: false,
+                start: 10,
+                end: 38,
+              },
+              start: 6,
+              end: 38,
+            },
+          ],
+          start: 0,
+          end: 38,
+        },
+      ],
+      start: 0,
+      end: 38,
+    }
+    expect(parse(input)).toEqual(ast)
+  })
+  it('variable generator function', () => {
+    const input = 'const a = function *name(a,b) {}'
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              init: {
+                type: NodeType.FunctionExpression,
+                id: {
+                  type: NodeType.Identifier,
+                  name: 'name',
+                  start: 20,
+                  end: 24,
+                },
+                params: [
+                  { type: NodeType.Identifier, name: 'a', start: 25, end: 26 },
+                  { type: NodeType.Identifier, name: 'b', start: 27, end: 28 },
+                ],
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 30,
+                  end: 32,
+                },
+                async: false,
+                generator: true,
+                start: 10,
+                end: 32,
+              },
+              start: 6,
+              end: 32,
+            },
+          ],
+          start: 0,
+          end: 32,
+        },
+      ],
+      start: 0,
+      end: 32,
     }
     expect(parse(input)).toEqual(ast)
   })
@@ -402,6 +756,8 @@ describe('Parser', () => {
             start: 15,
             end: 28,
             id: null,
+            async: false,
+            generator: false,
             params: [],
             body: {
               type: NodeType.BlockStatement,
@@ -419,7 +775,100 @@ describe('Parser', () => {
     const input = `
     let basename = '';
     if (baseTag) basename = baseTag.getAttribute('href');`
-    const ast = {}
-    // expect(parse(input)).toEqual(ast)
+    const ast = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'let',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: {
+                type: NodeType.Identifier,
+                name: 'basename',
+                start: 9,
+                end: 17,
+              },
+              init: {
+                type: NodeType.Literal,
+                value: '',
+                start: 20,
+                end: 22,
+                raw: "''",
+              },
+              start: 9,
+              end: 22,
+            },
+          ],
+          start: 5,
+          end: 22,
+        },
+        {
+          type: NodeType.IfStatement,
+          start: 28,
+          end: 80,
+          test: {
+            type: NodeType.Identifier,
+            name: 'baseTag',
+            start: 32,
+            end: 39,
+          },
+          consequent: {
+            type: NodeType.ExpressionStatement,
+            expression: {
+              type: NodeType.BinaryExpression,
+              operator: '=',
+              left: {
+                type: NodeType.Identifier,
+                name: 'basename',
+                start: 41,
+                end: 49,
+              },
+              right: {
+                type: NodeType.CallExpression,
+                callee: {
+                  type: NodeType.MemberExpression,
+                  object: {
+                    type: NodeType.Identifier,
+                    name: 'baseTag',
+                    start: 52,
+                    end: 59,
+                  },
+                  property: {
+                    type: NodeType.Identifier,
+                    name: 'getAttribute',
+                    start: 60,
+                    end: 72,
+                  },
+                  start: 52,
+                  end: 72,
+                  computed: false,
+                },
+                arguments: [
+                  {
+                    type: NodeType.Literal,
+                    value: 'href',
+                    start: 73,
+                    end: 79,
+                    raw: "'href'",
+                  },
+                ],
+                start: 52,
+                end: 80,
+              },
+              start: 50,
+              end: 80,
+            },
+            start: 50,
+            end: 80,
+          },
+          alternate: null,
+        },
+      ],
+      start: 0,
+      end: 80,
+    }
+    expect(parse(input)).toEqual(ast)
   })
 })

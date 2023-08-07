@@ -603,6 +603,8 @@ describe('statement', () => {
           type: 'FunctionDeclaration',
           id: { type: 'Identifier', name: 'a', start: 9, end: 10 },
           params: [],
+          async: false,
+          generator: false,
           body: { type: 'BlockStatement', body: [], start: 12, end: 14 },
           start: 0,
           end: 14,

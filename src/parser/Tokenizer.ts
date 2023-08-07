@@ -13,6 +13,7 @@ export enum TokenType {
   Function = 'Function',
   Class = 'Class',
   Number = 'Number',
+  ArrowOperator = 'ArrowOperator',
   BinaryOperator = 'BinaryOperator',
   UpdateOperator = 'UpdateOperator',
   Identifier = 'Identifier',
@@ -168,6 +169,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
       end: start + 6,
     }
   },
+  arrowOperator(start: number) {
+    return {
+      type: TokenType.ArrowOperator,
+      value: '=>',
+      start,
+      end: start + 2,
+    }
+  },
   binaryOperator(start: number, value: string) {
     return {
       type: TokenType.BinaryOperator,
@@ -318,12 +327,13 @@ export class Tokenizer {
   private _currentIndex: number = 0 // Scan the location of the current code snippet
   private _source: string // The code snippet currently passed in
   private _scanMode = ScanMode.Normal // Scan mode, and perform different operations on different types
+  private _options: TokenizerOption
   /**
    * @description: Parameters are snippets of code
    * @param {string} input
    */
   constructor(input: string, options: TokenizerOption = {}) {
-    const { plugins = [] } = options
+    this._options = options
     this._source = input // Obtain source code
   }
   /**
@@ -339,8 +349,16 @@ export class Tokenizer {
         this._currentIndex++
         continue
       }
+      // exec plugins
+      this._options.plugins?.forEach((element) => {
+        const tokens = element.tokenizer(currentChar, startIndex, this._source)
+        this._tokens.concat(tokens || [])
+        if (tokens.length > 0) {
+          this._currentIndex += tokens[tokens.length - 1].end - startIndex
+        }
+      })
       // 2. instanceof
-      else if (
+      if (
         BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar(9)) &&
         this._scanMode === ScanMode.Normal
       ) {
@@ -355,6 +373,13 @@ export class Tokenizer {
       }
       // 3. Determine if it is a single character () {}.; *
       else if (KNOWN_SINGLE_CHAR_TOKENS.has(currentChar as SingleCharTokens)) {
+        if (this._getNextNumberChar() === '=>') {
+          this._tokens.push(
+            TOKENS_GENERATOR.arrowOperator(startIndex, currentChar),
+          )
+          this._currentIndex += 2
+          continue
+        }
         const previousToken = this._getPreviousToken()
         // * Character special processing
         if (

@@ -60,15 +60,14 @@ describe('Expression', () => {
   })
   it('() => {};', () => {
     const result = [
-      { type: 'LeftParen', value: '(', start: 1, end: 2 },
-      { type: 'RightParen', value: ')', start: 2, end: 3 },
-      { type: 'Assign', value: '=', start: 4, end: 5 },
-      { type: 'BinaryOperator', value: '>', start: 5, end: 6 },
-      { type: 'LeftCurly', value: '{', start: 7, end: 8 },
-      { type: 'RightCurly', value: '}', start: 8, end: 9 },
-      { type: 'Semicolon', value: ';', start: 9, end: 10 },
+      { type: 'LeftParen', value: '(', start: 0, end: 1 },
+      { type: 'RightParen', value: ')', start: 1, end: 2 },
+      { type: 'ArrowOperator', value: '=>', start: 3, end: 5 },
+      { type: 'LeftCurly', value: '{', start: 6, end: 7 },
+      { type: 'RightCurly', value: '}', start: 7, end: 8 },
+      { type: 'Semicolon', value: ';', start: 8, end: 9 },
     ]
-    const code = ' () => {};'
+    const code = '() => {};'
     expect(tokenize(code)).toEqual(result)
   })
   it('class{};', () => {

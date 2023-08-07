@@ -101,6 +101,8 @@ describe('export', () => {
           end: 28,
           declaration: {
             type: NodeType.FunctionDeclaration,
+            async: false,
+            generator: false,
             start: 15,
             end: 28,
             id: null,

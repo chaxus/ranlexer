@@ -7,6 +7,7 @@ import type {
   BinaryExpression,
   BlockStatement,
   CallExpression,
+  ConditionalExpression,
   ExportDeclaration,
   ExportSpecifier,
   Expression,
@@ -54,8 +55,7 @@ export class Parser {
   }
 
   parse(): Program {
-    const program = this._parseProgram()
-    return program
+    return this._parseProgram()
   }
   /**
    * @description: Parse the core logic that generates the AST
@@ -71,6 +71,12 @@ export class Parser {
     }
     while (!this._isEnd()) {
       const node = this._parseStatement()
+      if (
+        node.type === NodeType.ExpressionStatement &&
+        node.expression.type === NodeType.ConditionalExpression
+      ) {
+        program.body.pop()
+      }
       program.body.push(node)
       if (this._isEnd()) {
         program.end = node.end
@@ -98,6 +104,7 @@ export class Parser {
         TokenType.BinaryOperator,
         TokenType.Colon,
         TokenType.LeftParen,
+        TokenType.QuestionOperator,
       ])
     )
       return this._parseExpressionStatement()
@@ -740,6 +747,24 @@ export class Parser {
     this._skipSemicolon()
     return expressionStatement
   }
+  private _parseConditionalExpression() {
+    const { start } = this._getPreviousToken()
+    this._currentIndex--
+    const test = this._parseIdentifier()
+    this._goNext(TokenType.QuestionOperator)
+    const consequent = this._parseIdentifier()
+    this._goNext(TokenType.Colon)
+    const alternate = this._parseIdentifier()
+    const conditionalExpression: ConditionalExpression = {
+      type: NodeType.ConditionalExpression,
+      start,
+      end: alternate.end,
+      test,
+      consequent,
+      alternate,
+    }
+    return conditionalExpression
+  }
   // Parse the a.b.c nested structure of the object
   private _parseExpression(): Expression {
     const token = this._getCurrentToken()
@@ -750,6 +775,9 @@ export class Parser {
     ) {
       // Analytic function expression
       return this._parseFunctionExpression()
+    }
+    if (this._checkCurrentTokenType(TokenType.QuestionOperator)) {
+      return this._parseConditionalExpression()
     }
     if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
       // Analytic array expression
@@ -807,7 +835,6 @@ export class Parser {
         break
       }
     }
-
     return expression!
   }
   private _parseUpdateOperatorExpression(

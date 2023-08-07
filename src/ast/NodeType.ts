@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: ran
- * @LastEditTime: 2023-08-07 20:47:20
+ * @LastEditTime: 2023-08-07 22:31:50
  * @Description: https://github.com/estree/estree
  */
 
@@ -39,6 +39,7 @@ export enum NodeType {
   ForInStatement = 'ForInStatement',
   ForOfStatement = 'ForOfStatement',
   SwitchStatement = 'SwitchStatement',
+  ConditionalExpression = 'ConditionalExpression',
   IfStatement = 'IfStatement',
   ImportSpecifier = 'ImportSpecifier', // import {c, d} from 'c';
   ImportDefaultSpecifier = 'ImportDefaultSpecifier', // import a from 'a';
@@ -95,6 +96,7 @@ export type Expression =
   | ArrayExpression
   | UpdateExpression
   | ArrowFunctionExpression
+  | ConditionalExpression
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -336,6 +338,13 @@ export interface BinaryExpression extends Node {
   left: Expression
   right: Expression
   operator: string
+}
+
+export interface ConditionalExpression extends Node {
+  type: NodeType.ConditionalExpression
+  test: Expression
+  consequent: Expression
+  alternate: Expression
 }
 export interface FunctionNode extends Node {
   id: Identifier | null

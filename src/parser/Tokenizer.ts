@@ -14,6 +14,7 @@ export enum TokenType {
   Class = 'Class',
   Number = 'Number',
   ArrowOperator = 'ArrowOperator',
+  QuestionOperator = 'QuestionOperator',
   BinaryOperator = 'BinaryOperator',
   UpdateOperator = 'UpdateOperator',
   Identifier = 'Identifier',
@@ -87,6 +88,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   },
   assign(start: number) {
     return { type: TokenType.Assign, value: '=', start, end: start + 1 }
+  },
+  QuestionOperator(start: number) {
+    return {
+      type: TokenType.QuestionOperator,
+      value: '?',
+      start,
+      end: start + 1,
+    }
   },
   import(start: number) {
     return {
@@ -263,6 +272,7 @@ type SingleCharTokens =
   | '<'
   | '>'
   | ':'
+  | '?'
 
 // Single-character mapping to Token generator
 const KNOWN_SINGLE_CHAR_TOKENS = new Map<
@@ -281,6 +291,7 @@ const KNOWN_SINGLE_CHAR_TOKENS = new Map<
   [',', TOKENS_GENERATOR.comma],
   ['*', TOKENS_GENERATOR.asterisk],
   ['=', TOKENS_GENERATOR.assign],
+  ['?', TOKENS_GENERATOR.QuestionOperator],
 ])
 // Quotation token
 const QUOTATION_TOKENS = ["'", '"', '`']

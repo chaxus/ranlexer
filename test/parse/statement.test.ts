@@ -731,4 +731,28 @@ describe('statement', () => {
     const code = 'const {a,b} = c;'
     expect(parse(code)).toEqual(result)
   })
+  it('ConditionalExpression', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'ConditionalExpression',
+            start: 0,
+            end: 9,
+            test: { type: 'Identifier', name: 'a', start: 0, end: 1 },
+            consequent: { type: 'Identifier', name: 'b', start: 4, end: 5 },
+            alternate: { type: 'Identifier', name: 'c', start: 8, end: 9 },
+          },
+          start: 0,
+          end: 9,
+        },
+      ],
+      start: 0,
+      end: 9,
+    }
+    const code = 'a ? b : c'
+    expect(parse(code)).toEqual(result)
+  })
 })

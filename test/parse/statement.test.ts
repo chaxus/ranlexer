@@ -334,44 +334,39 @@ describe('statement', () => {
       type: 'Program',
       body: [
         {
-          type: 'ExpressionStatement',
-          expression: {
-            type: 'LabeledStatement',
-            label: { type: 'Identifier', name: 'label', start: 0, end: 5 },
-            start: 0,
-            end: 20,
-            body: {
-              type: 'ExpressionStatement',
-              expression: {
-                type: 'CallExpression',
-                callee: {
-                  type: 'MemberExpression',
-                  object: {
-                    type: 'Identifier',
-                    name: 'console',
-                    start: 7,
-                    end: 14,
-                  },
-                  property: {
-                    type: 'Identifier',
-                    name: 'log',
-                    start: 15,
-                    end: 18,
-                  },
+          type: 'LabeledStatement',
+          label: { type: 'Identifier', name: 'label', start: 0, end: 5 },
+          start: 0,
+          end: 20,
+          body: {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                object: {
+                  type: 'Identifier',
+                  name: 'console',
                   start: 7,
-                  end: 18,
-                  computed: false,
+                  end: 14,
                 },
-                arguments: [],
+                property: {
+                  type: 'Identifier',
+                  name: 'log',
+                  start: 15,
+                  end: 18,
+                },
                 start: 7,
-                end: 20,
+                end: 18,
+                computed: false,
               },
+              arguments: [],
               start: 7,
               end: 20,
             },
+            start: 7,
+            end: 20,
           },
-          start: 0,
-          end: 20,
         },
       ],
       start: 0,

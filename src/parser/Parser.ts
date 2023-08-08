@@ -85,6 +85,7 @@ export class Parser {
    * @return {Statement}
    */
   private _parseStatement(): Statement {
+    const nextToken = this._getNextToken()
     // TokenType comes from the implementation of Tokenizer
     if (this._isFunctionDeclaration()) return this._parseFunctionDeclaration()
     if (this._checkCurrentTokenType(TokenType.Switch))
@@ -93,6 +94,12 @@ export class Parser {
       return this._parseIfStatement()
     if (this._checkCurrentTokenType(TokenType.For))
       return this._parseForStatement()
+    if (
+      this._checkCurrentTokenType(TokenType.Identifier) &&
+      nextToken &&
+      nextToken?.type === TokenType.Colon
+    )
+      return this._parseLabeledStatement()
     if (
       this._checkCurrentTokenType([
         TokenType.Identifier,
@@ -747,9 +754,9 @@ export class Parser {
   ): ConditionalExpression {
     const { start } = expression
     this._goNext(TokenType.QuestionOperator)
-    const consequent = this._parseIdentifier()
+    const consequent = this._parseExpression()
     this._goNext(TokenType.Colon)
-    const alternate = this._parseIdentifier()
+    const alternate = this._parseExpression()
     const conditionalExpression: ConditionalExpression = {
       type: NodeType.ConditionalExpression,
       start,
@@ -827,25 +834,20 @@ export class Parser {
       ) {
         // analyze i++
         expression = this._parseUpdateOperatorExpression(expression)
-      } else if (
-        this._checkCurrentTokenType(TokenType.Colon) &&
-        expression?.type === NodeType.Identifier
-      ) {
-        expression = this._parseLabeledStatement(expression)
       } else {
         break
       }
     }
     return expression!
   }
-  private _parseLabeledStatement(expression: Identifier): LabeledStatement {
-    const { start } = expression
+  private _parseLabeledStatement(): LabeledStatement {
+    const label = this._parseIdentifier()
     this._goNext(TokenType.Colon)
     const body = this._parseExpressionStatement()
     const labeledStatement: LabeledStatement = {
       type: NodeType.LabeledStatement,
-      label: expression,
-      start,
+      label,
+      start: label.start,
       end: body.end,
       body,
     }

@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-08-08 23:52:26
+ * @LastEditTime: 2023-08-09 00:14:29
  * @Description: https://github.com/estree/estree
  */
 
@@ -85,6 +85,7 @@ export type Statement =
   | IfStatement
   | ForInStatement
   | ForOfStatement
+  | LabeledStatement
 
 // expression statement
 export type Expression =
@@ -100,7 +101,6 @@ export type Expression =
   | ArrowFunctionExpression
   | ConditionalExpression
   | AssignmentExpression
-  | LabeledStatement
 
 export enum FunctionType {
   FunctionDeclaration,

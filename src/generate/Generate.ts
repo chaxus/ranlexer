@@ -286,9 +286,6 @@ export class Generate {
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { type, start, end, expression } = node
-    if (expression.type === NodeType.LabeledStatement) {
-      this.generateLabeledStatement(expression)
-    }
     if (expression.type === NodeType.MemberExpression) {
       this.generateMemberExpression(expression)
     }
@@ -695,6 +692,9 @@ export class Generate {
       }
       if (type === NodeType.ReturnStatement) {
         return this.generateReturnStatement(node)
+      }
+      if (type === NodeType.LabeledStatement) {
+        return this.generateLabeledStatement(node)
       }
     })
     return this.code.toString()

@@ -399,49 +399,39 @@ describe('statement', () => {
       type: NodeType.Program,
       body: [
         {
-          type: NodeType.ExpressionStatement,
-          expression: {
-            type: NodeType.LabeledStatement,
-            label: {
-              type: NodeType.Identifier,
-              name: 'label',
-              start: 0,
-              end: 5,
-            },
-            start: 0,
-            end: 20,
-            body: {
-              type: NodeType.ExpressionStatement,
-              expression: {
-                type: NodeType.CallExpression,
-                callee: {
-                  type: NodeType.MemberExpression,
-                  object: {
-                    type: NodeType.Identifier,
-                    name: 'console',
-                    start: 7,
-                    end: 14,
-                  },
-                  property: {
-                    type: NodeType.Identifier,
-                    name: 'log',
-                    start: 15,
-                    end: 18,
-                  },
+          type: NodeType.LabeledStatement,
+          label: { type: NodeType.Identifier, name: 'label', start: 0, end: 5 },
+          start: 0,
+          end: 20,
+          body: {
+            type: NodeType.ExpressionStatement,
+            expression: {
+              type: NodeType.CallExpression,
+              callee: {
+                type: NodeType.MemberExpression,
+                object: {
+                  type: NodeType.Identifier,
+                  name: 'console',
                   start: 7,
-                  end: 18,
-                  computed: false,
+                  end: 14,
                 },
-                arguments: [],
+                property: {
+                  type: NodeType.Identifier,
+                  name: 'log',
+                  start: 15,
+                  end: 18,
+                },
                 start: 7,
-                end: 20,
+                end: 18,
+                computed: false,
               },
+              arguments: [],
               start: 7,
               end: 20,
             },
+            start: 7,
+            end: 20,
           },
-          start: 0,
-          end: 20,
         },
       ],
       start: 0,

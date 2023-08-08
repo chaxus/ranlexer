@@ -22,6 +22,7 @@ import type {
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
+  LabeledStatement,
   MemberExpression,
   ObjectExpression,
   ObjectPattern,
@@ -285,6 +286,9 @@ export class Generate {
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { type, start, end, expression } = node
+    if (expression.type === NodeType.LabeledStatement) {
+      this.generateLabeledStatement(expression)
+    }
     if (expression.type === NodeType.MemberExpression) {
       this.generateMemberExpression(expression)
     }
@@ -637,6 +641,14 @@ export class Generate {
         this.generateBlockStatement(body)
       }
     }
+  }
+  generateLabeledStatement(node: LabeledStatement): void {
+    const { type, label, body, start, end } = node
+    if (label.type === NodeType.Identifier) {
+      this.code.update(label.start, label.end, label.name)
+      this.code.update(label.end, label.end + 1, ':')
+    }
+    this.generateExpressionStatement(body)
   }
   render(): string {
     const nodes = this.ast.body

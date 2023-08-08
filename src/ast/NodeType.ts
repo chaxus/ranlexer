@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
- * @LastEditors: ran
- * @LastEditTime: 2023-08-07 22:31:50
+ * @LastEditors: chaxus nouo18@163.com
+ * @LastEditTime: 2023-08-08 23:52:26
  * @Description: https://github.com/estree/estree
  */
 
@@ -19,6 +19,7 @@ export enum NodeType {
   UpdateExpression = 'UpdateExpression',
   CallExpression = 'CallExpression',
   BinaryExpression = 'BinaryExpression',
+  AssignmentExpression = 'AssignmentExpression',
   MemberExpression = 'MemberExpression',
   FunctionExpression = 'FunctionExpression',
   ArrowFunctionExpression = 'ArrowFunctionExpression',
@@ -36,6 +37,7 @@ export enum NodeType {
   ExpressionStatement = 'ExpressionStatement',
   ReturnStatement = 'ReturnStatement',
   ForStatement = 'ForStatement',
+  LabeledStatement = 'LabeledStatement',
   ForInStatement = 'ForInStatement',
   ForOfStatement = 'ForOfStatement',
   SwitchStatement = 'SwitchStatement',
@@ -97,6 +99,8 @@ export type Expression =
   | UpdateExpression
   | ArrowFunctionExpression
   | ConditionalExpression
+  | AssignmentExpression
+  | LabeledStatement
 
 export enum FunctionType {
   FunctionDeclaration,
@@ -149,6 +153,12 @@ export interface SwitchStatement extends Node {
   type: NodeType.SwitchStatement
   discriminant: Expression
   cases: SwitchCase[]
+}
+
+export interface LabeledStatement extends Node {
+  type: NodeType.LabeledStatement
+  body: ExpressionStatement
+  label: Identifier
 }
 
 export interface IfStatement extends Node {
@@ -335,6 +345,12 @@ export type ExportDeclaration =
 
 export interface BinaryExpression extends Node {
   type: NodeType.BinaryExpression
+  left: Expression
+  right: Expression
+  operator: string
+}
+export interface AssignmentExpression extends Node {
+  type: NodeType.AssignmentExpression
   left: Expression
   right: Expression
   operator: string

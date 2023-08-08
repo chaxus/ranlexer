@@ -4,6 +4,7 @@ import type {
   ArrayExpression,
   ArrayPattern,
   ArrowFunctionExpression,
+  AssignmentExpression,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -24,6 +25,7 @@ import type {
   ImportNamespaceSpecifier,
   ImportSpecifier,
   ImportSpecifiers,
+  LabeledStatement,
   Literal,
   MemberExpression,
   ObjectExpression,
@@ -71,12 +73,6 @@ export class Parser {
     }
     while (!this._isEnd()) {
       const node = this._parseStatement()
-      if (
-        node.type === NodeType.ExpressionStatement &&
-        node.expression.type === NodeType.ConditionalExpression
-      ) {
-        program.body.pop()
-      }
       program.body.push(node)
       if (this._isEnd()) {
         program.end = node.end
@@ -102,7 +98,6 @@ export class Parser {
         TokenType.Identifier,
         TokenType.UpdateOperator,
         TokenType.BinaryOperator,
-        TokenType.Colon,
         TokenType.LeftParen,
         TokenType.QuestionOperator,
       ])
@@ -747,10 +742,10 @@ export class Parser {
     this._skipSemicolon()
     return expressionStatement
   }
-  private _parseConditionalExpression() {
-    const { start } = this._getPreviousToken()
-    this._currentIndex--
-    const test = this._parseIdentifier()
+  private _parseConditionalExpression(
+    expression: Expression,
+  ): ConditionalExpression {
+    const { start } = expression
     this._goNext(TokenType.QuestionOperator)
     const consequent = this._parseIdentifier()
     this._goNext(TokenType.Colon)
@@ -759,7 +754,7 @@ export class Parser {
       type: NodeType.ConditionalExpression,
       start,
       end: alternate.end,
-      test,
+      test: expression,
       consequent,
       alternate,
     }
@@ -775,9 +770,6 @@ export class Parser {
     ) {
       // Analytic function expression
       return this._parseFunctionExpression()
-    }
-    if (this._checkCurrentTokenType(TokenType.QuestionOperator)) {
-      return this._parseConditionalExpression()
     }
     if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
       // Analytic array expression
@@ -817,25 +809,67 @@ export class Parser {
         expression = this._parseMemberExpression(expression as MemberExpression)
       } else if (
         expression &&
-        this._checkCurrentTokenType([
-          TokenType.BinaryOperator,
-          TokenType.Assign,
-          TokenType.Colon,
-        ])
+        this._checkCurrentTokenType(TokenType.BinaryOperator)
       ) {
         // analyze a + b
         expression = this._parseBinaryOperatorExpression(expression)
+      } else if (expression && this._checkCurrentTokenType(TokenType.Assign)) {
+        // analyze a = b
+        expression = this._parseAssignmentExpressionExpression(expression)
+      } else if (
+        this._checkCurrentTokenType(TokenType.QuestionOperator) &&
+        expression
+      ) {
+        expression = this._parseConditionalExpression(expression)
       } else if (
         expression &&
         this._checkCurrentTokenType(TokenType.UpdateOperator)
       ) {
         // analyze i++
         expression = this._parseUpdateOperatorExpression(expression)
+      } else if (
+        this._checkCurrentTokenType(TokenType.Colon) &&
+        expression?.type === NodeType.Identifier
+      ) {
+        expression = this._parseLabeledStatement(expression)
       } else {
         break
       }
     }
     return expression!
+  }
+  private _parseLabeledStatement(expression: Identifier): LabeledStatement {
+    const { start } = expression
+    this._goNext(TokenType.Colon)
+    const body = this._parseExpressionStatement()
+    const labeledStatement: LabeledStatement = {
+      type: NodeType.LabeledStatement,
+      label: expression,
+      start,
+      end: body.end,
+      body,
+    }
+    return labeledStatement
+  }
+  private _parseAssignmentExpressionExpression(
+    expression: Expression,
+  ): AssignmentExpression {
+    const { start } = this._getCurrentToken()
+    const operator = this._getCurrentToken().value!
+    if (this._checkCurrentTokenType(TokenType.Assign)) {
+      this._goNext(TokenType.Assign)
+    }
+    const right = this._parseExpression()
+    const node: AssignmentExpression = {
+      type: NodeType.AssignmentExpression,
+      operator,
+      left: expression,
+      right,
+      start,
+      end: right.end,
+    }
+    this._skipSemicolon()
+    return node
   }
   private _parseUpdateOperatorExpression(
     expression?: Expression,

@@ -336,37 +336,41 @@ describe('statement', () => {
         {
           type: 'ExpressionStatement',
           expression: {
-            type: 'BinaryExpression',
-            operator: ':',
-            left: { type: 'Identifier', name: 'label', start: 0, end: 5 },
-            right: {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                object: {
-                  type: 'Identifier',
-                  name: 'console',
+            type: 'LabeledStatement',
+            label: { type: 'Identifier', name: 'label', start: 0, end: 5 },
+            start: 0,
+            end: 20,
+            body: {
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'MemberExpression',
+                  object: {
+                    type: 'Identifier',
+                    name: 'console',
+                    start: 7,
+                    end: 14,
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'log',
+                    start: 15,
+                    end: 18,
+                  },
                   start: 7,
-                  end: 14,
-                },
-                property: {
-                  type: 'Identifier',
-                  name: 'log',
-                  start: 15,
                   end: 18,
+                  computed: false,
                 },
+                arguments: [],
                 start: 7,
-                end: 18,
-                computed: false,
+                end: 20,
               },
-              arguments: [],
               start: 7,
               end: 20,
             },
-            start: 5,
-            end: 20,
           },
-          start: 5,
+          start: 0,
           end: 20,
         },
       ],
@@ -483,7 +487,7 @@ describe('statement', () => {
           consequent: {
             type: 'ExpressionStatement',
             expression: {
-              type: 'BinaryExpression',
+              type: 'AssignmentExpression',
               operator: '=',
               left: { type: 'Identifier', name: 'b', start: 7, end: 8 },
               right: {
@@ -523,7 +527,7 @@ describe('statement', () => {
               {
                 type: 'ExpressionStatement',
                 expression: {
-                  type: 'BinaryExpression',
+                  type: 'AssignmentExpression',
                   operator: '=',
                   left: { type: 'Identifier', name: 'b', start: 8, end: 9 },
                   right: {

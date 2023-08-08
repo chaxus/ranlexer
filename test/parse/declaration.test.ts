@@ -817,7 +817,7 @@ describe('Parser', () => {
           consequent: {
             type: NodeType.ExpressionStatement,
             expression: {
-              type: NodeType.BinaryExpression,
+              type: NodeType.AssignmentExpression,
               operator: '=',
               left: {
                 type: NodeType.Identifier,

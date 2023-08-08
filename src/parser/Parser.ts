@@ -813,7 +813,12 @@ export class Parser {
         this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
       ) {
         // Continue to analyze, a.b
-        expression = this._parseMemberExpression(expression as MemberExpression)
+        if (
+          expression?.type === NodeType.MemberExpression ||
+          expression?.type === NodeType.Identifier
+        ) {
+          expression = this._parseMemberExpression(expression)
+        }
       } else if (
         expression &&
         this._checkCurrentTokenType(TokenType.BinaryOperator)
@@ -942,8 +947,7 @@ export class Parser {
       node.property = this._parseIdentifier()
       node.end = node.property.end
       node.computed = false
-    }
-    if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
+    } else if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
       node.computed = true
       this._goNext(TokenType.LeftBracket)
       while (!this._checkCurrentTokenType(TokenType.RightBracket)) {

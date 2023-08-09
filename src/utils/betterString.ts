@@ -20,6 +20,9 @@ export class RanString {
     character: string | RegExp | HandleString = '',
   ): string {
     const length = this.str.length
+    if (length < end) {
+      this.str = this.str.padEnd(end, ' ')
+    }
     const startStr = this.str.slice(0, start)
     const endStr = this.str.slice(end, length)
     if (character instanceof RegExp) {

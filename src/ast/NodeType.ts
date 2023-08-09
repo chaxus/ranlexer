@@ -202,7 +202,7 @@ export interface CallExpression extends Node {
 
 export interface MemberExpression extends Node {
   type: NodeType.MemberExpression
-  object: Identifier | MemberExpression
+  object: Identifier | MemberExpression | CallExpression
   property: Identifier | Expression | undefined
   computed: boolean
 }

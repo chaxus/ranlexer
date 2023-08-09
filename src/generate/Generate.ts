@@ -178,7 +178,7 @@ export class Generate {
     if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)
     } else {
-      this.code.update(node.callee.end, node.callee.end + 2, '();')
+      this.code.update(end, end + 2, '()')
     }
   }
   generateReturnStatement(node: ReturnStatement): void {
@@ -267,6 +267,9 @@ export class Generate {
       if (object.type === NodeType.Identifier) {
         this.generateIdentifier(object)
       }
+      if (object.type === NodeType.CallExpression) {
+        this.generateCallExpression(object)
+      }
       if (property?.type === NodeType.Literal) {
         this.code.update(property.start, property.end, property.raw)
       }
@@ -276,9 +279,12 @@ export class Generate {
       if (property?.type === NodeType.CallExpression) {
         this.generateCallExpression(property)
       }
+      if (property?.type === NodeType.MemberExpression) {
+        this.generateMemberExpression(property)
+      }
       if (computed && property) {
         this.code.update(property.start - 1, property.start, '[')
-        this.code.update(property.end, property.end + 1, ']')
+        this.code.update(end - 1, end, ']')
       } else {
         this.code.update(start, end, '.', /\s/g)
       }
@@ -500,28 +506,23 @@ export class Generate {
     node: ArrowFunctionExpression | FunctionExpression,
   ): void {
     const { params = [], id, start, end, body, async } = node
+    let arrowStart = start
     if (async) {
       this.code.update(start, start + 5, 'async')
+      arrowStart += 5
     }
-    let arrowStart = start
     if (params.length > 0) {
       this.generateFunctionParams(params)
       arrowStart = params[params.length - 1].end + 1
     } else {
-      if (id) {
-        this.code.update(id.end, id.end + 2, '()')
-        arrowStart = id.end + 3
-      } else {
-        this.code.update(start + 8, start + 13, '()')
-        arrowStart = start + 14
-      }
+      this.code.update(arrowStart, arrowStart + 2, '()')
+      arrowStart += 2
     }
     const arrowEnd = body.start
     this.code.addSpaceBothSlide(arrowStart, arrowEnd, '=>')
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
-    this.code.update(end, end + 1, ';')
   }
   /**
    * @description: Analytic variable declaration

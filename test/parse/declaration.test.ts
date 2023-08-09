@@ -127,35 +127,35 @@ describe('Parser', () => {
 
   it('function', () => {
     const input = 'function foo(a, b) { return a.add(b); }'
-    const ast: Program = {
-      type: NodeType.Program,
+    const ast = {
+      type: 'Program',
       body: [
         {
-          type: NodeType.FunctionDeclaration,
-          id: { type: NodeType.Identifier, name: 'foo', start: 9, end: 12 },
+          type: 'FunctionDeclaration',
+          id: { type: 'Identifier', name: 'foo', start: 9, end: 12 },
           async: false,
           generator: false,
           params: [
-            { type: NodeType.Identifier, name: 'a', start: 13, end: 14 },
-            { type: NodeType.Identifier, name: 'b', start: 16, end: 17 },
+            { type: 'Identifier', name: 'a', start: 13, end: 14 },
+            { type: 'Identifier', name: 'b', start: 16, end: 17 },
           ],
           body: {
-            type: NodeType.BlockStatement,
+            type: 'BlockStatement',
             body: [
               {
-                type: NodeType.ReturnStatement,
+                type: 'ReturnStatement',
                 argument: {
-                  type: NodeType.CallExpression,
+                  type: 'CallExpression',
                   callee: {
-                    type: NodeType.MemberExpression,
+                    type: 'MemberExpression',
                     object: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'a',
                       start: 28,
                       end: 29,
                     },
                     property: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'add',
                       start: 30,
                       end: 33,
@@ -165,18 +165,13 @@ describe('Parser', () => {
                     computed: false,
                   },
                   arguments: [
-                    {
-                      type: NodeType.Identifier,
-                      name: 'b',
-                      start: 34,
-                      end: 35,
-                    },
+                    { type: 'Identifier', name: 'b', start: 34, end: 35 },
                   ],
                   start: 28,
-                  end: 36,
+                  end: 33,
                 },
                 start: 21,
-                end: 36,
+                end: 33,
               },
             ],
             start: 19,
@@ -194,35 +189,35 @@ describe('Parser', () => {
 
   it('async function', () => {
     const input = 'async function foo(a, b) { return a.add(b); }'
-    const ast: Program = {
-      type: NodeType.Program,
+    const ast = {
+      type: 'Program',
       body: [
         {
-          type: NodeType.FunctionDeclaration,
-          id: { type: NodeType.Identifier, name: 'foo', start: 15, end: 18 },
+          type: 'FunctionDeclaration',
+          id: { type: 'Identifier', name: 'foo', start: 15, end: 18 },
           async: true,
           generator: false,
           params: [
-            { type: NodeType.Identifier, name: 'a', start: 19, end: 20 },
-            { type: NodeType.Identifier, name: 'b', start: 22, end: 23 },
+            { type: 'Identifier', name: 'a', start: 19, end: 20 },
+            { type: 'Identifier', name: 'b', start: 22, end: 23 },
           ],
           body: {
-            type: NodeType.BlockStatement,
+            type: 'BlockStatement',
             body: [
               {
-                type: NodeType.ReturnStatement,
+                type: 'ReturnStatement',
                 argument: {
-                  type: NodeType.CallExpression,
+                  type: 'CallExpression',
                   callee: {
-                    type: NodeType.MemberExpression,
+                    type: 'MemberExpression',
                     object: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'a',
                       start: 34,
                       end: 35,
                     },
                     property: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'add',
                       start: 36,
                       end: 39,
@@ -232,18 +227,13 @@ describe('Parser', () => {
                     computed: false,
                   },
                   arguments: [
-                    {
-                      type: NodeType.Identifier,
-                      name: 'b',
-                      start: 40,
-                      end: 41,
-                    },
+                    { type: 'Identifier', name: 'b', start: 40, end: 41 },
                   ],
                   start: 34,
-                  end: 42,
+                  end: 39,
                 },
                 start: 27,
-                end: 42,
+                end: 39,
               },
             ],
             start: 25,
@@ -260,35 +250,35 @@ describe('Parser', () => {
   })
   it('generator function', () => {
     const input = 'function *foo(a, b) { return a.add(b); }'
-    const ast: Program = {
-      type: NodeType.Program,
+    const ast = {
+      type: 'Program',
       body: [
         {
-          type: NodeType.FunctionDeclaration,
-          id: { type: NodeType.Identifier, name: 'foo', start: 10, end: 13 },
+          type: 'FunctionDeclaration',
+          id: { type: 'Identifier', name: 'foo', start: 10, end: 13 },
           async: false,
           generator: true,
           params: [
-            { type: NodeType.Identifier, name: 'a', start: 14, end: 15 },
-            { type: NodeType.Identifier, name: 'b', start: 17, end: 18 },
+            { type: 'Identifier', name: 'a', start: 14, end: 15 },
+            { type: 'Identifier', name: 'b', start: 17, end: 18 },
           ],
           body: {
-            type: NodeType.BlockStatement,
+            type: 'BlockStatement',
             body: [
               {
-                type: NodeType.ReturnStatement,
+                type: 'ReturnStatement',
                 argument: {
-                  type: NodeType.CallExpression,
+                  type: 'CallExpression',
                   callee: {
-                    type: NodeType.MemberExpression,
+                    type: 'MemberExpression',
                     object: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'a',
                       start: 29,
                       end: 30,
                     },
                     property: {
-                      type: NodeType.Identifier,
+                      type: 'Identifier',
                       name: 'add',
                       start: 31,
                       end: 34,
@@ -298,18 +288,13 @@ describe('Parser', () => {
                     computed: false,
                   },
                   arguments: [
-                    {
-                      type: NodeType.Identifier,
-                      name: 'b',
-                      start: 35,
-                      end: 36,
-                    },
+                    { type: 'Identifier', name: 'b', start: 35, end: 36 },
                   ],
                   start: 29,
-                  end: 37,
+                  end: 34,
                 },
                 start: 22,
-                end: 37,
+                end: 34,
               },
             ],
             start: 20,
@@ -776,22 +761,17 @@ describe('Parser', () => {
     let basename = '';
     if (baseTag) basename = baseTag.getAttribute('href');`
     const ast = {
-      type: NodeType.Program,
+      type: 'Program',
       body: [
         {
-          type: NodeType.VariableDeclaration,
+          type: 'VariableDeclaration',
           kind: 'let',
           declarations: [
             {
-              type: NodeType.VariableDeclarator,
-              id: {
-                type: NodeType.Identifier,
-                name: 'basename',
-                start: 9,
-                end: 17,
-              },
+              type: 'VariableDeclarator',
+              id: { type: 'Identifier', name: 'basename', start: 9, end: 17 },
               init: {
-                type: NodeType.Literal,
+                type: 'Literal',
                 value: '',
                 start: 20,
                 end: 22,
@@ -805,38 +785,33 @@ describe('Parser', () => {
           end: 22,
         },
         {
-          type: NodeType.IfStatement,
+          type: 'IfStatement',
           start: 28,
-          end: 80,
-          test: {
-            type: NodeType.Identifier,
-            name: 'baseTag',
-            start: 32,
-            end: 39,
-          },
+          end: 72,
+          test: { type: 'Identifier', name: 'baseTag', start: 32, end: 39 },
           consequent: {
-            type: NodeType.ExpressionStatement,
+            type: 'ExpressionStatement',
             expression: {
-              type: NodeType.AssignmentExpression,
+              type: 'AssignmentExpression',
               operator: '=',
               left: {
-                type: NodeType.Identifier,
+                type: 'Identifier',
                 name: 'basename',
                 start: 41,
                 end: 49,
               },
               right: {
-                type: NodeType.CallExpression,
+                type: 'CallExpression',
                 callee: {
-                  type: NodeType.MemberExpression,
+                  type: 'MemberExpression',
                   object: {
-                    type: NodeType.Identifier,
+                    type: 'Identifier',
                     name: 'baseTag',
                     start: 52,
                     end: 59,
                   },
                   property: {
-                    type: NodeType.Identifier,
+                    type: 'Identifier',
                     name: 'getAttribute',
                     start: 60,
                     end: 72,
@@ -847,7 +822,7 @@ describe('Parser', () => {
                 },
                 arguments: [
                   {
-                    type: NodeType.Literal,
+                    type: 'Literal',
                     value: 'href',
                     start: 73,
                     end: 79,
@@ -855,19 +830,19 @@ describe('Parser', () => {
                   },
                 ],
                 start: 52,
-                end: 80,
+                end: 72,
               },
               start: 50,
-              end: 80,
+              end: 72,
             },
             start: 50,
-            end: 80,
+            end: 72,
           },
           alternate: null,
         },
       ],
       start: 0,
-      end: 80,
+      end: 72,
     }
     expect(parse(input)).toEqual(ast)
   })

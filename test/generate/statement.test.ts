@@ -32,16 +32,16 @@ describe('statement', () => {
             },
             arguments: [],
             start: 6,
-            end: 13,
+            end: 11,
           },
           start: 6,
-          end: 13,
+          end: 11,
         },
       ],
       start: 0,
-      end: 13,
+      end: 11,
     }
-    const code = 'throw Error();'
+    const code = 'throw Error()'
     expect(generate(result)).toEqual(code)
   })
   it('{}', () => {
@@ -402,7 +402,7 @@ describe('statement', () => {
           type: NodeType.LabeledStatement,
           label: { type: NodeType.Identifier, name: 'label', start: 0, end: 5 },
           start: 0,
-          end: 20,
+          end: 18,
           body: {
             type: NodeType.ExpressionStatement,
             expression: {
@@ -427,17 +427,17 @@ describe('statement', () => {
               },
               arguments: [],
               start: 7,
-              end: 20,
+              end: 18,
             },
             start: 7,
-            end: 20,
+            end: 18,
           },
         },
       ],
       start: 0,
-      end: 20,
+      end: 18,
     }
-    const code = 'label: console.log();'
+    const code = 'label: console.log()'
     expect(generate(result)).toEqual(code)
   })
   it('with (a){}', () => {
@@ -661,10 +661,10 @@ describe('statement', () => {
                 },
                 arguments: [],
                 start: 2,
-                end: 5,
+                end: 3,
               },
               start: 0,
-              end: 5,
+              end: 6,
               computed: true,
             },
             property: {
@@ -675,15 +675,15 @@ describe('statement', () => {
               raw: '12',
             },
             start: 0,
-            end: 9,
+            end: 10,
             computed: true,
           },
           start: 0,
-          end: 9,
+          end: 10,
         },
       ],
       start: 0,
-      end: 9,
+      end: 10,
     }
     const code = 'a[b()][12]'
     expect(generate(result)).toEqual(code)

@@ -783,9 +783,6 @@ export class Parser {
       // Analytic object expression
       return this._parseObjectExpression()
     }
-    if (this._checkCurrentTokenType(TokenType.LeftParen)) {
-      return this._parseArrowFunctionExpression()
-    }
     if (
       this._checkCurrentTokenType([TokenType.Number, TokenType.StringLiteral])
     ) {
@@ -801,6 +798,7 @@ export class Parser {
       expression = this._parseIdentifier()
     }
     while (!this._isEnd()) {
+      const index = this._currentIndex
       if (
         this._checkCurrentTokenType(TokenType.Function) &&
         expression?.type === NodeType.Identifier &&
@@ -809,14 +807,24 @@ export class Parser {
         // Analytic function expression
         expression = this._parseFunctionExpression(expression)
       }
-      if (expression && this._checkCurrentTokenType(TokenType.LeftParen)) {
+      if (this._checkCurrentTokenType(TokenType.LeftParen)) {
         if (
           expression?.type === NodeType.Identifier &&
           expression?.name === 'async'
         ) {
           expression = this._parseArrowFunctionExpression(expression)
-        } else {
+        } else if (expression) {
           expression = this._parseCallExpression(expression)
+        } else {
+          try {
+            expression = this._parseArrowFunctionExpression()
+          } catch (error) {
+            this._currentIndex = index
+            this._goNext(TokenType.LeftParen)
+            expression = this._parseExpression()
+            expression.end += 1
+            this._goNext(TokenType.RightParen)
+          }
         }
       } else if (
         this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])

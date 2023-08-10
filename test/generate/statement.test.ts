@@ -32,14 +32,14 @@ describe('statement', () => {
             },
             arguments: [],
             start: 6,
-            end: 11,
+            end: 13,
           },
           start: 6,
-          end: 11,
+          end: 13,
         },
       ],
       start: 0,
-      end: 11,
+      end: 13,
     }
     const code = 'throw Error()'
     expect(generate(result)).toEqual(code)
@@ -427,15 +427,15 @@ describe('statement', () => {
               },
               arguments: [],
               start: 7,
-              end: 18,
+              end: 20,
             },
             start: 7,
-            end: 18,
+            end: 20,
           },
         },
       ],
       start: 0,
-      end: 18,
+      end: 20,
     }
     const code = 'label: console.log()'
     expect(generate(result)).toEqual(code)
@@ -661,7 +661,7 @@ describe('statement', () => {
                 },
                 arguments: [],
                 start: 2,
-                end: 3,
+                end: 5,
               },
               start: 0,
               end: 6,

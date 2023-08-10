@@ -174,6 +174,8 @@ export class Generate {
       this.generateMemberExpression(node.callee)
     } else if (node.callee.type === NodeType.Identifier) {
       this.generateIdentifier(node.callee)
+    } else if (node.callee.type === NodeType.CallExpression) {
+      this.generateCallExpression(node.callee)
     }
     if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)

@@ -974,12 +974,13 @@ export class Parser {
 
   private _parseCallExpression(callee: Expression) {
     const args = this._parseParams(FunctionType.CallExpression) as Expression[]
+    const end = args.length > 0 ? args[args.length - 1].end : 2
     const node: CallExpression = {
       type: NodeType.CallExpression,
       callee,
       arguments: args,
       start: callee.start,
-      end: callee.end,
+      end: callee.end + end,
     }
     this._skipSemicolon()
     return node

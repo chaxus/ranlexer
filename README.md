@@ -149,8 +149,6 @@ bundle.write()
 
 ## Example
 
-
-
 ## Meta
 
 [LICENSE (MIT)](/LICENSE)

@@ -19,14 +19,14 @@ describe('statement', () => {
             callee: { type: 'Identifier', name: 'Error', start: 6, end: 11 },
             arguments: [],
             start: 6,
-            end: 11,
+            end: 13,
           },
           start: 6,
-          end: 11,
+          end: 13,
         },
       ],
       start: 0,
-      end: 11,
+      end: 13,
     }
     const code = 'throw Error();'
     expect(parse(code)).toEqual(result)
@@ -59,10 +59,10 @@ describe('statement', () => {
             callee: { type: 'Identifier', name: 'catch', start: 7, end: 12 },
             arguments: [{ type: 'Identifier', name: 'e', start: 13, end: 14 }],
             start: 7,
-            end: 12,
+            end: 26,
           },
           start: 7,
-          end: 12,
+          end: 26,
         },
         { type: 'BlockStatement', body: [], start: 16, end: 18 },
         {
@@ -233,10 +233,10 @@ describe('statement', () => {
               { type: 'Identifier', name: 'true', start: 7, end: 11 },
             ],
             start: 0,
-            end: 5,
+            end: 16,
           },
           start: 0,
-          end: 5,
+          end: 16,
         },
         { type: 'BlockStatement', body: [], start: 13, end: 15 },
       ],
@@ -266,14 +266,14 @@ describe('statement', () => {
               { type: 'Identifier', name: 'true', start: 13, end: 17 },
             ],
             start: 6,
-            end: 11,
+            end: 28,
           },
           start: 6,
-          end: 11,
+          end: 28,
         },
       ],
       start: 0,
-      end: 11,
+      end: 28,
     }
     const code = 'do {} while (true)'
     expect(parse(code)).toEqual(result)
@@ -337,7 +337,7 @@ describe('statement', () => {
           type: 'LabeledStatement',
           label: { type: 'Identifier', name: 'label', start: 0, end: 5 },
           start: 0,
-          end: 18,
+          end: 20,
           body: {
             type: 'ExpressionStatement',
             expression: {
@@ -362,15 +362,15 @@ describe('statement', () => {
               },
               arguments: [],
               start: 7,
-              end: 18,
+              end: 20,
             },
             start: 7,
-            end: 18,
+            end: 20,
           },
         },
       ],
       start: 0,
-      end: 18,
+      end: 20,
     }
     const code = 'label: console.log();'
     expect(parse(code)).toEqual(result)
@@ -386,10 +386,10 @@ describe('statement', () => {
             callee: { type: 'Identifier', name: 'with', start: 0, end: 4 },
             arguments: [{ type: 'Identifier', name: 'a', start: 6, end: 7 }],
             start: 0,
-            end: 4,
+            end: 11,
           },
           start: 0,
-          end: 4,
+          end: 11,
         },
         { type: 'BlockStatement', body: [], start: 8, end: 10 },
       ],
@@ -567,7 +567,7 @@ describe('statement', () => {
                 callee: { type: 'Identifier', name: 'b', start: 2, end: 3 },
                 arguments: [],
                 start: 2,
-                end: 3,
+                end: 5,
               },
               start: 0,
               end: 6,
@@ -752,6 +752,41 @@ describe('statement', () => {
       end: 9,
     }
     const code = 'a ? b : c'
+    expect(parse(code)).toEqual(result)
+  })
+  it('nest CallExpression', () => {
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'CallExpression',
+            callee: {
+              type: 'CallExpression',
+              callee: {
+                type: 'CallExpression',
+                callee: { type: 'Identifier', name: 'a', start: 0, end: 1 },
+                arguments: [],
+                start: 0,
+                end: 3,
+              },
+              arguments: [],
+              start: 0,
+              end: 5,
+            },
+            arguments: [],
+            start: 0,
+            end: 7,
+          },
+          start: 0,
+          end: 7,
+        },
+      ],
+      start: 0,
+      end: 7,
+    }
+    const code = 'a()()()'
     expect(parse(code)).toEqual(result)
   })
 })

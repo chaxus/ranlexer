@@ -185,7 +185,7 @@ export class Generate {
     if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)
     } else {
-      this.code.update(end - 2, end, '()')
+      this.code.update(node.callee.end, node.callee.end + 2, '()')
     }
   }
   generateReturnStatement(node: ReturnStatement): void {

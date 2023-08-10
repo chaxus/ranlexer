@@ -89,7 +89,7 @@ describe('export', () => {
     expect(generate(ast)).to.be.equal(result)
   })
   it('export ExportDefaultDeclaration declaration', () => {
-    const result = 'export default function(){};'
+    const result = 'export default function() {};'
     const ast: Program = {
       type: NodeType.Program,
       start: 0,

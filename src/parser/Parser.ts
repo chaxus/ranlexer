@@ -712,15 +712,16 @@ export class Parser {
     this._skipSemicolon()
     return node
   }
-  private _parseArrowFunctionExpression(): ArrowFunctionExpression {
+  private _parseArrowFunctionExpression(
+    expression?: Identifier,
+  ): ArrowFunctionExpression {
     const { start } = this._getCurrentToken()
     let async = false
-    if (this._checkCurrentTokenType(TokenType.Identifier)) {
-      const { value } = this._getCurrentToken()
-      if (value === 'async') {
-        async = true
-      }
-      this._goNext(TokenType.Identifier)
+    if (
+      expression?.type === NodeType.Identifier &&
+      expression.name === 'async'
+    ) {
+      async = true
     }
     const params = this._parseParams()
     this._goNext(TokenType.ArrowOperator)
@@ -733,7 +734,7 @@ export class Parser {
       async,
       generator: false,
       body,
-      start,
+      start: expression?.start || start,
       end: body.end,
     }
     return node
@@ -769,12 +770,8 @@ export class Parser {
   }
   // Parse the a.b.c nested structure of the object
   private _parseExpression(): Expression {
-    const token = this._getCurrentToken()
     // Check to see if it is a function expression
-    if (
-      this._checkCurrentTokenType(TokenType.Function) ||
-      (token.type === TokenType.Identifier && token.value === 'async')
-    ) {
+    if (this._checkCurrentTokenType(TokenType.Function)) {
       // Analytic function expression
       return this._parseFunctionExpression()
     }
@@ -786,10 +783,7 @@ export class Parser {
       // Analytic object expression
       return this._parseObjectExpression()
     }
-    if (
-      this._checkCurrentTokenType(TokenType.LeftParen) ||
-      (token.type === TokenType.Identifier && token.value === 'async')
-    ) {
+    if (this._checkCurrentTokenType(TokenType.LeftParen)) {
       return this._parseArrowFunctionExpression()
     }
     if (
@@ -807,15 +801,31 @@ export class Parser {
       expression = this._parseIdentifier()
     }
     while (!this._isEnd()) {
+      if (
+        this._checkCurrentTokenType(TokenType.Function) &&
+        expression?.type === NodeType.Identifier &&
+        expression?.name === 'async'
+      ) {
+        // Analytic function expression
+        expression = this._parseFunctionExpression(expression)
+      }
       if (expression && this._checkCurrentTokenType(TokenType.LeftParen)) {
-        expression = this._parseCallExpression(expression)
+        if (
+          expression?.type === NodeType.Identifier &&
+          expression?.name === 'async'
+        ) {
+          expression = this._parseArrowFunctionExpression(expression)
+        } else {
+          expression = this._parseCallExpression(expression)
+        }
       } else if (
         this._checkCurrentTokenType([TokenType.Dot, TokenType.LeftBracket])
       ) {
         // Continue to analyze, a.b
         if (
           expression?.type === NodeType.MemberExpression ||
-          expression?.type === NodeType.Identifier
+          expression?.type === NodeType.Identifier ||
+          expression?.type === NodeType.CallExpression
         ) {
           expression = this._parseMemberExpression(expression)
         }
@@ -932,7 +942,7 @@ export class Parser {
   }
 
   private _parseMemberExpression(
-    object: Identifier | MemberExpression,
+    object: Identifier | MemberExpression | CallExpression,
   ): MemberExpression {
     const node: MemberExpression = {
       type: NodeType.MemberExpression,
@@ -945,16 +955,17 @@ export class Parser {
     if (this._checkCurrentTokenType(TokenType.Dot)) {
       this._goNext(TokenType.Dot)
       node.property = this._parseIdentifier()
-      node.end = node.property.end
       node.computed = false
+      node.end = node.property.end
     } else if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
       node.computed = true
       this._goNext(TokenType.LeftBracket)
       while (!this._checkCurrentTokenType(TokenType.RightBracket)) {
         // Recursive call to the Statement in the body of the _parseStatement parse function
         node.property = this._parseExpression()
-        node.end = node.property.end
       }
+      const { end } = this._getCurrentToken()
+      node.end = end
       this._goNext(TokenType.RightBracket)
     }
     this._skipSemicolon()
@@ -963,14 +974,12 @@ export class Parser {
 
   private _parseCallExpression(callee: Expression) {
     const args = this._parseParams(FunctionType.CallExpression) as Expression[]
-    // Gets the end position of the last character
-    const { end } = this._getPreviousToken()
     const node: CallExpression = {
       type: NodeType.CallExpression,
       callee,
       arguments: args,
       start: callee.start,
-      end,
+      end: callee.end,
     }
     this._skipSemicolon()
     return node
@@ -1014,11 +1023,15 @@ export class Parser {
    * @description: Analytic function expression
    * @return {FunctionExpression}
    */
-  private _parseFunctionExpression(): FunctionExpression {
+  private _parseFunctionExpression(
+    expression?: Identifier,
+  ): FunctionExpression {
     const { start, value, type } = this._getCurrentToken()
     let async = false
-    if (type === TokenType.Identifier && value === 'async') {
-      this._goNext(TokenType.Identifier)
+    if (
+      expression?.type === NodeType.Identifier &&
+      expression.name === 'async'
+    ) {
       async = true
     }
     let id = null
@@ -1048,7 +1061,7 @@ export class Parser {
       body,
       async,
       generator,
-      start,
+      start: expression?.start || start,
       end: body.end,
     }
     return node

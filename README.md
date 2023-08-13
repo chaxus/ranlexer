@@ -18,6 +18,10 @@ Using npm:
 npm install ranlexer --save
 ```
 
+## Library Progress
+
+This library is still under active development. Most common code manipulation/generation use cases are implemented, but there's still a lot of work to do. Please open an issue if you find a feature missing, bug, or question that isn't in the issue.
+
 ## Usage
 
 ranlexer can export the following methods
@@ -143,6 +147,8 @@ const bundle = await build(option)
 bundle.write()
 ```
 
-### Meta
+## Example
+
+## Meta
 
 [LICENSE (MIT)](/LICENSE)

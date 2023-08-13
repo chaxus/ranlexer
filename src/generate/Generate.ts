@@ -2,6 +2,7 @@ import type {
   ArrayExpression,
   ArrayPattern,
   ArrowFunctionExpression,
+  AssignmentExpression,
   BinaryExpression,
   BlockStatement,
   CallExpression,
@@ -174,11 +175,17 @@ export class Generate {
       this.generateMemberExpression(node.callee)
     } else if (node.callee.type === NodeType.Identifier) {
       this.generateIdentifier(node.callee)
+    } else if (node.callee.type === NodeType.CallExpression) {
+      this.generateCallExpression(node.callee)
+    } else if (node.callee.type === NodeType.FunctionExpression) {
+      this.code.update(start - 1, start, '(')
+      this.generateFunctionExpression(node.callee)
+      this.code.update(node.callee.end - 1, node.callee.end, ')')
     }
     if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)
     } else {
-      this.code.update(end, end + 2, '()')
+      this.code.update(node.callee.end, node.callee.end + 2, '()')
     }
   }
   generateReturnStatement(node: ReturnStatement): void {
@@ -307,12 +314,31 @@ export class Generate {
     if (expression.type === NodeType.UpdateExpression) {
       this.generateUpdateExpression(expression)
     }
+    if (expression.type === NodeType.AssignmentExpression) {
+      this.generateAssignmentExpression(expression)
+    }
     if (this.code.toString().length < end - start) {
       let str = ';'
       while (str.length + this.code.toString().length < end - start) {
         str += ' '
       }
       this.code.update(this.code.toString().length, end, str)
+    }
+  }
+  generateAssignmentExpression(node: AssignmentExpression): void {
+    const { left, right, operator } = node
+    if (left.type === NodeType.Identifier) {
+      this.generateIdentifier(left)
+    }
+    this.code.addSpaceBothSlide(left.end, right.start - 1, operator)
+    if (right.type === NodeType.Identifier) {
+      this.generateIdentifier(right)
+    }
+    if (right.type === NodeType.AssignmentExpression) {
+      this.generateAssignmentExpression(right)
+    }
+    if (right.type === NodeType.FunctionExpression) {
+      this.generateFunctionExpression(right)
     }
   }
   generateUpdateExpression(node: UpdateExpression): void {

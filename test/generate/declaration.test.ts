@@ -297,6 +297,88 @@ describe('declaration', () => {
     }
     expect(generate(ast)).toEqual(result)
   })
+  it('arrow async function no params', () => {
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'app', start: 6, end: 9 },
+              init: {
+                type: NodeType.ArrowFunctionExpression,
+                id: null,
+                params: [],
+                async: true,
+                generator: false,
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 23,
+                  end: 25,
+                },
+                start: 12,
+                end: 25,
+              },
+              start: 6,
+              end: 25,
+            },
+          ],
+          start: 0,
+          end: 25,
+        },
+      ],
+      start: 0,
+      end: 25,
+    }
+    const result = 'const app = async() => {};'
+    expect(generate(ast)).toEqual(result)
+  })
+
+  it('arrow function no params', () => {
+    const ast: Program = {
+      type: NodeType.Program,
+      body: [
+        {
+          type: NodeType.VariableDeclaration,
+          kind: 'const',
+          declarations: [
+            {
+              type: NodeType.VariableDeclarator,
+              id: { type: NodeType.Identifier, name: 'app', start: 6, end: 9 },
+              init: {
+                type: NodeType.ArrowFunctionExpression,
+                id: null,
+                params: [],
+                async: false,
+                generator: false,
+                body: {
+                  type: NodeType.BlockStatement,
+                  body: [],
+                  start: 18,
+                  end: 20,
+                },
+                start: 12,
+                end: 20,
+              },
+              start: 6,
+              end: 20,
+            },
+          ],
+          start: 0,
+          end: 20,
+        },
+      ],
+      start: 0,
+      end: 20,
+    }
+    const result = 'const app = () => {};'
+    expect(generate(ast)).toEqual(result)
+  })
+
   it('arrow async function', () => {
     const result = 'const a = async(a,b) => {};'
     const ast: Program = {

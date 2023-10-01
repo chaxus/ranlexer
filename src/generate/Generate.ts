@@ -45,8 +45,8 @@ type StatementFunction<T extends Statement = Statement> = IsEqual<
   Statement
 > extends true
   ? T extends T
-    ? (node: T) => void
-    : never
+  ? (node: T) => void
+  : never
   : (node: T) => void
 
 type GenerateStatement = StatementFunction<Statement>
@@ -208,6 +208,9 @@ export class Generate {
         if (item.type === NodeType.ExpressionStatement) {
           this.generateExpressionStatement(item)
         }
+        if (item.type === NodeType.VariableDeclaration) {
+          this.generateVariableDeclaration(item)
+        }
       })
       this.code.update(end - 1, end, '}')
     } else {
@@ -221,6 +224,12 @@ export class Generate {
       const { type } = param
       const paramStart = params[paramsStartIndex].start
       const paramEnd = params[paramsEndIndex].end
+      if (type === NodeType.ArrayExpression) {
+        this.generateArrayExpression(param)
+      }
+      if (type === NodeType.ArrowFunctionExpression) {
+        this.generateArrowFunctionExpressionExpression(param)
+      }
       if (type === NodeType.Identifier) {
         this.generateIdentifier(param)
       }
@@ -229,7 +238,7 @@ export class Generate {
       }
       if (index === paramsEndIndex) {
         this.code.update(paramEnd, paramEnd + 1, ')')
-        this.code.update(paramStart, paramEnd, ',', /\s+/g)
+        this.code.update(paramStart, paramEnd, ',', /[\s+;]/g)
       }
     })
   }
@@ -499,6 +508,9 @@ export class Generate {
       if (init.type === NodeType.FunctionExpression) {
         this.generateFunctionExpression(init)
       }
+      if (init.type === NodeType.CallExpression) {
+        this.generateCallExpression(init)
+      }
     }
   }
   generateFunctionExpression(node: FunctionExpression): void {
@@ -541,8 +553,13 @@ export class Generate {
       this.generateFunctionParams(params)
       arrowStart = params[params.length - 1].end + 1
     } else {
-      this.code.update(arrowStart, arrowStart + 2, '()')
-      arrowStart += 2
+      if (id) {
+        this.code.update(id.end, id.end + 2, '()')
+        arrowStart = id.end + 3
+      } else {
+        this.code.update(arrowStart, arrowStart + 2, '()')
+        arrowStart += 2
+      }
     }
     const arrowEnd = body.start
     this.code.addSpaceBothSlide(arrowStart, arrowEnd, '=>')

@@ -85,6 +85,7 @@ export class Parser {
    * @return {Statement}
    */
   private _parseStatement(): Statement {
+    debugger;
     const nextToken = this._getNextToken()
     // TokenType comes from the implementation of Tokenizer
     if (this._isFunctionDeclaration()) return this._parseFunctionDeclaration()

@@ -45,8 +45,8 @@ type StatementFunction<T extends Statement = Statement> = IsEqual<
   Statement
 > extends true
   ? T extends T
-  ? (node: T) => void
-  : never
+    ? (node: T) => void
+    : never
   : (node: T) => void
 
 type GenerateStatement = StatementFunction<Statement>
@@ -238,7 +238,7 @@ export class Generate {
       }
       if (index === paramsEndIndex) {
         this.code.update(paramEnd, paramEnd + 1, ')')
-        this.code.update(paramStart, paramEnd, ',', /[\s+;]/g)
+        this.code.update(paramStart, paramEnd, ',', /\s+|;/g)
       }
     })
   }

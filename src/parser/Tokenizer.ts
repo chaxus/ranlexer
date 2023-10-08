@@ -1,4 +1,5 @@
-import { isAlpha, isDigit, isUnderline, isWhiteSpace } from '@/utils/char'
+import { isAlpha, isColumnColon, isDigit, isUnderline, isWhiteSpace } from '@/utils/char'
+import type { Loc } from '@/ast/NodeType'
 
 // Lexical analyzer divides the code into lexical units for the convenience of subsequent syntax analysis
 // Essentially, code strings are scanned character by character and then grouped according to certain syntactic rules.
@@ -54,8 +55,10 @@ export enum ScanMode {
 export type Token = {
   type: TokenType
   value?: string
-  start: number
-  end: number
+  loc: {
+    start: Loc,
+    end: Loc
+  }
   raw?: string
 }
 
@@ -65,193 +68,211 @@ export interface TokenizerOption {
 
 // Token generator object, keyword mapping
 const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
-  let(start: number) {
-    return { type: TokenType.Let, value: 'let', start, end: start + 3 }
+  let(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Let, value: 'let', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
   },
-  const(start: number) {
-    return { type: TokenType.Const, value: 'const', start, end: start + 5 }
+  const(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Const, value: 'const', loc: { start: loc, end: { line, column: column + 5, index: index + 5 } } }
   },
-  var(start: number) {
-    return { type: TokenType.Var, value: 'var', start, end: start + 3 }
+  var(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Var, value: 'var', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
   },
-  for(start: number) {
-    return { type: TokenType.For, value: 'for', start, end: start + 3 }
+  for(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.For, value: 'for', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
   },
-  switch(start: number) {
-    return { type: TokenType.Switch, value: 'switch', start, end: start + 6 }
+  switch(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Switch, value: 'switch', loc: { start: loc, end: { line, column: column + 6, index: index + 6 } } }
   },
-  case(start: number) {
-    return { type: TokenType.Case, value: 'case', start, end: start + 4 }
+  case(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Case, value: 'case', loc: { start: loc, end: { line, column: column + 4, index: index + 4 } } }
   },
-  if(start: number) {
-    return { type: TokenType.If, value: 'if', start, end: start + 2 }
+  if(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.If, value: 'if', loc: { start: loc, end: { line, column: column + 2, index: index + 2 } } }
   },
-  assign(start: number) {
-    return { type: TokenType.Assign, value: '=', start, end: start + 1 }
+  assign(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Assign, value: '=', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  QuestionOperator(start: number) {
+  QuestionOperator(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.QuestionOperator,
       value: '?',
-      start,
-      end: start + 1,
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
     }
   },
-  import(start: number) {
+  import(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Import,
       value: 'import',
-      start,
-      end: start + 6,
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
     }
   },
-  export(start: number) {
+  export(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Export,
       value: 'export',
-      start,
-      end: start + 6,
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
     }
   },
-  from(start: number) {
+  from(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.From,
       value: 'from',
-      start,
-      end: start + 4,
+      loc: { start: loc, end: { line, column: column + 4, index: index + 4 } }
     }
   },
-  as(start: number) {
+  as(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.As,
       value: 'as',
-      start,
-      end: start + 2,
+      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } }
     }
   },
-  asterisk(start: number) {
+  asterisk(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Asterisk,
       value: '*',
-      start,
-      end: start + 1,
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
     }
   },
-  default(start: number) {
+  default(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Default,
       value: 'default',
-      start,
-      end: start + 7,
+      loc: { start: loc, end: { line, column: column + 7, index: index + 7 } }
     }
   },
-  number(start: number, value: string) {
+  number(loc: Loc, value: string) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Number,
       value,
-      start,
-      end: start + value.length,
+      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } },
       raw: value,
     }
   },
-  class(start: number) {
+  class(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Class,
       value: 'class',
-      start,
-      end: start + 5,
+      loc: { start: loc, end: { line, column: column + 5, index: index + 5 } }
     }
   },
-  function(start: number) {
+  function(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Function,
       value: 'function',
-      start,
-      end: start + 8,
+      loc: { start: loc, end: { line, column: column + 8, index: index + 8 } }
     }
   },
-  return(start: number) {
+  return(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Return,
       value: 'return',
-      start,
-      end: start + 6,
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
     }
   },
-  arrowOperator(start: number) {
+  arrowOperator(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.ArrowOperator,
       value: '=>',
-      start,
-      end: start + 2,
+      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } }
     }
   },
-  binaryOperator(start: number, value: string) {
+  binaryOperator(loc: Loc, value: string) {
+    const { line, column, index } = loc
     return {
       type: TokenType.BinaryOperator,
       value,
-      start,
-      end: start + value.length,
+      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } }
     }
   },
-  updateOperator(start: number, value: string) {
+  updateOperator(loc: Loc, value: string) {
+    const { line, column, index } = loc
     return {
       type: TokenType.UpdateOperator,
       value,
-      start,
-      end: start + value.length,
+      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } }
     }
   },
-  comma(start: number) {
+  comma(loc: Loc) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Comma,
       value: ',',
-      start,
-      end: start + 1,
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
     }
   },
-  leftParen(start: number) {
-    return { type: TokenType.LeftParen, value: '(', start, end: start + 1 }
+  leftParen(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.LeftParen, value: '(', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  rightParen(start: number) {
-    return { type: TokenType.RightParen, value: ')', start, end: start + 1 }
+  rightParen(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.RightParen, value: ')', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  leftBracket(start: number) {
-    return { type: TokenType.LeftBracket, value: '[', start, end: start + 1 }
+  leftBracket(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.LeftBracket, value: '[', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  rightBracket(start: number) {
-    return { type: TokenType.RightBracket, value: ']', start, end: start + 1 }
+  rightBracket(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.RightBracket, value: ']', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  leftCurly(start: number) {
-    return { type: TokenType.LeftCurly, value: '{', start, end: start + 1 }
+  leftCurly(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.LeftCurly, value: '{', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  rightCurly(start: number) {
-    return { type: TokenType.RightCurly, value: '}', start, end: start + 1 }
+  rightCurly(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.RightCurly, value: '}', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  dot(start: number) {
-    return { type: TokenType.Dot, value: '.', start, end: start + 1 }
+  dot(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Dot, value: '.', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  semicolon(start: number) {
-    return { type: TokenType.Semicolon, value: ';', start, end: start + 1 }
+  semicolon(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Semicolon, value: ';', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  colon(start: number) {
-    return { type: TokenType.Colon, value: ':', start, end: start + 1 }
+  colon(loc: Loc) {
+    const { line, column, index } = loc
+    return { type: TokenType.Colon, value: ':', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
   },
-  stringLiteral(start: number, value: string, raw: string) {
+  stringLiteral(loc: Loc, value: string, raw: string) {
+    const { line, column, index } = loc
     return {
       type: TokenType.StringLiteral,
       value,
-      start,
-      end: start + value.length + 2,
+      loc: { start: loc, end: { line, column: column + value.length + 2, index: index + value.length + 2 } },
       raw,
     }
   },
-  identifier(start: number, value: string) {
+  identifier(loc: Loc, value: string) {
+    const { line, column, index } = loc
     return {
       type: TokenType.Identifier,
       value,
-      start,
-      end: start + value.length,
+      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } },
+
     }
   },
 }
@@ -339,6 +360,9 @@ export class Tokenizer {
   private _source: string // The code snippet currently passed in
   private _scanMode = ScanMode.Normal // Scan mode, and perform different operations on different types
   private _options: TokenizerOption
+  private _line: number
+  private _column: number
+  private _index: number
   /**
    * @description: Parameters are snippets of code
    * @param {string} input
@@ -346,6 +370,9 @@ export class Tokenizer {
   constructor(input: string, options: TokenizerOption = {}) {
     this._options = options
     this._source = input // Obtain source code
+    this._line = 0
+    this._column = 0
+    this._index = 0
   }
   /**
    * @description: Main program, scan string to generate token
@@ -355,9 +382,23 @@ export class Tokenizer {
     while (this._currentIndex < this._source.length) {
       const currentChar = this._source[this._currentIndex]
       const startIndex = this._currentIndex
+      const startLoc: Loc = {
+        line: this._line,
+        column: this._column,
+        index: startIndex,
+      }
       // 1. Determines whether it is a delimiter
       if (isWhiteSpace(currentChar)) {
         this._currentIndex++
+        this._index++
+        this._column++
+        continue
+      }
+      if (isColumnColon(currentChar)) {
+        this._currentIndex++
+        this._column = 0
+        this._line++
+        this._index++
         continue
       }
       // exec plugins
@@ -375,7 +416,7 @@ export class Tokenizer {
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
-            startIndex,
+            startLoc,
             this._getNextNumberChar(9),
           ),
         )
@@ -386,7 +427,7 @@ export class Tokenizer {
       else if (KNOWN_SINGLE_CHAR_TOKENS.has(currentChar as SingleCharTokens)) {
         if (this._getNextNumberChar() === '=>') {
           this._tokens.push(
-            TOKENS_GENERATOR.arrowOperator(startIndex, currentChar),
+            TOKENS_GENERATOR.arrowOperator(startLoc, currentChar),
           )
           this._currentIndex += 2
           continue
@@ -400,14 +441,14 @@ export class Tokenizer {
           previousToken.type !== TokenType.Export
         ) {
           // If it is not import/export, it is considered to be a binary operator to avoid miscalculation {
-          this._tokens.push(TOKENS_GENERATOR.asterisk(startIndex, currentChar))
+          this._tokens.push(TOKENS_GENERATOR.asterisk(startLoc, currentChar))
           this._currentIndex++
           continue
           // Otherwise, follow the * in import/export
         }
         const token = KNOWN_SINGLE_CHAR_TOKENS.get(
           currentChar as SingleCharTokens,
-        )!(startIndex)
+        )!(startLoc)
         this._tokens.push(token)
         this._currentIndex++
       }
@@ -418,7 +459,7 @@ export class Tokenizer {
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
-            startIndex,
+            startLoc,
             this._getNextNumberChar(2),
           ),
         )
@@ -430,7 +471,7 @@ export class Tokenizer {
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.binaryOperator(
-            startIndex,
+            startLoc,
             this._getNextNumberChar(1),
           ),
         )
@@ -442,7 +483,7 @@ export class Tokenizer {
       ) {
         this._tokens.push(
           TOKENS_GENERATOR.updateOperator(
-            startIndex,
+            startLoc,
             this._getNextNumberChar(),
           ),
         )
@@ -453,7 +494,7 @@ export class Tokenizer {
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
-          TOKENS_GENERATOR.binaryOperator(startIndex, currentChar),
+          TOKENS_GENERATOR.binaryOperator(startLoc, currentChar),
         )
         this._currentIndex++
         continue
@@ -502,6 +543,11 @@ export class Tokenizer {
     let identifier = ''
     let currentChar = this._getCurrentChar()
     const startIndex = this._currentIndex
+    const startLoc: Loc = {
+      line: this._line,
+      column: this._column,
+      index: startIndex,
+    }
     // If it is letters, numbers, and underscores, collect them as characters
     while (
       isAlpha(currentChar) ||
@@ -517,12 +563,12 @@ export class Tokenizer {
     if (identifier in TOKENS_GENERATOR) {
       token =
         TOKENS_GENERATOR[identifier as keyof typeof TOKENS_GENERATOR](
-          startIndex,
+          startLoc,
         )
     }
     // 2. The result is an identifier
     else {
-      token = TOKENS_GENERATOR['identifier'](startIndex, identifier)
+      token = TOKENS_GENERATOR['identifier'](startLoc, identifier)
     }
     // Lexical analysis adds this._tokens
     this._tokens.push(token)
@@ -532,6 +578,11 @@ export class Tokenizer {
   scanStringLiteral(): void {
     this._setScanMode(ScanMode.StringLiteral)
     const startIndex = this._currentIndex
+    const startLoc: Loc = {
+      line: this._line,
+      column: this._column,
+      index: startIndex,
+    }
     let currentChar = this._getCurrentChar()
     // Record quotes
     const startQuotation = currentChar
@@ -545,7 +596,7 @@ export class Tokenizer {
       currentChar = this._getCurrentChar()
     }
     const token = TOKENS_GENERATOR.stringLiteral(
-      startIndex,
+      startLoc,
       str,
       `${startQuotation}${str}${startQuotation}`,
     )
@@ -556,6 +607,11 @@ export class Tokenizer {
   _scanNumber(): void {
     this._setScanMode(ScanMode.Number)
     const startIndex = this._currentIndex
+    const startLoc: Loc = {
+      line: this._line,
+      column: this._column,
+      index: startIndex,
+    }
     let number = ''
     let currentChar = this._getCurrentChar()
     let isFloat = false
@@ -570,7 +626,7 @@ export class Tokenizer {
     if (isFloat && currentChar === '.') {
       throw new Error('Unexpected character "."')
     }
-    const token = TOKENS_GENERATOR.number(startIndex, number)
+    const token = TOKENS_GENERATOR.number(startLoc, number)
     // Lexical analysis adds this._tokens
     this._tokens.push(token)
     this._resetScanMode()

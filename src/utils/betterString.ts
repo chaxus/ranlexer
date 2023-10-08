@@ -57,5 +57,10 @@ export class RanString {
       }
     }
     this.update(start, end, str)
+    return this.str
+  }
+  append(str: string = '') {
+    this.str += str
+    return this.str
   }
 }

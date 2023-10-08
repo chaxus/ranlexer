@@ -1,7 +1,7 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-08-09 00:14:29
+ * @LastEditTime: 2023-10-07 15:31:35
  * @Description: https://github.com/estree/estree
  */
 
@@ -107,10 +107,18 @@ export enum FunctionType {
   CallExpression,
 }
 
+export interface Loc {
+  line: number,
+  column: number,
+  index: number,
+}
+
 export interface Node {
   type: string
-  start: number
-  end: number
+  loc: {
+    start: Loc,
+    end: Loc
+  }
   _scope?: Scope
 }
 
@@ -254,16 +262,12 @@ export interface FunctionDeclaration extends FunctionNode {
 
 export type VariableKind = 'var' | 'let' | 'const'
 
-export interface ArrayPattern {
+export interface ArrayPattern extends Node {
   type: NodeType.ArrayPattern
-  start: number
-  end: number
   elements: Array<Identifier>
 }
-export interface ObjectPattern {
+export interface ObjectPattern extends Node {
   type: NodeType.ObjectPattern
-  start: number
-  end: number
   properties: Property[]
 }
 

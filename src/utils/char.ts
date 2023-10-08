@@ -1,5 +1,9 @@
 export function isWhiteSpace(char: string): boolean {
-  return char === ' ' || char === '\t' || char === '\n' || char === '\r'
+  return char === ' ' || char === '\t' || char === '\r'
+}
+
+export function isColumnColon(char: string): boolean {
+  return char === '\n'
 }
 
 export function isAlpha(char: string): boolean {

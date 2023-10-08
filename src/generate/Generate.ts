@@ -68,18 +68,20 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 15, `export default `)
+    this.currentIndex = loc.start.index + 15
     if (declaration.type === NodeType.FunctionDeclaration) {
       this.generateFunctionDeclaration(declaration)
     }
-    this.currentIndex = loc.end.index
   }
   generateExportAllDeclaration(node: ExportAllDeclaration): void {
     const { loc, exported, source } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.end.index, `export * from ${source.raw};`)
     this.currentIndex = loc.end.index
@@ -89,6 +91,7 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (exported.name === local.name) {
       this.code.update(loc.start.index, loc.end.index, local.name)
@@ -102,8 +105,10 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 7, 'export ')
+    this.currentIndex = loc.start.index + 7
     const size = specifiers.length - 1
     let flag = true
     specifiers.forEach((specifier, index) => {
@@ -113,38 +118,41 @@ export class Generate {
         if (flag) {
           flag = false
           this.code.update(loc.start.index - 2, loc.start.index, '{ ')
+          this.currentIndex = loc.start.index
         }
       }
       if (index < size) {
         this.code.update(loc.end.index, loc.end.index + 1, ',')
+        this.currentIndex = loc.end.index + 1
       }
     })
     if (!flag) {
       flag = true
       this.code.update(specifiers[size].loc.end.index, specifiers[size].loc.end.index + 2, ' }')
+      this.currentIndex = specifiers[size].loc.end.index + 2
     }
     if (source) {
       this.code.update(source.loc.start.index - 5, source.loc.end.index, `from ${source.raw};`)
+      this.currentIndex = source.loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateImportDefaultSpecifier(node: ImportDefaultSpecifier): void {
     const { loc, local } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (local.type === NodeType.Identifier) {
       this.generateIdentifier(local)
     }
-    this.currentIndex = loc.end.index
   }
   generateImportSpecifier(node: ImportSpecifier): void {
     const { loc, imported, local } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
-      this.currentIndex = loc.end.index
+      this.currentIndex++
     }
     if (imported.name === local.name) {
       this.code.update(loc.start.index, loc.end.index, local.name)
@@ -158,6 +166,7 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.end.index, `* as ${local.name}`)
     this.currentIndex = loc.end.index
@@ -167,8 +176,10 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 7, 'import ')
+    this.currentIndex = loc.start.index + 7
     const size = specifiers.length - 1
     // 1. flag true indicates the beginning of the open parenthesis
     // and false indicates the end of the close parenthesis
@@ -182,6 +193,7 @@ export class Generate {
         if (!flag) {
           flag = true
           this.code.update(loc.end.index - 2, loc.end.index, ' }')
+          this.currentIndex = loc.end.index
         }
       }
       // 4. ImportSpecifier need parenthesis
@@ -191,6 +203,7 @@ export class Generate {
         if (flag) {
           flag = false
           this.code.update(loc.start.index - 2, loc.start.index, '{ ')
+          this.currentIndex = loc.start.index
         }
       }
       if (type === NodeType.ImportNamespaceSpecifier) {
@@ -198,12 +211,14 @@ export class Generate {
       }
       if (index < size) {
         this.code.update(loc.end.index, loc.end.index + 1, ',')
+        this.currentIndex = loc.end.index + 1
       }
     })
     // 6. if the specifiers are consumed and flag is false, add an open parenthesis
     if (!flag) {
       flag = true
       this.code.update(specifiers[size].loc.end.index, specifiers[size].loc.end.index + 2, ' }')
+      this.currentIndex = specifiers[size].loc.end.index + 2
     }
     if (source) {
       if (size < 0) {
@@ -211,14 +226,15 @@ export class Generate {
       } else {
         this.code.update(source.loc.start.index - 5, source.loc.end.index, `from ${source.raw};`)
       }
+      this.currentIndex = source.loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateCallExpression(node: CallExpression): void {
     const { loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (node.callee.type === NodeType.MemberExpression) {
       this.generateMemberExpression(node.callee)
@@ -228,38 +244,44 @@ export class Generate {
       this.generateCallExpression(node.callee)
     } else if (node.callee.type === NodeType.FunctionExpression) {
       this.code.update(loc.start.index - 1, loc.start.index, '(')
+      this.currentIndex = loc.start.index
       this.generateFunctionExpression(node.callee)
       this.code.update(node.callee.loc.end.index - 1, node.callee.loc.end.index, ')')
+      this.currentIndex = node.callee.loc.end.index
     }
     if (node.arguments?.length > 0) {
       this.generateFunctionParams(node.arguments)
     } else {
       this.code.update(node.callee.loc.end.index, node.callee.loc.end.index + 2, '()')
+      this.currentIndex = node.callee.loc.end.index + 2
     }
-    this.currentIndex = loc.end.index
   }
   generateReturnStatement(node: ReturnStatement): void {
     const { loc, argument } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (argument?.type === NodeType.CallExpression) {
       this.code.update(loc.start.index, loc.start.index + 7, 'return ')
+      this.currentIndex = loc.start.index + 7
       this.generateCallExpression(argument)
     } else {
       this.code.update(loc.start.index, loc.end.index, 'return')
+      this.currentIndex = loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateBlockStatement(node: BlockStatement): void {
     const { loc, body = [] } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (body.length > 0) {
-      this.code.update(loc.start.index, loc.start.index + 2, '{\n')
+      this.code.update(loc.start.index, loc.start.index + 1, '{')
+      this.currentIndex = loc.start.index + 2
       body.forEach((item) => {
         if (item.type === NodeType.ReturnStatement) {
           this.generateReturnStatement(item)
@@ -271,11 +293,17 @@ export class Generate {
           this.generateVariableDeclaration(item)
         }
       })
-      this.code.update(loc.end.index - 2, loc.end.index, '\n}')
+      if (loc.end.line > this.currentLine) {
+        this.currentLine = loc.end.line
+        this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+        this.currentIndex++
+      }
+      this.code.update(this.currentIndex, this.currentIndex + 1, '}')
+      this.currentIndex++
     } else {
       this.code.update(loc.start.index, loc.end.index, '{}')
+      this.currentIndex = loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateFunctionParams(params: Expression[] | Identifier[] = []): void {
     const paramsEndIndex = params.length - 1
@@ -295,12 +323,13 @@ export class Generate {
       }
       if (index === paramsStartIndex) {
         this.code.update(paramStart - 1, paramStart, '(')
+        this.currentIndex = paramStart
       }
       if (index === paramsEndIndex) {
-        this.code.update(paramEnd, paramEnd + 1, ')')
         this.code.update(paramStart, paramEnd, ',', /\s+|;/g)
+        this.code.update(paramEnd, paramEnd + 1, ')')
+        this.currentIndex = paramEnd + 1
       }
-      this.currentIndex = paramEnd
     })
   }
   generateFunctionDeclaration(node: FunctionDeclaration): void {
@@ -308,15 +337,19 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (async) {
       this.code.update(loc.start.index, loc.start.index + 14, 'async function')
+      this.currentIndex = loc.start.index + 14
     } else {
       this.code.update(loc.start.index, loc.start.index + 8, 'function')
+      this.currentIndex = loc.start.index + 8
     }
     if (id) {
       if (generator) {
         this.code.update(id?.loc.start.index - 1, id?.loc.start.index, '*')
+        this.currentIndex = id?.loc.start.index
       }
       this.generateIdentifier(id)
     }
@@ -325,21 +358,24 @@ export class Generate {
     } else {
       if (id) {
         this.code.update(id.loc.end.index, id.loc.end.index + 2, '()')
+        this.currentIndex = id.loc.end.index + 2
       } else {
         this.code.update(loc.start.index + 8, loc.start.index + 13, '()')
+        this.currentIndex = loc.start.index + 13
       }
     }
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
     this.code.update(loc.end.index, loc.end.index + 1, ';')
-    this.currentIndex = loc.end.index
+    this.currentIndex = loc.end.index + 1
   }
   generateIdentifier(node: Identifier): void {
     const { loc, type, name } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.end.index, name)
     this.currentIndex = loc.end.index
@@ -349,6 +385,7 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (type === NodeType.MemberExpression) {
       const { object, property } = node
@@ -363,6 +400,7 @@ export class Generate {
       }
       if (property?.type === NodeType.Literal) {
         this.code.update(property.loc.start.index, property.loc.end.index, property.raw)
+        this.currentIndex = property.loc.end.index
       }
       if (property?.type === NodeType.Identifier) {
         this.generateIdentifier(property)
@@ -379,14 +417,15 @@ export class Generate {
       } else {
         this.code.update(loc.start.index, loc.end.index, '.', /\s/g)
       }
+      this.currentIndex = loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateExpressionStatement(node: ExpressionStatement): void {
     const { loc, expression } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (expression.type === NodeType.MemberExpression) {
       this.generateMemberExpression(expression)
@@ -412,8 +451,8 @@ export class Generate {
         str += ' '
       }
       this.code.update(this.code.toString().length, loc.end.index, str)
+      this.currentIndex = loc.end.index
     }
-    this.currentIndex = loc.end.index
   }
   generateAssignmentExpression(node: AssignmentExpression): void {
     const { left, right, operator } = node
@@ -436,24 +475,25 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
-      this.currentIndex = loc.end.index
+      this.currentIndex++
     }
     if (argument.type === NodeType.Identifier) {
       this.generateIdentifier(argument)
     }
     if (prefix) {
       this.code.update(loc.start.index, loc.start.index + operator.length, operator)
+      this.currentIndex = loc.start.index + operator.length
     } else {
       this.code.update(argument.loc.end.index, argument.loc.end.index + operator.length, operator)
+      this.currentIndex = argument.loc.end.index + operator.length
     }
-    this.currentIndex = loc.end.index
   }
   generateBinaryExpression(node: BinaryExpression): void {
     const { type, operator, left, right, loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
-      this.currentIndex = loc.end.index
+      this.currentIndex++
     }
     if (left.type === NodeType.Identifier) {
       this.generateIdentifier(left)
@@ -463,6 +503,7 @@ export class Generate {
     }
     if (right.type === NodeType.Literal) {
       this.code.update(right.loc.start.index, right.loc.end.index, right.raw)
+      this.currentIndex = right.loc.end.index
     }
     if (right.type === NodeType.CallExpression) {
       this.generateCallExpression(right)
@@ -484,13 +525,16 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 1, '[')
+    this.currentIndex = loc.start.index + 1
     const size = elements?.length || 0
     elements?.forEach((element, index) => {
       const { type } = element
       if (type === NodeType.Literal) {
         this.code.update(element.loc.start.index, element.loc.end.index, element.raw)
+        this.currentIndex = element.loc.end.index
       }
       if (type === NodeType.ArrayExpression) {
         this.generateArrayExpression(element)
@@ -503,37 +547,43 @@ export class Generate {
       }
       if (index + 1 < size) {
         this.code.update(element.loc.end.index, element.loc.end.index + 1, ',')
+        this.currentIndex = element.loc.end.index + 1
       }
     })
     this.code.update(node.loc.end.index - 1, node.loc.end.index, ']')
-    this.currentIndex = loc.end.index
+    this.currentIndex = node.loc.end.index
   }
   generateObjectExpression(node: ObjectExpression): void {
     const { properties = [], loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
-      this.currentIndex = loc.end.index
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 1, '{')
+    this.currentIndex = loc.start.index + 1
     const size = properties.length
     properties.forEach((property, index) => {
       const { loc, key, value } = property
       if (key?.type === NodeType.Identifier) {
         this.code.update(key.loc.start.index, key.loc.end.index, key.name)
         this.code.update(key.loc.end.index, key.loc.end.index + 1, ':')
+        this.currentIndex = key.loc.end.index + 1
       }
       if (value?.type === NodeType.Literal) {
         this.code.update(value.loc.start.index, value.loc.end.index, value.raw)
+        this.currentIndex = value.loc.end.index
       }
       if (value?.type === NodeType.Identifier) {
         this.code.update(value.loc.start.index, value.loc.end.index, value.name)
+        this.currentIndex = value.loc.end.index
       }
       if (value?.type === NodeType.ObjectExpression) {
         this.generateObjectExpression(value)
       }
       if (index + 1 < size) {
         this.code.update(loc.end.index, loc.end.index + 1, ',')
+        this.currentIndex = loc.end.index + 1
       }
     })
     this.code.update(loc.end.index - 1, loc.end.index, '}')
@@ -544,46 +594,56 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 1, '[')
+    this.currentIndex = loc.start.index + 1
     const size = elements?.length || 0
     elements?.forEach((element, index) => {
       const { type } = element
       if (type === NodeType.Identifier) {
         this.code.update(element.loc.start.index, element.loc.end.index, element.name)
+        this.currentIndex = element.loc.end.index
       }
       if (index + 1 < size) {
         this.code.update(element.loc.end.index, element.loc.end.index + 1, ',')
+        this.currentIndex = element.loc.end.index + 1
       }
     })
     this.code.update(node.loc.end.index - 1, node.loc.end.index, ']')
-    this.currentIndex = loc.end.index
+    this.currentIndex = node.loc.end.index
   }
   generateObjectPattern(node: ObjectPattern) {
     const { properties = [], loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 1, '{')
+    this.currentIndex = loc.start.index + 1
     const size = properties.length
     properties.forEach((property, index) => {
       const { loc, key, value } = property
       if (key?.type === NodeType.Identifier) {
         this.code.update(key.loc.start.index, key.loc.end.index, key.name)
         this.code.update(key.loc.end.index, key.loc.end.index + 1, ':')
+        this.currentIndex = key.loc.end.index + 1
       }
       if (value?.type === NodeType.Literal) {
         this.code.update(value.loc.start.index, value.loc.end.index, value.raw)
+        this.currentIndex = value.loc.end.index
       }
       if (value?.type === NodeType.Identifier) {
         this.code.update(value.loc.start.index, value.loc.end.index, value.name)
+        this.currentIndex = value.loc.end.index
       }
       if (value?.type === NodeType.ObjectExpression) {
         this.generateObjectExpression(value)
       }
       if (index + 1 < size) {
         this.code.update(loc.end.index, loc.end.index + 1, ',')
+        this.currentIndex = loc.end.index + 1
       }
     })
     this.code.update(loc.end.index - 1, loc.end.index, '}')
@@ -598,9 +658,11 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (id?.type === NodeType.Identifier) {
       this.code.update(id.loc.start.index, id.loc.end.index, id.name)
+      this.currentIndex = id.loc.end.index
     }
     if (id?.type === NodeType.ArrayPattern) {
       this.generateArrayPattern(id)
@@ -612,9 +674,11 @@ export class Generate {
       this.code.addSpaceBothSlide(id.loc.end.index, init?.loc.start.index, '=')
       if (init.type === NodeType.Literal) {
         this.code.update(init.loc.start.index, init.loc.end.index, init.raw)
+        this.currentIndex = init.loc.end.index
       }
       if (init.type === NodeType.Identifier) {
         this.code.update(init.loc.start.index, init.loc.end.index, init.name)
+        this.currentIndex = init.loc.end.index
       }
       if (init.type === NodeType.ArrayExpression) {
         this.generateArrayExpression(init)
@@ -632,22 +696,25 @@ export class Generate {
         this.generateCallExpression(init)
       }
     }
-    this.currentIndex = loc.end.index
   }
   generateFunctionExpression(node: FunctionExpression): void {
     const { loc, id, params = [], body, async, generator } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (async) {
       this.code.update(loc.start.index, loc.start.index + 14, 'async function')
+      this.currentIndex = loc.start.index + 14
     } else {
       this.code.update(loc.start.index, loc.start.index + 8, 'function')
+      this.currentIndex = loc.start.index + 8
     }
     if (id) {
       if (generator) {
         this.code.update(id?.loc.start.index - 1, id?.loc.start.index, '*')
+        this.currentIndex = id?.loc.start.index
       }
       this.generateIdentifier(id)
     }
@@ -656,15 +723,17 @@ export class Generate {
     } else {
       if (id) {
         this.code.update(id.loc.end.index, id.loc.end.index + 2, '()')
+        this.currentIndex = id.loc.end.index + 2
       } else {
         this.code.update(loc.start.index + 8, loc.start.index + 13, '()')
+        this.currentIndex = loc.start.index + 13
       }
     }
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
     this.code.update(loc.end.index, loc.end.index + 1, ';')
-    this.currentIndex = loc.end.index
+    this.currentIndex = loc.end.index + 1
   }
   generateArrowFunctionExpressionExpression(
     node: ArrowFunctionExpression | FunctionExpression,
@@ -673,11 +742,12 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
-      this.currentIndex = loc.end.index
+      this.currentIndex++
     }
     let arrowStart = loc.start.index
     if (async) {
       this.code.update(loc.start.index, loc.start.index + 5, 'async')
+      this.currentIndex = loc.start.index + 5
       arrowStart += 5
     }
     if (params.length > 0) {
@@ -686,18 +756,20 @@ export class Generate {
     } else {
       if (id) {
         this.code.update(id.loc.end.index, id.loc.end.index + 2, '()')
+        this.currentIndex = id.loc.end.index + 2
         arrowStart = id.loc.end.index + 3
       } else {
         this.code.update(arrowStart, arrowStart + 2, '()')
+        this.currentIndex = arrowStart + 2
         arrowStart += 2
       }
     }
     const arrowEnd = body.loc.start.index
     this.code.addSpaceBothSlide(arrowStart, arrowEnd, '=>')
+    this.currentIndex = arrowEnd
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
-    this.currentIndex = loc.end.index
   }
   /**
    * @description: Analytic variable declaration
@@ -708,155 +780,177 @@ export class Generate {
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + kind.length, kind)
-    this.code.update(loc.end.index, loc.end.index + 1, ';')
+    this.currentIndex = loc.start.index + kind.length
     declarations.forEach((declaration) => {
       const { type } = declaration
       if (type === NodeType.VariableDeclarator) {
         return this.generateLiteral(declaration)
       }
     })
-    this.currentIndex = loc.end.index
+    this.code.update(loc.end.index, loc.end.index + 1, ';')
+    this.currentIndex = loc.end.index + 1
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 4, 'for(')
+    this.currentIndex = loc.start.index + 4
     if (type === NodeType.ForInStatement) {
       const { declarations = [] } = left
       this.code.update(left.loc.start.index, left.loc.start.index + left.kind.length, left.kind)
+      this.currentIndex = left.loc.start.index + left.kind.length
       declarations.forEach((item: VariableDeclarator) => {
         if (item.type === NodeType.VariableDeclarator) {
           this.generateLiteral(item)
         }
       })
       this.code.update(left.loc.end.index, left.loc.end.index + 4, ' in ')
+      this.currentIndex = left.loc.end.index + 4
       if (right?.type === NodeType.Identifier) {
         this.generateIdentifier(right)
         this.code.update(right.loc.end.index, right.loc.end.index + 1, ')')
+        this.currentIndex = right.loc.end.index + 1
       }
       if (body.type === NodeType.BlockStatement) {
         this.generateBlockStatement(body)
       }
     }
-    this.currentIndex = loc.end.index
   }
   generateForStatement(node: ForStatement): void {
     const { type, init, update, test, body, loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 4, 'for(')
+    this.currentIndex = loc.start.index + 4
     if (init.type === NodeType.VariableDeclaration) {
       this.generateVariableDeclaration(init)
     }
     if (update?.type === NodeType.ExpressionStatement) {
       this.generateExpressionStatement(update)
       this.code.update(update.loc.end.index, update.loc.end.index + 1, ')')
+      this.currentIndex = update.loc.end.index + 1
     }
     if (test?.type === NodeType.ExpressionStatement) {
       this.generateExpressionStatement(test)
       this.code.update(test.loc.end.index, test.loc.end.index + 1, ';')
+      this.currentIndex = test.loc.end.index + 1
     }
     if (body.type === NodeType.BlockStatement) {
       this.generateBlockStatement(body)
     }
-    this.currentIndex = loc.end.index
   }
   generateSwitchStatement(node: SwitchStatement): void {
     const { loc, type, discriminant, cases = [] } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 6, 'switch')
+    this.currentIndex = loc.start.index + 6
     this.code.update(discriminant.loc.start.index - 1, discriminant.loc.start.index, '(')
+    this.currentIndex = discriminant.loc.start.index
     if (discriminant.type === NodeType.Identifier) {
       this.generateIdentifier(discriminant)
     }
     this.code.update(discriminant.loc.end.index, discriminant.loc.end.index + 2, '){')
+    this.currentIndex = discriminant.loc.end.index + 2
     cases.forEach((item) => {
       const { type, loc, test, consequent = [] } = item
       if (test?.type === NodeType.Literal) {
         this.code.update(loc.start.index, loc.start.index + 4, 'case')
         this.code.update(test.loc.start.index, test.loc.end.index, test.raw)
         this.code.update(test.loc.end.index, test.loc.end.index + 1, ':')
+        this.currentIndex = test.loc.end.index + 1
       } else {
         this.code.update(loc.start.index, loc.start.index + 8, 'default:')
+        this.currentIndex = loc.start.index + 8
       }
       consequent.forEach((exp) => {
         if (exp.type === NodeType.ExpressionStatement) {
           this.generateExpressionStatement(exp)
         }
       })
-      this.code.update(loc.end.index, loc.end.index + 1, ';')
     })
     this.code.update(loc.end.index - 1, loc.end.index, '}')
-    this.currentIndex = loc.end.index
+    this.code.update(loc.end.index, loc.end.index + 1, ';')
+    this.currentIndex = loc.end.index + 1
   }
   generateIfStatement(node: IfStatement): void {
     const { loc, test, consequent, alternate } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 2, 'if')
     this.code.update(test.loc.start.index - 1, test.loc.start.index, '(')
+    this.currentIndex = test.loc.start.index
     if (test.type === NodeType.Identifier) {
       this.generateIdentifier(test)
     }
     this.code.update(test.loc.end.index, test.loc.end.index + 1, ')')
+    this.currentIndex = test.loc.end.index + 1
     if (consequent.type === NodeType.ExpressionStatement) {
       this.generateExpressionStatement(consequent)
     }
     if (consequent.type === NodeType.BlockStatement) {
       this.generateBlockStatement(consequent)
     }
-    this.currentIndex = loc.end.index
   }
   generateForOfStatement(node: ForOfStatement): void {
     const { type, left, right, body, loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     this.code.update(loc.start.index, loc.start.index + 4, 'for(')
+    this.currentIndex = loc.start.index + 4
     if (type === NodeType.ForOfStatement) {
       const { declarations = [] } = left
       this.code.update(left.loc.start.index, left.loc.start.index + left.kind.length, left.kind)
+      this.currentIndex = left.loc.start.index + left.kind.length
       declarations.forEach((item: VariableDeclarator) => {
         if (item.type === NodeType.VariableDeclarator) {
           this.generateLiteral(item)
         }
       })
       this.code.update(left.loc.end.index, left.loc.end.index + 4, ' of ')
+      this.currentIndex = left.loc.end.index + 4
       if (right?.type === NodeType.Identifier) {
         this.generateIdentifier(right)
         this.code.update(right.loc.end.index, right.loc.end.index + 1, ')')
+        this.currentIndex = right.loc.end.index + 1
       }
       if (body.type === NodeType.BlockStatement) {
         this.generateBlockStatement(body)
       }
     }
-    this.currentIndex = loc.end.index
   }
   generateLabeledStatement(node: LabeledStatement): void {
     const { type, label, body, loc } = node
     if (loc.start.line > this.currentLine) {
       this.currentLine = loc.start.line
       this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
+      this.currentIndex++
     }
     if (label.type === NodeType.Identifier) {
       this.code.update(label.loc.start.index, label.loc.end.index, label.name)
       this.code.update(label.loc.end.index, label.loc.end.index + 1, ':')
+      this.currentIndex = label.loc.end.index + 1
     }
     this.generateExpressionStatement(body)
-    this.currentIndex = loc.end.index
   }
   render(): string {
     const nodes = this.ast.body

@@ -790,8 +790,8 @@ export class Generate {
         return this.generateLiteral(declaration)
       }
     })
-    this.code.update(loc.end.index, loc.end.index + 1, ';')
-    this.currentIndex = loc.end.index + 1
+    this.code.update(this.currentIndex, this.currentIndex + 1, ';')
+    this.currentIndex++
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, loc } = node

@@ -1,4 +1,10 @@
-import { isAlpha, isColumnColon, isDigit, isUnderline, isWhiteSpace } from '@/utils/char'
+import {
+  isAlpha,
+  isColumnColon,
+  isDigit,
+  isUnderline,
+  isWhiteSpace,
+} from '@/utils/char'
 import type { Loc } from '@/ast/NodeType'
 
 // Lexical analyzer divides the code into lexical units for the convenience of subsequent syntax analysis
@@ -56,7 +62,7 @@ export type Token = {
   type: TokenType
   value?: string
   loc: {
-    start: Loc,
+    start: Loc
     end: Loc
   }
   raw?: string
@@ -70,42 +76,74 @@ export interface TokenizerOption {
 const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
   let(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Let, value: 'let', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
+    return {
+      type: TokenType.Let,
+      value: 'let',
+      loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
+    }
   },
   const(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Const, value: 'const', loc: { start: loc, end: { line, column: column + 5, index: index + 5 } } }
+    return {
+      type: TokenType.Const,
+      value: 'const',
+      loc: { start: loc, end: { line, column: column + 5, index: index + 5 } },
+    }
   },
   var(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Var, value: 'var', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
+    return {
+      type: TokenType.Var,
+      value: 'var',
+      loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
+    }
   },
   for(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.For, value: 'for', loc: { start: loc, end: { line, column: column + 3, index: index + 3 } } }
+    return {
+      type: TokenType.For,
+      value: 'for',
+      loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
+    }
   },
   switch(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Switch, value: 'switch', loc: { start: loc, end: { line, column: column + 6, index: index + 6 } } }
+    return {
+      type: TokenType.Switch,
+      value: 'switch',
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
+    }
   },
   case(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Case, value: 'case', loc: { start: loc, end: { line, column: column + 4, index: index + 4 } } }
+    return {
+      type: TokenType.Case,
+      value: 'case',
+      loc: { start: loc, end: { line, column: column + 4, index: index + 4 } },
+    }
   },
   if(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.If, value: 'if', loc: { start: loc, end: { line, column: column + 2, index: index + 2 } } }
+    return {
+      type: TokenType.If,
+      value: 'if',
+      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
+    }
   },
   assign(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Assign, value: '=', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.Assign,
+      value: '=',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   QuestionOperator(loc: Loc) {
     const { line, column, index } = loc
     return {
       type: TokenType.QuestionOperator,
       value: '?',
-      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
   import(loc: Loc) {
@@ -113,7 +151,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Import,
       value: 'import',
-      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
   export(loc: Loc) {
@@ -121,7 +159,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Export,
       value: 'export',
-      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
   from(loc: Loc) {
@@ -129,7 +167,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.From,
       value: 'from',
-      loc: { start: loc, end: { line, column: column + 4, index: index + 4 } }
+      loc: { start: loc, end: { line, column: column + 4, index: index + 4 } },
     }
   },
   as(loc: Loc) {
@@ -137,7 +175,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.As,
       value: 'as',
-      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } }
+      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
     }
   },
   asterisk(loc: Loc) {
@@ -145,7 +183,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Asterisk,
       value: '*',
-      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
   default(loc: Loc) {
@@ -153,7 +191,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Default,
       value: 'default',
-      loc: { start: loc, end: { line, column: column + 7, index: index + 7 } }
+      loc: { start: loc, end: { line, column: column + 7, index: index + 7 } },
     }
   },
   number(loc: Loc, value: string) {
@@ -161,7 +199,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Number,
       value,
-      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } },
+      loc: {
+        start: loc,
+        end: {
+          line,
+          column: column + value.length,
+          index: index + value.length,
+        },
+      },
       raw: value,
     }
   },
@@ -170,7 +215,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Class,
       value: 'class',
-      loc: { start: loc, end: { line, column: column + 5, index: index + 5 } }
+      loc: { start: loc, end: { line, column: column + 5, index: index + 5 } },
     }
   },
   function(loc: Loc) {
@@ -178,7 +223,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Function,
       value: 'function',
-      loc: { start: loc, end: { line, column: column + 8, index: index + 8 } }
+      loc: { start: loc, end: { line, column: column + 8, index: index + 8 } },
     }
   },
   return(loc: Loc) {
@@ -186,7 +231,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Return,
       value: 'return',
-      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } }
+      loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
   arrowOperator(loc: Loc) {
@@ -194,7 +239,7 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.ArrowOperator,
       value: '=>',
-      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } }
+      loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
     }
   },
   binaryOperator(loc: Loc, value: string) {
@@ -202,7 +247,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.BinaryOperator,
       value,
-      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } }
+      loc: {
+        start: loc,
+        end: {
+          line,
+          column: column + value.length,
+          index: index + value.length,
+        },
+      },
     }
   },
   updateOperator(loc: Loc, value: string) {
@@ -210,7 +262,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.UpdateOperator,
       value,
-      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } }
+      loc: {
+        start: loc,
+        end: {
+          line,
+          column: column + value.length,
+          index: index + value.length,
+        },
+      },
     }
   },
   comma(loc: Loc) {
@@ -218,51 +277,94 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Comma,
       value: ',',
-      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } }
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
   leftParen(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.LeftParen, value: '(', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.LeftParen,
+      value: '(',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   rightParen(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.RightParen, value: ')', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.RightParen,
+      value: ')',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   leftBracket(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.LeftBracket, value: '[', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.LeftBracket,
+      value: '[',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   rightBracket(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.RightBracket, value: ']', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.RightBracket,
+      value: ']',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   leftCurly(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.LeftCurly, value: '{', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.LeftCurly,
+      value: '{',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   rightCurly(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.RightCurly, value: '}', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.RightCurly,
+      value: '}',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   dot(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Dot, value: '.', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.Dot,
+      value: '.',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   semicolon(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Semicolon, value: ';', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.Semicolon,
+      value: ';',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   colon(loc: Loc) {
     const { line, column, index } = loc
-    return { type: TokenType.Colon, value: ':', loc: { start: loc, end: { line, column: column + 1, index: index + 1 } } }
+    return {
+      type: TokenType.Colon,
+      value: ':',
+      loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
+    }
   },
   stringLiteral(loc: Loc, value: string, raw: string) {
     const { line, column, index } = loc
     return {
       type: TokenType.StringLiteral,
       value,
-      loc: { start: loc, end: { line, column: column + value.length + 2, index: index + value.length + 2 } },
+      loc: {
+        start: loc,
+        end: {
+          line,
+          column: column + value.length + 2,
+          index: index + value.length + 2,
+        },
+      },
       raw,
     }
   },
@@ -271,8 +373,14 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Identifier,
       value,
-      loc: { start: loc, end: { line, column: column + value.length, index: index + value.length } },
-
+      loc: {
+        start: loc,
+        end: {
+          line,
+          column: column + value.length,
+          index: index + value.length,
+        },
+      },
     }
   },
 }
@@ -415,10 +523,7 @@ export class Tokenizer {
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
-          TOKENS_GENERATOR.binaryOperator(
-            startLoc,
-            this._getNextNumberChar(9),
-          ),
+          TOKENS_GENERATOR.binaryOperator(startLoc, this._getNextNumberChar(9)),
         )
         this._currentIndex += 10
         continue
@@ -458,10 +563,7 @@ export class Tokenizer {
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
-          TOKENS_GENERATOR.binaryOperator(
-            startLoc,
-            this._getNextNumberChar(2),
-          ),
+          TOKENS_GENERATOR.binaryOperator(startLoc, this._getNextNumberChar(2)),
         )
         this._currentIndex += 3
         continue
@@ -470,10 +572,7 @@ export class Tokenizer {
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
-          TOKENS_GENERATOR.binaryOperator(
-            startLoc,
-            this._getNextNumberChar(1),
-          ),
+          TOKENS_GENERATOR.binaryOperator(startLoc, this._getNextNumberChar(1)),
         )
         this._currentIndex += 2
         continue
@@ -482,10 +581,7 @@ export class Tokenizer {
         this._scanMode === ScanMode.Normal
       ) {
         this._tokens.push(
-          TOKENS_GENERATOR.updateOperator(
-            startLoc,
-            this._getNextNumberChar(),
-          ),
+          TOKENS_GENERATOR.updateOperator(startLoc, this._getNextNumberChar()),
         )
         this._currentIndex += 2
         continue
@@ -562,9 +658,7 @@ export class Tokenizer {
     // 1. The result is a keyword
     if (identifier in TOKENS_GENERATOR) {
       token =
-        TOKENS_GENERATOR[identifier as keyof typeof TOKENS_GENERATOR](
-          startLoc,
-        )
+        TOKENS_GENERATOR[identifier as keyof typeof TOKENS_GENERATOR](startLoc)
     }
     // 2. The result is an identifier
     else {

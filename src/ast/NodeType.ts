@@ -108,15 +108,15 @@ export enum FunctionType {
 }
 
 export interface Loc {
-  line: number,
-  column: number,
-  index: number,
+  line: number
+  column: number
+  index: number
 }
 
 export interface Node {
   type: string
   loc: {
-    start: Loc,
+    start: Loc
     end: Loc
   }
   _scope?: Scope

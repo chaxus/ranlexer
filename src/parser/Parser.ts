@@ -73,14 +73,14 @@ export class Parser {
         start: {
           line: 0,
           column: 0,
-          index: 0
+          index: 0,
         },
         end: {
           line: Infinity,
           column: Infinity,
-          index: Infinity
+          index: Infinity,
         },
-      }
+      },
     }
     while (!this._isEnd()) {
       const node = this._parseStatement()
@@ -162,7 +162,7 @@ export class Parser {
       type: NodeType.IfStatement,
       loc: {
         start: loc.start,
-        end: consequent.loc.end
+        end: consequent.loc.end,
       },
       test,
       consequent,
@@ -249,7 +249,7 @@ export class Parser {
         type: NodeType.ForInStatement,
         loc: {
           start: loc.start,
-          end: body.loc.end
+          end: body.loc.end,
         },
         right,
         left: init,
@@ -262,7 +262,7 @@ export class Parser {
         type: NodeType.ForOfStatement,
         loc: {
           start: loc.start,
-          end: body.loc.end
+          end: body.loc.end,
         },
         right,
         left: init,
@@ -274,7 +274,7 @@ export class Parser {
       type: NodeType.ForStatement,
       loc: {
         start: loc.start,
-        end: body.loc.end
+        end: body.loc.end,
       },
       init,
       test: test!,
@@ -289,7 +289,7 @@ export class Parser {
     const objectExpression: ObjectExpression = {
       type: NodeType.ObjectExpression,
       properties,
-      loc
+      loc,
     }
     // Consumption "{"
     this._goNext(TokenType.LeftCurly)
@@ -318,7 +318,7 @@ export class Parser {
         end: {
           line: Infinity,
           column: Infinity,
-          index: Infinity
+          index: Infinity,
         },
       },
     }
@@ -346,7 +346,7 @@ export class Parser {
         end: {
           line: Infinity,
           column: Infinity,
-          index: Infinity
+          index: Infinity,
         },
       },
       type: NodeType.Property,
@@ -388,7 +388,7 @@ export class Parser {
         end: {
           line: Infinity,
           column: Infinity,
-          index: Infinity
+          index: Infinity,
         },
       },
     }
@@ -419,7 +419,7 @@ export class Parser {
         end: {
           line: Infinity,
           column: Infinity,
-          index: Infinity
+          index: Infinity,
         },
       },
     }
@@ -477,7 +477,7 @@ export class Parser {
           loc: {
             start: specifier.loc.start,
             end: local ? local.loc.end : specifier.loc.end,
-          }
+          },
         }
         specifiers.push(importSpecifier)
         if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -497,7 +497,7 @@ export class Parser {
         local,
         loc: {
           start: loc.start,
-          end: local.loc.end
+          end: local.loc.end,
         },
       }
       specifiers.push(importNamespaceSpecifier)
@@ -513,7 +513,7 @@ export class Parser {
       specifiers: specifiers as ImportSpecifiers,
       loc: {
         start: loc.start,
-        end: source.loc.end
+        end: source.loc.end,
       },
       source,
     }
@@ -541,8 +541,8 @@ export class Parser {
           declaration: local,
           loc: {
             start: local.loc.start,
-            end: local.loc.end
-          }
+            end: local.loc.end,
+          },
         }
       }
       // export default function() {}
@@ -553,8 +553,8 @@ export class Parser {
           declaration,
           loc: {
             start: loc.start,
-            end: declaration.loc.end
-          }
+            end: declaration.loc.end,
+          },
         }
       }
       // export default class {}
@@ -576,8 +576,8 @@ export class Parser {
           exported,
           loc: {
             start: local.loc.start,
-            end: exported.loc.end
-          }
+            end: exported.loc.end,
+          },
         }
         specifiers.push(exportSpecifier)
         if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -594,7 +594,7 @@ export class Parser {
         specifiers,
         loc: {
           start: loc.start,
-          end: source.loc.end
+          end: source.loc.end,
         },
         declaration: null,
         source,
@@ -614,7 +614,7 @@ export class Parser {
         declaration,
         loc: {
           start: loc.start,
-          end: declaration.loc.end
+          end: declaration.loc.end,
         },
         specifiers: specifiers as ExportSpecifier[],
         source: null,
@@ -630,7 +630,7 @@ export class Parser {
         declaration,
         loc: {
           start: loc.start,
-          end: declaration.loc.end
+          end: declaration.loc.end,
         },
         specifiers: specifiers as ExportSpecifier[],
         source: null,
@@ -650,7 +650,7 @@ export class Parser {
         type: NodeType.ExportAllDeclaration,
         loc: {
           start: loc.start,
-          end: source.loc.end
+          end: source.loc.end,
         },
         source,
         exported,
@@ -737,7 +737,7 @@ export class Parser {
         loc: {
           start: id!.loc.start,
           end: init ? init.loc.end : id!.loc.end,
-        }
+        },
       }
       declarations.push(declarator)
       if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -752,7 +752,7 @@ export class Parser {
       loc: {
         start: loc.start,
         end: this._getPreviousToken().loc.end,
-      }
+      },
     }
     this._skipSemicolon()
     return node
@@ -771,7 +771,7 @@ export class Parser {
       loc: {
         start: loc.start,
         end: argument ? argument.loc.end : loc.end,
-      }
+      },
     }
     this._skipSemicolon()
     return node
@@ -801,7 +801,7 @@ export class Parser {
       loc: {
         start: expression?.loc.start || loc.start,
         end: body.loc.end,
-      }
+      },
     }
     return node
   }
@@ -812,8 +812,8 @@ export class Parser {
       expression,
       loc: {
         start: expression.loc.start,
-        end: expression.loc.end
-      }
+        end: expression.loc.end,
+      },
     }
     this._skipSemicolon()
     return expressionStatement
@@ -830,7 +830,7 @@ export class Parser {
       type: NodeType.ConditionalExpression,
       loc: {
         start: loc.start,
-        end: alternate.loc.end
+        end: alternate.loc.end,
       },
       test: expression,
       consequent,
@@ -943,7 +943,7 @@ export class Parser {
       label,
       loc: {
         start: label.loc.start,
-        end: body.loc.end
+        end: body.loc.end,
       },
       body,
     }
@@ -965,8 +965,8 @@ export class Parser {
       right,
       loc: {
         start: loc.start,
-        end: right.loc.end
-      }
+        end: right.loc.end,
+      },
     }
     this._skipSemicolon()
     return node
@@ -984,8 +984,8 @@ export class Parser {
         prefix: false,
         loc: {
           start: expression.loc.start,
-          end: loc.end
-        }
+          end: loc.end,
+        },
       }
       return node
     } else {
@@ -997,8 +997,8 @@ export class Parser {
         prefix: true,
         loc: {
           start: loc.start,
-          end: argument.loc.end
-        }
+          end: argument.loc.end,
+        },
       }
       return node
     }
@@ -1023,8 +1023,8 @@ export class Parser {
       right,
       loc: {
         start: loc.start,
-        end: right.loc.end
-      }
+        end: right.loc.end,
+      },
     }
     this._skipSemicolon()
     return node
@@ -1042,8 +1042,8 @@ export class Parser {
         end: {
           column: Infinity,
           line: Infinity,
-          index: Infinity
-        }
+          index: Infinity,
+        },
       },
       computed: false,
     }
@@ -1079,9 +1079,9 @@ export class Parser {
         end: {
           column: callee.loc.end.column + end,
           index: callee.loc.end.index + end,
-          line: callee.loc.end.line
-        }
-      }
+          line: callee.loc.end.line,
+        },
+      },
     }
     this._skipSemicolon()
     return node
@@ -1118,8 +1118,8 @@ export class Parser {
       body,
       loc: {
         start: loc.start,
-        end: body.loc.end
-      }
+        end: body.loc.end,
+      },
     }
     return node
   }
@@ -1167,7 +1167,7 @@ export class Parser {
       generator,
       loc: {
         start: expression?.loc.start || loc.start,
-        end: body.loc.end
+        end: body.loc.end,
       },
     }
     return node
@@ -1187,9 +1187,9 @@ export class Parser {
       const param =
         mode === FunctionType.FunctionDeclaration
           ? // Function declaration
-          this._parseIdentifier()
+            this._parseIdentifier()
           : // Function call
-          this._parseExpression()
+            this._parseExpression()
       params.push(param)
       if (!this._checkCurrentTokenType(TokenType.RightParen)) {
         this._goNext(TokenType.Comma)
@@ -1212,9 +1212,9 @@ export class Parser {
     const literal: Literal = {
       type: NodeType.Literal,
       value: token.value!,
-      loc:{
-        start:token.loc.start,
-        end:token.loc.end
+      loc: {
+        start: token.loc.start,
+        end: token.loc.end,
       },
       raw: token.raw!,
     }
@@ -1244,13 +1244,13 @@ export class Parser {
     const blockStatement: BlockStatement = {
       type: NodeType.BlockStatement,
       body: [],
-      loc:{
-        start:loc.start,
-        end:{
-          line:Infinity,
-          column:Infinity,
-          index:Infinity
-        }
+      loc: {
+        start: loc.start,
+        end: {
+          line: Infinity,
+          column: Infinity,
+          index: Infinity,
+        },
       },
     }
     // Consumption "{"

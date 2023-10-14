@@ -3,32 +3,415 @@ import { parse } from '@/parser'
 
 describe('statement', () => {
   it('throw Error();', () => {
-    const result = {"type":"Program","body":[{"type":"ExpressionStatement","expression":{"type":"Identifier","name":"throw","loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":5,"index":5}}},"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":5,"index":5}}},{"type":"ExpressionStatement","expression":{"type":"CallExpression","callee":{"type":"Identifier","name":"Error","loc":{"start":{"line":0,"column":1,"index":6},"end":{"line":0,"column":6,"index":11}}},"arguments":[],"loc":{"start":{"line":0,"column":1,"index":6},"end":{"column":8,"index":13,"line":0}}},"loc":{"start":{"line":0,"column":1,"index":6},"end":{"column":8,"index":13,"line":0}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"column":8,"index":13,"line":0}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'throw',
+            loc: {
+              start: { line: 0, column: 0, index: 0 },
+              end: { line: 0, column: 5, index: 5 },
+            },
+          },
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 5, index: 5 },
+          },
+        },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'CallExpression',
+            callee: {
+              type: 'Identifier',
+              name: 'Error',
+              loc: {
+                start: { line: 0, column: 1, index: 6 },
+                end: { line: 0, column: 6, index: 11 },
+              },
+            },
+            arguments: [],
+            loc: {
+              start: { line: 0, column: 1, index: 6 },
+              end: { column: 8, index: 13, line: 0 },
+            },
+          },
+          loc: {
+            start: { line: 0, column: 1, index: 6 },
+            end: { column: 8, index: 13, line: 0 },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { column: 8, index: 13, line: 0 },
+      },
+    }
     const code = 'throw Error();'
     expect(parse(code)).toEqual(result)
   })
   it('{}', () => {
-    const result = {"type":"Program","body":[{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":1,"index":2}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":1,"index":2}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'BlockStatement',
+          body: [],
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 1, index: 2 },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 0, column: 1, index: 2 },
+      },
+    }
     const code = '{}'
     expect(parse(code)).toEqual(result)
   })
   it('try {} catch(e) {} finally{}', () => {
-    const result = {"type":"Program","body":[{"type":"ExpressionStatement","expression":{"type":"Identifier","name":"try","loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":3,"index":3}}},"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":3,"index":3}}},{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":1,"index":4},"end":{"line":0,"column":2,"index":6}}},{"type":"ExpressionStatement","expression":{"type":"CallExpression","callee":{"type":"Identifier","name":"catch","loc":{"start":{"line":0,"column":2,"index":7},"end":{"line":0,"column":7,"index":12}}},"arguments":[{"type":"Identifier","name":"e","loc":{"start":{"line":0,"column":2,"index":13},"end":{"line":0,"column":3,"index":14}}}],"loc":{"start":{"line":0,"column":2,"index":7},"end":{"column":10,"index":15,"line":0}}},"loc":{"start":{"line":0,"column":2,"index":7},"end":{"column":10,"index":15,"line":0}}},{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":3,"index":16},"end":{"line":0,"column":4,"index":18}}},{"type":"ExpressionStatement","expression":{"type":"Identifier","name":"finally","loc":{"start":{"line":0,"column":4,"index":19},"end":{"line":0,"column":11,"index":26}}},"loc":{"start":{"line":0,"column":4,"index":19},"end":{"line":0,"column":11,"index":26}}},{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":4,"index":26},"end":{"line":0,"column":5,"index":28}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":5,"index":28}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'try',
+            loc: {
+              start: { line: 0, column: 0, index: 0 },
+              end: { line: 0, column: 3, index: 3 },
+            },
+          },
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 3, index: 3 },
+          },
+        },
+        {
+          type: 'BlockStatement',
+          body: [],
+          loc: {
+            start: { line: 0, column: 1, index: 4 },
+            end: { line: 0, column: 2, index: 6 },
+          },
+        },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'CallExpression',
+            callee: {
+              type: 'Identifier',
+              name: 'catch',
+              loc: {
+                start: { line: 0, column: 2, index: 7 },
+                end: { line: 0, column: 7, index: 12 },
+              },
+            },
+            arguments: [
+              {
+                type: 'Identifier',
+                name: 'e',
+                loc: {
+                  start: { line: 0, column: 2, index: 13 },
+                  end: { line: 0, column: 3, index: 14 },
+                },
+              },
+            ],
+            loc: {
+              start: { line: 0, column: 2, index: 7 },
+              end: { column: 10, index: 15, line: 0 },
+            },
+          },
+          loc: {
+            start: { line: 0, column: 2, index: 7 },
+            end: { column: 10, index: 15, line: 0 },
+          },
+        },
+        {
+          type: 'BlockStatement',
+          body: [],
+          loc: {
+            start: { line: 0, column: 3, index: 16 },
+            end: { line: 0, column: 4, index: 18 },
+          },
+        },
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'Identifier',
+            name: 'finally',
+            loc: {
+              start: { line: 0, column: 4, index: 19 },
+              end: { line: 0, column: 11, index: 26 },
+            },
+          },
+          loc: {
+            start: { line: 0, column: 4, index: 19 },
+            end: { line: 0, column: 11, index: 26 },
+          },
+        },
+        {
+          type: 'BlockStatement',
+          body: [],
+          loc: {
+            start: { line: 0, column: 4, index: 26 },
+            end: { line: 0, column: 5, index: 28 },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 0, column: 5, index: 28 },
+      },
+    }
     const code = 'try {} catch(e) {} finally{}'
     expect(parse(code)).toEqual(result)
   })
   it('for (let key in obj) {}', () => {
-    const result = {"type":"Program","body":[{"type":"ForInStatement","loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":6,"index":23}},"right":{"type":"Identifier","name":"obj","loc":{"start":{"line":0,"column":4,"index":16},"end":{"line":0,"column":7,"index":19}}},"left":{"type":"VariableDeclaration","kind":"let","declarations":[{"type":"VariableDeclarator","id":{"type":"Identifier","name":"key","loc":{"start":{"line":0,"column":2,"index":9},"end":{"line":0,"column":5,"index":12}}},"init":null,"loc":{"start":{"line":0,"column":2,"index":9},"end":{"line":0,"column":5,"index":12}}}],"loc":{"start":{"line":0,"column":1,"index":5},"end":{"line":0,"column":5,"index":12}}},"body":{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":5,"index":21},"end":{"line":0,"column":6,"index":23}}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":6,"index":23}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ForInStatement',
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 6, index: 23 },
+          },
+          right: {
+            type: 'Identifier',
+            name: 'obj',
+            loc: {
+              start: { line: 0, column: 4, index: 16 },
+              end: { line: 0, column: 7, index: 19 },
+            },
+          },
+          left: {
+            type: 'VariableDeclaration',
+            kind: 'let',
+            declarations: [
+              {
+                type: 'VariableDeclarator',
+                id: {
+                  type: 'Identifier',
+                  name: 'key',
+                  loc: {
+                    start: { line: 0, column: 2, index: 9 },
+                    end: { line: 0, column: 5, index: 12 },
+                  },
+                },
+                init: null,
+                loc: {
+                  start: { line: 0, column: 2, index: 9 },
+                  end: { line: 0, column: 5, index: 12 },
+                },
+              },
+            ],
+            loc: {
+              start: { line: 0, column: 1, index: 5 },
+              end: { line: 0, column: 5, index: 12 },
+            },
+          },
+          body: {
+            type: 'BlockStatement',
+            body: [],
+            loc: {
+              start: { line: 0, column: 5, index: 21 },
+              end: { line: 0, column: 6, index: 23 },
+            },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 0, column: 6, index: 23 },
+      },
+    }
     const code = 'for (let key in obj) {}'
     expect(parse(code)).toEqual(result)
   })
   it('for (let i = 0;i < 10;i ++) {}', () => {
-    const result = {"type":"Program","body":[{"type":"ForStatement","loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":9,"index":30}},"init":{"type":"VariableDeclaration","kind":"let","declarations":[{"type":"VariableDeclarator","id":{"type":"Identifier","name":"i","loc":{"start":{"line":0,"column":2,"index":9},"end":{"line":0,"column":3,"index":10}}},"init":{"type":"Literal","value":"0","loc":{"start":{"line":0,"column":4,"index":13},"end":{"line":0,"column":5,"index":14}},"raw":"0"},"loc":{"start":{"line":0,"column":2,"index":9},"end":{"line":0,"column":5,"index":14}}}],"loc":{"start":{"line":0,"column":1,"index":5},"end":{"line":0,"column":5,"index":14}}},"test":{"type":"ExpressionStatement","expression":{"type":"BinaryExpression","operator":"<","left":{"type":"Identifier","name":"i","loc":{"start":{"line":0,"column":4,"index":15},"end":{"line":0,"column":5,"index":16}}},"right":{"type":"Literal","value":"10","loc":{"start":{"line":0,"column":6,"index":19},"end":{"line":0,"column":8,"index":21}},"raw":"10"},"loc":{"start":{"line":0,"column":5,"index":17},"end":{"line":0,"column":8,"index":21}}},"loc":{"start":{"line":0,"column":5,"index":17},"end":{"line":0,"column":8,"index":21}}},"update":{"type":"ExpressionStatement","expression":{"type":"UpdateExpression","operator":"++","argument":{"type":"Identifier","name":"i","loc":{"start":{"line":0,"column":6,"index":22},"end":{"line":0,"column":7,"index":23}}},"prefix":false,"loc":{"start":{"line":0,"column":6,"index":22},"end":{"line":0,"column":9,"index":26}}},"loc":{"start":{"line":0,"column":6,"index":22},"end":{"line":0,"column":9,"index":26}}},"body":{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":8,"index":28},"end":{"line":0,"column":9,"index":30}}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":9,"index":30}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ForStatement',
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 9, index: 30 },
+          },
+          init: {
+            type: 'VariableDeclaration',
+            kind: 'let',
+            declarations: [
+              {
+                type: 'VariableDeclarator',
+                id: {
+                  type: 'Identifier',
+                  name: 'i',
+                  loc: {
+                    start: { line: 0, column: 2, index: 9 },
+                    end: { line: 0, column: 3, index: 10 },
+                  },
+                },
+                init: {
+                  type: 'Literal',
+                  value: '0',
+                  loc: {
+                    start: { line: 0, column: 4, index: 13 },
+                    end: { line: 0, column: 5, index: 14 },
+                  },
+                  raw: '0',
+                },
+                loc: {
+                  start: { line: 0, column: 2, index: 9 },
+                  end: { line: 0, column: 5, index: 14 },
+                },
+              },
+            ],
+            loc: {
+              start: { line: 0, column: 1, index: 5 },
+              end: { line: 0, column: 5, index: 14 },
+            },
+          },
+          test: {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'BinaryExpression',
+              operator: '<',
+              left: {
+                type: 'Identifier',
+                name: 'i',
+                loc: {
+                  start: { line: 0, column: 4, index: 15 },
+                  end: { line: 0, column: 5, index: 16 },
+                },
+              },
+              right: {
+                type: 'Literal',
+                value: '10',
+                loc: {
+                  start: { line: 0, column: 6, index: 19 },
+                  end: { line: 0, column: 8, index: 21 },
+                },
+                raw: '10',
+              },
+              loc: {
+                start: { line: 0, column: 5, index: 17 },
+                end: { line: 0, column: 8, index: 21 },
+              },
+            },
+            loc: {
+              start: { line: 0, column: 5, index: 17 },
+              end: { line: 0, column: 8, index: 21 },
+            },
+          },
+          update: {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'UpdateExpression',
+              operator: '++',
+              argument: {
+                type: 'Identifier',
+                name: 'i',
+                loc: {
+                  start: { line: 0, column: 6, index: 22 },
+                  end: { line: 0, column: 7, index: 23 },
+                },
+              },
+              prefix: false,
+              loc: {
+                start: { line: 0, column: 6, index: 22 },
+                end: { line: 0, column: 9, index: 26 },
+              },
+            },
+            loc: {
+              start: { line: 0, column: 6, index: 22 },
+              end: { line: 0, column: 9, index: 26 },
+            },
+          },
+          body: {
+            type: 'BlockStatement',
+            body: [],
+            loc: {
+              start: { line: 0, column: 8, index: 28 },
+              end: { line: 0, column: 9, index: 30 },
+            },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 0, column: 9, index: 30 },
+      },
+    }
     const code = 'for (let i = 0;i < 10;i ++) {}'
     expect(parse(code)).toEqual(result)
   })
   it('for (const key of obj) {}', () => {
-    const result = {"type":"Program","body":[{"type":"ForOfStatement","loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":6,"index":25}},"right":{"type":"Identifier","name":"obj","loc":{"start":{"line":0,"column":4,"index":18},"end":{"line":0,"column":7,"index":21}}},"left":{"type":"VariableDeclaration","kind":"const","declarations":[{"type":"VariableDeclarator","id":{"type":"Identifier","name":"key","loc":{"start":{"line":0,"column":2,"index":11},"end":{"line":0,"column":5,"index":14}}},"init":null,"loc":{"start":{"line":0,"column":2,"index":11},"end":{"line":0,"column":5,"index":14}}}],"loc":{"start":{"line":0,"column":1,"index":5},"end":{"line":0,"column":5,"index":14}}},"body":{"type":"BlockStatement","body":[],"loc":{"start":{"line":0,"column":5,"index":23},"end":{"line":0,"column":6,"index":25}}}}],"loc":{"start":{"line":0,"column":0,"index":0},"end":{"line":0,"column":6,"index":25}}}
+    const result = {
+      type: 'Program',
+      body: [
+        {
+          type: 'ForOfStatement',
+          loc: {
+            start: { line: 0, column: 0, index: 0 },
+            end: { line: 0, column: 6, index: 25 },
+          },
+          right: {
+            type: 'Identifier',
+            name: 'obj',
+            loc: {
+              start: { line: 0, column: 4, index: 18 },
+              end: { line: 0, column: 7, index: 21 },
+            },
+          },
+          left: {
+            type: 'VariableDeclaration',
+            kind: 'const',
+            declarations: [
+              {
+                type: 'VariableDeclarator',
+                id: {
+                  type: 'Identifier',
+                  name: 'key',
+                  loc: {
+                    start: { line: 0, column: 2, index: 11 },
+                    end: { line: 0, column: 5, index: 14 },
+                  },
+                },
+                init: null,
+                loc: {
+                  start: { line: 0, column: 2, index: 11 },
+                  end: { line: 0, column: 5, index: 14 },
+                },
+              },
+            ],
+            loc: {
+              start: { line: 0, column: 1, index: 5 },
+              end: { line: 0, column: 5, index: 14 },
+            },
+          },
+          body: {
+            type: 'BlockStatement',
+            body: [],
+            loc: {
+              start: { line: 0, column: 5, index: 23 },
+              end: { line: 0, column: 6, index: 25 },
+            },
+          },
+        },
+      ],
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 0, column: 6, index: 25 },
+      },
+    }
     const code = 'for (const key of obj) {}'
     expect(parse(code)).toEqual(result)
   })

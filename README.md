@@ -147,8 +147,6 @@ const bundle = await build(option)
 bundle.write()
 ```
 
-## Example
-
 ## Meta
 
 [LICENSE (MIT)](/LICENSE)

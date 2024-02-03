@@ -61,6 +61,8 @@ export enum ScanMode {
 export type Token = {
   type: TokenType
   value?: string
+  start: number
+  end: number
   loc: {
     start: Loc
     end: Loc
@@ -79,6 +81,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Let,
       value: 'let',
+      start: index,
+      end: index + 3,
       loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
     }
   },
@@ -87,6 +91,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Const,
       value: 'const',
+      start: index,
+      end: index + 5,
       loc: { start: loc, end: { line, column: column + 5, index: index + 5 } },
     }
   },
@@ -95,6 +101,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Var,
       value: 'var',
+      start: index,
+      end: index + 3,
       loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
     }
   },
@@ -103,6 +111,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.For,
       value: 'for',
+      start: index,
+      end: index + 3,
       loc: { start: loc, end: { line, column: column + 3, index: index + 3 } },
     }
   },
@@ -111,6 +121,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Switch,
       value: 'switch',
+      start: index,
+      end: index + 6,
       loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
@@ -119,6 +131,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Case,
       value: 'case',
+      start: index,
+      end: index + 4,
       loc: { start: loc, end: { line, column: column + 4, index: index + 4 } },
     }
   },
@@ -127,6 +141,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.If,
       value: 'if',
+      start: index,
+      end: index + 2,
       loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
     }
   },
@@ -135,6 +151,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Assign,
       value: '=',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -143,6 +161,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.QuestionOperator,
       value: '?',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -151,6 +171,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Import,
       value: 'import',
+      start: index,
+      end: index + 6,
       loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
@@ -159,6 +181,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Export,
       value: 'export',
+      start: index,
+      end: index + 6,
       loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
@@ -167,6 +191,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.From,
       value: 'from',
+      start: index,
+      end: index + 4,
       loc: { start: loc, end: { line, column: column + 4, index: index + 4 } },
     }
   },
@@ -175,6 +201,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.As,
       value: 'as',
+      start: index,
+      end: index + 2,
       loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
     }
   },
@@ -183,6 +211,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Asterisk,
       value: '*',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -191,6 +221,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Default,
       value: 'default',
+      start: index,
+      end: index + 7,
       loc: { start: loc, end: { line, column: column + 7, index: index + 7 } },
     }
   },
@@ -199,6 +231,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Number,
       value,
+      start: index,
+      end: index + value.length,
       loc: {
         start: loc,
         end: {
@@ -215,6 +249,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Class,
       value: 'class',
+      start: index,
+      end: index + 5,
       loc: { start: loc, end: { line, column: column + 5, index: index + 5 } },
     }
   },
@@ -223,6 +259,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Function,
       value: 'function',
+      start: index,
+      end: index + 8,
       loc: { start: loc, end: { line, column: column + 8, index: index + 8 } },
     }
   },
@@ -231,6 +269,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Return,
       value: 'return',
+      start: index,
+      end: index + 6,
       loc: { start: loc, end: { line, column: column + 6, index: index + 6 } },
     }
   },
@@ -239,6 +279,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.ArrowOperator,
       value: '=>',
+      start: index,
+      end: index + 2,
       loc: { start: loc, end: { line, column: column + 2, index: index + 2 } },
     }
   },
@@ -247,6 +289,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.BinaryOperator,
       value,
+      start: index,
+      end: index + value.length,
       loc: {
         start: loc,
         end: {
@@ -262,6 +306,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.UpdateOperator,
       value,
+      start: index,
+      end: index + value.length,
       loc: {
         start: loc,
         end: {
@@ -277,6 +323,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Comma,
       value: ',',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -285,6 +333,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.LeftParen,
       value: '(',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -293,6 +343,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.RightParen,
       value: ')',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -301,6 +353,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.LeftBracket,
       value: '[',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -309,6 +363,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.RightBracket,
       value: ']',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -317,6 +373,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.LeftCurly,
       value: '{',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -325,6 +383,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.RightCurly,
       value: '}',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -333,6 +393,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Dot,
       value: '.',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -341,6 +403,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Semicolon,
       value: ';',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -349,6 +413,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Colon,
       value: ':',
+      start: index,
+      end: index + 1,
       loc: { start: loc, end: { line, column: column + 1, index: index + 1 } },
     }
   },
@@ -357,6 +423,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.StringLiteral,
       value,
+      start: index,
+      end: index + value.length + 2,
       loc: {
         start: loc,
         end: {
@@ -373,6 +441,8 @@ const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
     return {
       type: TokenType.Identifier,
       value,
+      start: index,
+      end: index + value.length,
       loc: {
         start: loc,
         end: {
@@ -478,7 +548,7 @@ export class Tokenizer {
   constructor(input: string, options: TokenizerOption = {}) {
     this._options = options
     this._source = input // Obtain source code
-    this._line = 0
+    this._line = 1
     this._column = 0
     this._index = 0
   }

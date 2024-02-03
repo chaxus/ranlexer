@@ -69,6 +69,8 @@ export class Parser {
     const program: Program = {
       type: NodeType.Program,
       body: [],
+      start: 0,
+      end: Infinity,
       loc: {
         start: {
           line: 0,
@@ -87,6 +89,7 @@ export class Parser {
       program.body.push(node)
       if (this._isEnd()) {
         program.loc.end = node.loc.end
+        program.end = node.end
       }
     }
     return program
@@ -147,7 +150,7 @@ export class Parser {
     return this._checkCurrentTokenType(TokenType.Function) || isAsyncFunction
   }
   private _parseIfStatement(): IfStatement {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     this._goNext(TokenType.If)
     this._goNext(TokenType.LeftParen)
     const test = this._parseExpression()
@@ -160,6 +163,8 @@ export class Parser {
     }
     const ifStatement: IfStatement = {
       type: NodeType.IfStatement,
+      start,
+      end: consequent.end,
       loc: {
         start: loc.start,
         end: consequent.loc.end,
@@ -171,7 +176,7 @@ export class Parser {
     return ifStatement
   }
   private _parseSwitchStatement(): SwitchStatement {
-    const { loc } = this._getCurrentToken()
+    const { start } = this._getCurrentToken()
     this._goNext(TokenType.Switch)
     this._goNext(TokenType.LeftParen)
     const discriminant = this._parseExpression()
@@ -180,15 +185,17 @@ export class Parser {
     const cases = []
     while (!this._checkCurrentTokenType(TokenType.RightCurly)) {
       let test = null
-      let end: Loc = { line: Infinity, column: Infinity, index: Infinity }
+      let locEnd: Loc = { line: Infinity, column: Infinity, index: Infinity }
+      let end = Infinity
       const consequent = []
-      const { loc } = this._getCurrentToken()
+      const { loc, start } = this._getCurrentToken()
       if (this._checkCurrentTokenType(TokenType.Case)) {
         this._goNext(TokenType.Case)
         test = this._parseExpression()
       } else {
         this._goNext(TokenType.Default)
-        end = this._getCurrentToken().loc.end
+        locEnd = this._getCurrentToken().loc.end
+        end = this._getCurrentToken().end
       }
       this._goNext(TokenType.Colon)
       while (
@@ -199,11 +206,14 @@ export class Parser {
         ])
       ) {
         const caseStatement = this._parseStatement()
-        end = caseStatement.loc.end
+        locEnd = caseStatement.loc.end
+        end = caseStatement.end
         consequent.push(caseStatement)
       }
       const switchCase: SwitchCase = {
         type: NodeType.SwitchCase,
+        start,
+        end,
         loc,
         test,
         consequent,
@@ -211,17 +221,19 @@ export class Parser {
       cases.push(switchCase)
       this._skipSemicolon()
     }
-    this._goNext(TokenType.RightCurly)
     const switchStatement: SwitchStatement = {
       type: NodeType.SwitchStatement,
       loc: this._getCurrentToken().loc,
+      end: this._getCurrentToken().end,
+      start,
       discriminant,
       cases,
     }
+    this._goNext(TokenType.RightCurly)
     return switchStatement
   }
   private _parseForStatement(): ForStatement | ForInStatement | ForOfStatement {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     let test: ExpressionStatement, update: ExpressionStatement, right, type
     this._goNext(TokenType.For)
     this._goNext(TokenType.LeftParen)
@@ -247,6 +259,8 @@ export class Parser {
     if (type === NodeType.ForInStatement) {
       const forInStatement: ForInStatement = {
         type: NodeType.ForInStatement,
+        start,
+        end: body.end,
         loc: {
           start: loc.start,
           end: body.loc.end,
@@ -260,6 +274,8 @@ export class Parser {
     if (type === NodeType.ForOfStatement) {
       const forOfStatement: ForOfStatement = {
         type: NodeType.ForOfStatement,
+        start,
+        end: body.end,
         loc: {
           start: loc.start,
           end: body.loc.end,
@@ -272,6 +288,8 @@ export class Parser {
     }
     const forStatement: ForStatement = {
       type: NodeType.ForStatement,
+      start,
+      end: body.end,
       loc: {
         start: loc.start,
         end: body.loc.end,
@@ -284,12 +302,14 @@ export class Parser {
     return forStatement
   }
   private _parseObjectExpression(): ObjectExpression {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const properties: Property[] = []
     const objectExpression: ObjectExpression = {
       type: NodeType.ObjectExpression,
       properties,
       loc,
+      start,
+      end: Infinity,
     }
     // Consumption "{"
     this._goNext(TokenType.LeftCurly)
@@ -304,15 +324,18 @@ export class Parser {
     }
     objectExpression.loc.end = this._getCurrentToken().loc.end
     // Consumption "}"
+    objectExpression.end = this._getCurrentToken().end
     this._goNext(TokenType.RightCurly)
     return objectExpression
   }
   private _parseObjectPattern(): ObjectPattern {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const properties: Property[] = []
     const objectPattern: ObjectPattern = {
       type: NodeType.ObjectPattern,
       properties,
+      start,
+      end: Infinity,
       loc: {
         start: loc.start,
         end: {
@@ -335,12 +358,15 @@ export class Parser {
     }
     objectPattern.loc.end = this._getCurrentToken().loc.end
     // Consumption "}"
+    objectPattern.end = this._getCurrentToken().end
     this._goNext(TokenType.RightCurly)
     return objectPattern
   }
   private _parseProperty(): Property {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const property: Property = {
+      start,
+      end: Infinity,
       loc: {
         start: loc.start,
         end: {
@@ -374,15 +400,18 @@ export class Parser {
     }
     if (property.value) {
       property.loc.end = property.value.loc.end
+      property.end = property.value.end
     }
     return property
   }
   private _parseArrayExpression(): ArrayExpression {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const elements: Expression[] = []
     const arrayExpression: ArrayExpression = {
       type: NodeType.ArrayExpression,
       elements,
+      start,
+      end: Infinity,
       loc: {
         start: loc.start,
         end: {
@@ -404,16 +433,19 @@ export class Parser {
       elements.push(node)
     }
     arrayExpression.loc.end = this._getCurrentToken().loc.end
+    arrayExpression.end = this._getCurrentToken().end
     // Consumption "]"
     this._goNext(TokenType.RightBracket)
     return arrayExpression
   }
   private _parseArrayPattern(): ArrayPattern {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const elements: Identifier[] = []
     const arrayPattern: ArrayPattern = {
       type: NodeType.ArrayPattern,
       elements,
+      start,
+      end: Infinity,
       loc: {
         start: loc.start,
         end: {
@@ -435,6 +467,7 @@ export class Parser {
       elements.push(node)
     }
     arrayPattern.loc.end = this._getCurrentToken().loc.end
+    arrayPattern.end = this._getCurrentToken().end
     // Consumption "]"
     this._goNext(TokenType.RightBracket)
     return arrayPattern
@@ -444,7 +477,7 @@ export class Parser {
    * @return {ImportDeclaration}
    */
   private _parseImportDeclaration(): ImportDeclaration {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const specifiers: ImportSpecifiers = []
     this._goNext(TokenType.Import)
     // import a
@@ -454,6 +487,8 @@ export class Parser {
         type: NodeType.ImportDefaultSpecifier,
         local,
         loc: local.loc,
+        start: local.start,
+        end: local.end,
       }
       specifiers.push(defaultSpecifier)
       if (this._checkCurrentTokenType(TokenType.Comma)) {
@@ -474,6 +509,8 @@ export class Parser {
           type: NodeType.ImportSpecifier,
           imported: specifier,
           local: local ? local : specifier,
+          start: specifier.start,
+          end: local ? local.end : specifier.end,
           loc: {
             start: specifier.loc.start,
             end: local ? local.loc.end : specifier.loc.end,
@@ -488,13 +525,15 @@ export class Parser {
     }
     // import * as a
     else if (this._checkCurrentTokenType(TokenType.Asterisk)) {
-      const { loc } = this._getCurrentToken()
+      const { loc, start } = this._getCurrentToken()
       this._goNext(TokenType.Asterisk)
       this._goNext(TokenType.As)
       const local = this._parseIdentifier()
       const importNamespaceSpecifier: ImportNamespaceSpecifier = {
         type: NodeType.ImportNamespaceSpecifier,
         local,
+        start,
+        end: local.end,
         loc: {
           start: loc.start,
           end: local.loc.end,
@@ -511,6 +550,8 @@ export class Parser {
     const node: ImportDeclaration = {
       type: NodeType.ImportDeclaration,
       specifiers: specifiers as ImportSpecifiers,
+      start,
+      end: source.end,
       loc: {
         start: loc.start,
         end: source.loc.end,
@@ -525,7 +566,7 @@ export class Parser {
    * @return {ExportDeclaration}
    */
   private _parseExportDeclaration(): ExportDeclaration {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     let exportDeclaration: ExportDeclaration | undefined
     const specifiers: ExportSpecifier[] = []
     this._goNext(TokenType.Export)
@@ -539,6 +580,8 @@ export class Parser {
         exportDeclaration = {
           type: NodeType.ExportDefaultDeclaration,
           declaration: local,
+          start: local.start,
+          end: local.end,
           loc: {
             start: local.loc.start,
             end: local.loc.end,
@@ -551,6 +594,8 @@ export class Parser {
         exportDeclaration = {
           type: NodeType.ExportDefaultDeclaration,
           declaration,
+          start,
+          end: declaration.end,
           loc: {
             start: loc.start,
             end: declaration.loc.end,
@@ -574,6 +619,8 @@ export class Parser {
           type: NodeType.ExportSpecifier,
           local,
           exported,
+          start: local.start,
+          end: exported.end,
           loc: {
             start: local.loc.start,
             end: exported.loc.end,
@@ -596,6 +643,8 @@ export class Parser {
           start: loc.start,
           end: source.loc.end,
         },
+        start,
+        end: source.end,
         declaration: null,
         source,
       }
@@ -612,6 +661,8 @@ export class Parser {
       exportDeclaration = {
         type: NodeType.ExportNamedDeclaration,
         declaration,
+        start,
+        end: declaration.end,
         loc: {
           start: loc.start,
           end: declaration.loc.end,
@@ -628,6 +679,8 @@ export class Parser {
       exportDeclaration = {
         type: NodeType.ExportNamedDeclaration,
         declaration,
+        start,
+        end: declaration.end,
         loc: {
           start: loc.start,
           end: declaration.loc.end,
@@ -648,6 +701,8 @@ export class Parser {
       const source = this._parseLiteral()
       exportDeclaration = {
         type: NodeType.ExportAllDeclaration,
+        start,
+        end: source.end,
         loc: {
           start: loc.start,
           end: source.loc.end,
@@ -672,7 +727,7 @@ export class Parser {
    */
   private _parseVariableDeclaration(): VariableDeclaration {
     // Gets the statement start location
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     // Get the let
     const kind = this._getCurrentToken().value
     this._goNext([TokenType.Let, TokenType.Var, TokenType.Const])
@@ -734,6 +789,8 @@ export class Parser {
         type: NodeType.VariableDeclarator,
         id,
         init,
+        start: id!.start,
+        end: init ? init.end : id!.end,
         loc: {
           start: id!.loc.start,
           end: init ? init.loc.end : id!.loc.end,
@@ -749,6 +806,8 @@ export class Parser {
       type: NodeType.VariableDeclaration,
       kind: kind as VariableKind,
       declarations,
+      start,
+      end: this._getPreviousToken().end,
       loc: {
         start: loc.start,
         end: this._getPreviousToken().loc.end,
@@ -759,7 +818,7 @@ export class Parser {
   }
 
   private _parseReturnStatement(): ReturnStatement {
-    const { loc } = this._getCurrentToken()
+    const { loc, start, end } = this._getCurrentToken()
     this._goNext(TokenType.Return)
     let argument = null
     if (!this._checkCurrentTokenType(TokenType.Semicolon)) {
@@ -768,6 +827,8 @@ export class Parser {
     const node: ReturnStatement = {
       type: NodeType.ReturnStatement,
       argument,
+      start,
+      end: argument ? argument.end : end,
       loc: {
         start: loc.start,
         end: argument ? argument.loc.end : loc.end,
@@ -779,7 +840,7 @@ export class Parser {
   private _parseArrowFunctionExpression(
     expression?: Identifier,
   ): ArrowFunctionExpression {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     let async = false
     if (
       expression?.type === NodeType.Identifier &&
@@ -798,6 +859,8 @@ export class Parser {
       async,
       generator: false,
       body,
+      start: expression?.start || start,
+      end: body.end,
       loc: {
         start: expression?.loc.start || loc.start,
         end: body.loc.end,
@@ -810,6 +873,8 @@ export class Parser {
     const expressionStatement: ExpressionStatement = {
       type: NodeType.ExpressionStatement,
       expression,
+      start: expression.start,
+      end: expression.end,
       loc: {
         start: expression.loc.start,
         end: expression.loc.end,
@@ -821,7 +886,7 @@ export class Parser {
   private _parseConditionalExpression(
     expression: Expression,
   ): ConditionalExpression {
-    const { loc } = expression
+    const { loc, start } = expression
     this._goNext(TokenType.QuestionOperator)
     const consequent = this._parseExpression()
     this._goNext(TokenType.Colon)
@@ -832,6 +897,8 @@ export class Parser {
         start: loc.start,
         end: alternate.loc.end,
       },
+      start,
+      end: alternate.end,
       test: expression,
       consequent,
       alternate,
@@ -894,6 +961,7 @@ export class Parser {
             expression = this._parseExpression()
             expression.loc.end.column += 1
             expression.loc.end.index += 1
+            expression.end += 1
             this._goNext(TokenType.RightParen)
           }
         }
@@ -940,6 +1008,8 @@ export class Parser {
     const body = this._parseExpressionStatement()
     const labeledStatement: LabeledStatement = {
       type: NodeType.LabeledStatement,
+      start: label.start,
+      end: body.end,
       label,
       loc: {
         start: label.loc.start,
@@ -952,7 +1022,7 @@ export class Parser {
   private _parseAssignmentExpressionExpression(
     expression: Expression,
   ): AssignmentExpression {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const operator = this._getCurrentToken().value!
     if (this._checkCurrentTokenType(TokenType.Assign)) {
       this._goNext(TokenType.Assign)
@@ -967,6 +1037,8 @@ export class Parser {
         start: loc.start,
         end: right.loc.end,
       },
+      start,
+      end: right.end,
     }
     this._skipSemicolon()
     return node
@@ -974,7 +1046,7 @@ export class Parser {
   private _parseUpdateOperatorExpression(
     expression?: Expression,
   ): UpdateExpression {
-    const { value, loc } = this._getCurrentToken()
+    const { value, loc, start, end } = this._getCurrentToken()
     this._goNext(TokenType.UpdateOperator)
     if (expression) {
       const node: UpdateExpression = {
@@ -986,6 +1058,8 @@ export class Parser {
           start: expression.loc.start,
           end: loc.end,
         },
+        start: expression.start,
+        end,
       }
       return node
     } else {
@@ -999,6 +1073,8 @@ export class Parser {
           start: loc.start,
           end: argument.loc.end,
         },
+        start: start,
+        end: argument.end,
       }
       return node
     }
@@ -1006,7 +1082,7 @@ export class Parser {
   private _parseBinaryOperatorExpression(
     expression: Expression,
   ): BinaryExpression {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const operator = this._getCurrentToken().value!
     if (this._checkCurrentTokenType(TokenType.BinaryOperator)) {
       this._goNext(TokenType.BinaryOperator)
@@ -1025,6 +1101,8 @@ export class Parser {
         start: loc.start,
         end: right.loc.end,
       },
+      start,
+      end: right.end,
     }
     this._skipSemicolon()
     return node
@@ -1045,6 +1123,8 @@ export class Parser {
           index: Infinity,
         },
       },
+      start: object.start,
+      end: Infinity,
       computed: false,
     }
     if (this._checkCurrentTokenType(TokenType.Dot)) {
@@ -1052,6 +1132,7 @@ export class Parser {
       node.property = this._parseIdentifier()
       node.computed = false
       node.loc.end = node.property.loc.end
+      node.end = node.property.end
     } else if (this._checkCurrentTokenType(TokenType.LeftBracket)) {
       node.computed = true
       this._goNext(TokenType.LeftBracket)
@@ -1059,8 +1140,9 @@ export class Parser {
         // Recursive call to the Statement in the body of the _parseStatement parse function
         node.property = this._parseExpression()
       }
-      const { loc } = this._getCurrentToken()
+      const { loc, end } = this._getCurrentToken()
       node.loc.end = loc.end
+      node.end = end
       this._goNext(TokenType.RightBracket)
     }
     this._skipSemicolon()
@@ -1069,16 +1151,19 @@ export class Parser {
 
   private _parseCallExpression(callee: Expression) {
     const args = this._parseParams(FunctionType.CallExpression) as Expression[]
-    const end = args.length > 0 ? args[args.length - 1].loc.end.column : 2
+    const locEnd = args.length > 0 ? args[args.length - 1].loc.end.column : 2
+    const end = args.length > 0 ? args[args.length - 1].end : 2
     const node: CallExpression = {
       type: NodeType.CallExpression,
       callee,
+      start: callee.start,
+      end: callee.end + end,
       arguments: args,
       loc: {
         start: callee.loc.start,
         end: {
-          column: callee.loc.end.column + end,
-          index: callee.loc.end.index + end,
+          column: callee.loc.end.column + locEnd,
+          index: callee.loc.end.index + locEnd,
           line: callee.loc.end.line,
         },
       },
@@ -1088,7 +1173,7 @@ export class Parser {
   }
 
   private _parseFunctionDeclaration(): FunctionDeclaration {
-    const { loc, value } = this._getCurrentToken()
+    const { loc, value, start } = this._getCurrentToken()
     let async = false
     if (
       this._checkCurrentTokenType(TokenType.Identifier) &&
@@ -1116,6 +1201,8 @@ export class Parser {
       generator,
       params,
       body,
+      start,
+      end: body.end,
       loc: {
         start: loc.start,
         end: body.loc.end,
@@ -1130,7 +1217,7 @@ export class Parser {
   private _parseFunctionExpression(
     expression?: Identifier,
   ): FunctionExpression {
-    const { loc, value, type } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     let async = false
     if (
       expression?.type === NodeType.Identifier &&
@@ -1165,6 +1252,8 @@ export class Parser {
       body,
       async,
       generator,
+      start: expression?.start || start,
+      end: body.end,
       loc: {
         start: expression?.loc.start || loc.start,
         end: body.loc.end,
@@ -1210,6 +1299,8 @@ export class Parser {
       value = Number(value)
     }
     const literal: Literal = {
+      start: token.start,
+      end: token.end,
       type: NodeType.Literal,
       value: token.value!,
       loc: {
@@ -1228,6 +1319,8 @@ export class Parser {
   private _parseIdentifier(): Identifier {
     const token = this._getCurrentToken()
     const identifier: Identifier = {
+      start: token.start,
+      end: token.end,
       type: NodeType.Identifier,
       name: token.value!,
       loc: token.loc,
@@ -1240,9 +1333,11 @@ export class Parser {
    * @return {BlockStatement}
    */
   private _parseBlockStatement(): BlockStatement {
-    const { loc } = this._getCurrentToken()
+    const { loc, start } = this._getCurrentToken()
     const blockStatement: BlockStatement = {
       type: NodeType.BlockStatement,
+      start,
+      end: Infinity,
       body: [],
       loc: {
         start: loc.start,
@@ -1261,6 +1356,7 @@ export class Parser {
       blockStatement.body.push(node)
     }
     blockStatement.loc.end = this._getCurrentToken().loc.end
+    blockStatement.end = this._getCurrentToken().end
     // Consumption "}"
     this._goNext(TokenType.RightCurly)
     this._skipSemicolon()

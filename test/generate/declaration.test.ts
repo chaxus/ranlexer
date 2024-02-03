@@ -7,36 +7,56 @@ describe('declaration', () => {
   it('variable declaration', async () => {
     const ast: Program = {
       type: NodeType.Program,
-      start: 0,
-      end: 9,
       body: [
         {
           type: NodeType.VariableDeclaration,
-          start: 0,
-          end: 9,
+          kind: 'let',
           declarations: [
             {
               type: NodeType.VariableDeclarator,
               id: {
-                type: NodeType.Identifier,
-                name: 'a',
                 start: 4,
                 end: 5,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 4 },
+                  end: { line: 1, column: 2, index: 5 },
+                },
+              },
+              init: {
+                start: 8,
+                end: 9,
+                type: NodeType.Literal,
+                value: '1',
+                loc: {
+                  start: { line: 1, column: 3, index: 8 },
+                  end: { line: 1, column: 4, index: 9 },
+                },
+                raw: '1',
               },
               start: 4,
               end: 9,
-              init: {
-                type: NodeType.Literal,
-                value: '1',
-                raw: '1',
-                start: 8,
-                end: 9,
+              loc: {
+                start: { line: 1, column: 1, index: 4 },
+                end: { line: 1, column: 4, index: 9 },
               },
             },
           ],
-          kind: 'let',
+          start: 0,
+          end: 9,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 4, index: 9 },
+          },
         },
       ],
+      start: 0,
+      end: 9,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 4, index: 9 },
+      },
     }
     const result = 'let a = 1;'
     expect(generate(ast)).to.be.equal(result)
@@ -44,18 +64,18 @@ describe('declaration', () => {
   it('function', () => {
     const ast: Program = {
       type: NodeType.Program,
-      start: 0,
-      end: 39,
       body: [
         {
-          start: 0,
-          end: 39,
           type: NodeType.FunctionDeclaration,
           id: {
             start: 9,
             end: 12,
             type: NodeType.Identifier,
             name: 'foo',
+            loc: {
+              start: { line: 1, column: 1, index: 9 },
+              end: { line: 1, column: 4, index: 12 },
+            },
           },
           async: false,
           generator: false,
@@ -65,12 +85,20 @@ describe('declaration', () => {
               end: 14,
               type: NodeType.Identifier,
               name: 'a',
+              loc: {
+                start: { line: 1, column: 1, index: 13 },
+                end: { line: 1, column: 2, index: 14 },
+              },
             },
             {
-              start: 16,
-              end: 17,
+              start: 15,
+              end: 16,
               type: NodeType.Identifier,
               name: 'b',
+              loc: {
+                start: { line: 1, column: 1, index: 15 },
+                end: { line: 1, column: 2, index: 16 },
+              },
             },
           ],
           body: {
@@ -80,44 +108,84 @@ describe('declaration', () => {
             body: [
               {
                 type: NodeType.ReturnStatement,
-                start: 21,
-                end: 36,
                 argument: {
                   type: NodeType.CallExpression,
-                  start: 28,
-                  end: 36,
                   callee: {
                     type: NodeType.MemberExpression,
                     object: {
-                      type: NodeType.Identifier,
-                      name: 'a',
                       start: 28,
                       end: 29,
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      loc: {
+                        start: { line: 1, column: 5, index: 28 },
+                        end: { line: 1, column: 6, index: 29 },
+                      },
                     },
                     property: {
-                      type: NodeType.Identifier,
-                      name: 'add',
                       start: 30,
                       end: 33,
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      loc: {
+                        start: { line: 1, column: 5, index: 30 },
+                        end: { line: 1, column: 8, index: 33 },
+                      },
+                    },
+                    loc: {
+                      start: { line: 1, column: 5, index: 28 },
+                      end: { line: 1, column: 8, index: 33 },
                     },
                     start: 28,
                     end: 33,
                     computed: false,
                   },
+                  start: 28,
+                  end: 68,
                   arguments: [
                     {
-                      type: NodeType.Identifier,
-                      name: 'b',
                       start: 34,
                       end: 35,
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      loc: {
+                        start: { line: 1, column: 5, index: 34 },
+                        end: { line: 1, column: 6, index: 35 },
+                      },
                     },
                   ],
+                  loc: {
+                    start: { line: 1, column: 5, index: 28 },
+                    end: { column: 14, index: 39, line: 1 },
+                  },
+                },
+                start: 21,
+                end: 68,
+                loc: {
+                  start: { line: 1, column: 4, index: 21 },
+                  end: { column: 14, index: 39, line: 1 },
                 },
               },
             ],
+            loc: {
+              start: { line: 1, column: 3, index: 19 },
+              end: { line: 1, column: 8, index: 39 },
+            },
+          },
+          start: 0,
+          end: 39,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 8, index: 39 },
           },
         },
       ],
+      start: 0,
+      end: 39,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 8, index: 39 },
+      },
     }
     const result = 'function foo(a,b)  { return a.add(b)  };'
     expect(generate(ast)).to.be.equal(result)
@@ -128,15 +196,44 @@ describe('declaration', () => {
       body: [
         {
           type: NodeType.FunctionDeclaration,
-          id: { type: NodeType.Identifier, name: 'foo', start: 15, end: 18 },
+          id: {
+            start: 15,
+            end: 18,
+            type: NodeType.Identifier,
+            name: 'foo',
+            loc: {
+              start: { line: 1, column: 2, index: 15 },
+              end: { line: 1, column: 5, index: 18 },
+            },
+          },
           async: true,
           generator: false,
           params: [
-            { type: NodeType.Identifier, name: 'a', start: 19, end: 20 },
-            { type: NodeType.Identifier, name: 'b', start: 22, end: 23 },
+            {
+              start: 19,
+              end: 20,
+              type: NodeType.Identifier,
+              name: 'a',
+              loc: {
+                start: { line: 1, column: 2, index: 19 },
+                end: { line: 1, column: 3, index: 20 },
+              },
+            },
+            {
+              start: 21,
+              end: 22,
+              type: NodeType.Identifier,
+              name: 'b',
+              loc: {
+                start: { line: 1, column: 2, index: 21 },
+                end: { line: 1, column: 3, index: 22 },
+              },
+            },
           ],
           body: {
             type: NodeType.BlockStatement,
+            start: 25,
+            end: 45,
             body: [
               {
                 type: NodeType.ReturnStatement,
@@ -145,45 +242,79 @@ describe('declaration', () => {
                   callee: {
                     type: NodeType.MemberExpression,
                     object: {
-                      type: NodeType.Identifier,
-                      name: 'a',
                       start: 34,
                       end: 35,
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      loc: {
+                        start: { line: 1, column: 6, index: 34 },
+                        end: { line: 1, column: 7, index: 35 },
+                      },
                     },
                     property: {
-                      type: NodeType.Identifier,
-                      name: 'add',
                       start: 36,
                       end: 39,
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      loc: {
+                        start: { line: 1, column: 6, index: 36 },
+                        end: { line: 1, column: 9, index: 39 },
+                      },
+                    },
+                    loc: {
+                      start: { line: 1, column: 6, index: 34 },
+                      end: { line: 1, column: 9, index: 39 },
                     },
                     start: 34,
                     end: 39,
                     computed: false,
                   },
+                  start: 34,
+                  end: 80,
                   arguments: [
                     {
-                      type: NodeType.Identifier,
-                      name: 'b',
                       start: 40,
                       end: 41,
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      loc: {
+                        start: { line: 1, column: 6, index: 40 },
+                        end: { line: 1, column: 7, index: 41 },
+                      },
                     },
                   ],
-                  start: 34,
-                  end: 42,
+                  loc: {
+                    start: { line: 1, column: 6, index: 34 },
+                    end: { column: 16, index: 46, line: 1 },
+                  },
                 },
                 start: 27,
-                end: 42,
+                end: 80,
+                loc: {
+                  start: { line: 1, column: 5, index: 27 },
+                  end: { column: 16, index: 46, line: 1 },
+                },
               },
             ],
-            start: 25,
-            end: 45,
+            loc: {
+              start: { line: 1, column: 4, index: 25 },
+              end: { line: 1, column: 9, index: 45 },
+            },
           },
           start: 0,
           end: 45,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 9, index: 45 },
+          },
         },
       ],
       start: 0,
       end: 45,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 9, index: 45 },
+      },
     }
     const result = 'async function foo(a,b)  { return a.add(b)  };'
     expect(generate(ast)).to.be.equal(result)
@@ -194,15 +325,44 @@ describe('declaration', () => {
       body: [
         {
           type: NodeType.FunctionDeclaration,
-          id: { type: NodeType.Identifier, name: 'foo', start: 10, end: 13 },
+          id: {
+            start: 10,
+            end: 13,
+            type: NodeType.Identifier,
+            name: 'foo',
+            loc: {
+              start: { line: 1, column: 1, index: 10 },
+              end: { line: 1, column: 4, index: 13 },
+            },
+          },
           async: false,
           generator: true,
           params: [
-            { type: NodeType.Identifier, name: 'a', start: 14, end: 15 },
-            { type: NodeType.Identifier, name: 'b', start: 17, end: 18 },
+            {
+              start: 14,
+              end: 15,
+              type: NodeType.Identifier,
+              name: 'a',
+              loc: {
+                start: { line: 1, column: 1, index: 14 },
+                end: { line: 1, column: 2, index: 15 },
+              },
+            },
+            {
+              start: 16,
+              end: 17,
+              type: NodeType.Identifier,
+              name: 'b',
+              loc: {
+                start: { line: 1, column: 1, index: 16 },
+                end: { line: 1, column: 2, index: 17 },
+              },
+            },
           ],
           body: {
             type: NodeType.BlockStatement,
+            start: 20,
+            end: 40,
             body: [
               {
                 type: NodeType.ReturnStatement,
@@ -211,45 +371,79 @@ describe('declaration', () => {
                   callee: {
                     type: NodeType.MemberExpression,
                     object: {
-                      type: NodeType.Identifier,
-                      name: 'a',
                       start: 29,
                       end: 30,
+                      type: NodeType.Identifier,
+                      name: 'a',
+                      loc: {
+                        start: { line: 1, column: 5, index: 29 },
+                        end: { line: 1, column: 6, index: 30 },
+                      },
                     },
                     property: {
-                      type: NodeType.Identifier,
-                      name: 'add',
                       start: 31,
                       end: 34,
+                      type: NodeType.Identifier,
+                      name: 'add',
+                      loc: {
+                        start: { line: 1, column: 5, index: 31 },
+                        end: { line: 1, column: 8, index: 34 },
+                      },
+                    },
+                    loc: {
+                      start: { line: 1, column: 5, index: 29 },
+                      end: { line: 1, column: 8, index: 34 },
                     },
                     start: 29,
                     end: 34,
                     computed: false,
                   },
+                  start: 29,
+                  end: 70,
                   arguments: [
                     {
-                      type: NodeType.Identifier,
-                      name: 'b',
                       start: 35,
                       end: 36,
+                      type: NodeType.Identifier,
+                      name: 'b',
+                      loc: {
+                        start: { line: 1, column: 5, index: 35 },
+                        end: { line: 1, column: 6, index: 36 },
+                      },
                     },
                   ],
-                  start: 29,
-                  end: 37,
+                  loc: {
+                    start: { line: 1, column: 5, index: 29 },
+                    end: { column: 14, index: 40, line: 1 },
+                  },
                 },
                 start: 22,
-                end: 37,
+                end: 70,
+                loc: {
+                  start: { line: 1, column: 4, index: 22 },
+                  end: { column: 14, index: 40, line: 1 },
+                },
               },
             ],
-            start: 20,
-            end: 40,
+            loc: {
+              start: { line: 1, column: 3, index: 20 },
+              end: { line: 1, column: 8, index: 40 },
+            },
           },
           start: 0,
           end: 40,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 8, index: 40 },
+          },
         },
       ],
       start: 0,
       end: 40,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 8, index: 40 },
+      },
     }
     const result = 'function *foo(a,b)  { return a.add(b)  };'
     expect(generate(ast)).to.be.equal(result)
@@ -265,35 +459,82 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              id: {
+                start: 6,
+                end: 7,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 2, index: 7 },
+                },
+              },
               init: {
                 type: NodeType.ArrowFunctionExpression,
                 id: null,
                 params: [
-                  { type: NodeType.Identifier, name: 'a', start: 11, end: 12 },
-                  { type: NodeType.Identifier, name: 'b', start: 13, end: 14 },
+                  {
+                    start: 11,
+                    end: 12,
+                    type: NodeType.Identifier,
+                    name: 'a',
+                    loc: {
+                      start: { line: 1, column: 3, index: 11 },
+                      end: { line: 1, column: 4, index: 12 },
+                    },
+                  },
+                  {
+                    start: 13,
+                    end: 14,
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    loc: {
+                      start: { line: 1, column: 3, index: 13 },
+                      end: { line: 1, column: 4, index: 14 },
+                    },
+                  },
                 ],
                 async: false,
                 generator: false,
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 19,
                   end: 21,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 19 },
+                    end: { line: 1, column: 6, index: 21 },
+                  },
                 },
                 start: 10,
                 end: 21,
+                loc: {
+                  start: { line: 1, column: 3, index: 10 },
+                  end: { line: 1, column: 6, index: 21 },
+                },
               },
               start: 6,
               end: 21,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 21 },
+              },
             },
           ],
           start: 0,
-          end: 21,
+          end: 22,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 22 },
+          },
         },
       ],
       start: 0,
-      end: 21,
+      end: 22,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 22 },
+      },
     }
     expect(generate(ast)).toEqual(result)
   })
@@ -307,7 +548,16 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'app', start: 6, end: 9 },
+              id: {
+                start: 6,
+                end: 9,
+                type: NodeType.Identifier,
+                name: 'app',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 4, index: 9 },
+                },
+              },
               init: {
                 type: NodeType.ArrowFunctionExpression,
                 id: null,
@@ -316,23 +566,43 @@ describe('declaration', () => {
                 generator: false,
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 23,
                   end: 25,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 23 },
+                    end: { line: 1, column: 6, index: 25 },
+                  },
                 },
                 start: 12,
                 end: 25,
+                loc: {
+                  start: { line: 1, column: 3, index: 12 },
+                  end: { line: 1, column: 6, index: 25 },
+                },
               },
               start: 6,
               end: 25,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 25 },
+              },
             },
           ],
           start: 0,
-          end: 25,
+          end: 26,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 26 },
+          },
         },
       ],
       start: 0,
-      end: 25,
+      end: 26,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 26 },
+      },
     }
     const result = 'const app = async() => {};'
     expect(generate(ast)).toEqual(result)
@@ -348,7 +618,16 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'app', start: 6, end: 9 },
+              id: {
+                start: 6,
+                end: 9,
+                type: NodeType.Identifier,
+                name: 'app',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 4, index: 9 },
+                },
+              },
               init: {
                 type: NodeType.ArrowFunctionExpression,
                 id: null,
@@ -357,23 +636,43 @@ describe('declaration', () => {
                 generator: false,
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 18,
                   end: 20,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 18 },
+                    end: { line: 1, column: 6, index: 20 },
+                  },
                 },
                 start: 12,
                 end: 20,
+                loc: {
+                  start: { line: 1, column: 3, index: 12 },
+                  end: { line: 1, column: 6, index: 20 },
+                },
               },
               start: 6,
               end: 20,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 20 },
+              },
             },
           ],
           start: 0,
-          end: 20,
+          end: 21,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 21 },
+          },
         },
       ],
       start: 0,
-      end: 20,
+      end: 21,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 21 },
+      },
     }
     const result = 'const app = () => {};'
     expect(generate(ast)).toEqual(result)
@@ -390,35 +689,82 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              id: {
+                start: 6,
+                end: 7,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 2, index: 7 },
+                },
+              },
               init: {
                 type: NodeType.ArrowFunctionExpression,
                 id: null,
                 params: [
-                  { type: NodeType.Identifier, name: 'a', start: 16, end: 17 },
-                  { type: NodeType.Identifier, name: 'b', start: 18, end: 19 },
+                  {
+                    start: 16,
+                    end: 17,
+                    type: NodeType.Identifier,
+                    name: 'a',
+                    loc: {
+                      start: { line: 1, column: 3, index: 16 },
+                      end: { line: 1, column: 4, index: 17 },
+                    },
+                  },
+                  {
+                    start: 18,
+                    end: 19,
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    loc: {
+                      start: { line: 1, column: 3, index: 18 },
+                      end: { line: 1, column: 4, index: 19 },
+                    },
+                  },
                 ],
-                body: {
-                  type: NodeType.BlockStatement,
-                  body: [],
-                  start: 24,
-                  end: 26,
-                },
                 async: true,
                 generator: false,
+                body: {
+                  type: NodeType.BlockStatement,
+                  start: 24,
+                  end: 26,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 24 },
+                    end: { line: 1, column: 6, index: 26 },
+                  },
+                },
                 start: 10,
                 end: 26,
+                loc: {
+                  start: { line: 1, column: 3, index: 10 },
+                  end: { line: 1, column: 6, index: 26 },
+                },
               },
               start: 6,
               end: 26,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 26 },
+              },
             },
           ],
           start: 0,
-          end: 26,
+          end: 27,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 27 },
+          },
         },
       ],
       start: 0,
-      end: 26,
+      end: 27,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 27 },
+      },
     }
     expect(generate(ast)).toEqual(result)
   })
@@ -433,40 +779,91 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              id: {
+                start: 6,
+                end: 7,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 2, index: 7 },
+                },
+              },
               init: {
                 type: NodeType.FunctionExpression,
                 id: {
-                  type: NodeType.Identifier,
-                  name: 'async',
                   start: 19,
                   end: 24,
+                  type: NodeType.Identifier,
+                  name: 'async',
+                  loc: {
+                    start: { line: 1, column: 4, index: 19 },
+                    end: { line: 1, column: 9, index: 24 },
+                  },
                 },
                 params: [
-                  { type: NodeType.Identifier, name: 'a', start: 25, end: 26 },
-                  { type: NodeType.Identifier, name: 'b', start: 27, end: 28 },
+                  {
+                    start: 25,
+                    end: 26,
+                    type: NodeType.Identifier,
+                    name: 'a',
+                    loc: {
+                      start: { line: 1, column: 4, index: 25 },
+                      end: { line: 1, column: 5, index: 26 },
+                    },
+                  },
+                  {
+                    start: 27,
+                    end: 28,
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    loc: {
+                      start: { line: 1, column: 4, index: 27 },
+                      end: { line: 1, column: 5, index: 28 },
+                    },
+                  },
                 ],
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 30,
                   end: 32,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 30 },
+                    end: { line: 1, column: 6, index: 32 },
+                  },
                 },
                 async: false,
                 generator: false,
                 start: 10,
                 end: 32,
+                loc: {
+                  start: { line: 1, column: 3, index: 10 },
+                  end: { line: 1, column: 6, index: 32 },
+                },
               },
               start: 6,
               end: 32,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 32 },
+              },
             },
           ],
           start: 0,
-          end: 32,
+          end: 33,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 33 },
+          },
         },
       ],
       start: 0,
-      end: 32,
+      end: 33,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 33 },
+      },
     }
     expect(generate(ast)).toEqual(input)
   })
@@ -481,40 +878,91 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              id: {
+                start: 6,
+                end: 7,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 2, index: 7 },
+                },
+              },
               init: {
                 type: NodeType.FunctionExpression,
                 id: {
-                  type: NodeType.Identifier,
-                  name: 'async',
                   start: 25,
                   end: 30,
+                  type: NodeType.Identifier,
+                  name: 'async',
+                  loc: {
+                    start: { line: 1, column: 5, index: 25 },
+                    end: { line: 1, column: 10, index: 30 },
+                  },
                 },
                 params: [
-                  { type: NodeType.Identifier, name: 'a', start: 31, end: 32 },
-                  { type: NodeType.Identifier, name: 'b', start: 33, end: 34 },
+                  {
+                    start: 31,
+                    end: 32,
+                    type: NodeType.Identifier,
+                    name: 'a',
+                    loc: {
+                      start: { line: 1, column: 5, index: 31 },
+                      end: { line: 1, column: 6, index: 32 },
+                    },
+                  },
+                  {
+                    start: 33,
+                    end: 34,
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    loc: {
+                      start: { line: 1, column: 5, index: 33 },
+                      end: { line: 1, column: 6, index: 34 },
+                    },
+                  },
                 ],
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 36,
                   end: 38,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 6, index: 36 },
+                    end: { line: 1, column: 7, index: 38 },
+                  },
                 },
                 async: true,
                 generator: false,
                 start: 10,
                 end: 38,
+                loc: {
+                  start: { line: 1, column: 3, index: 10 },
+                  end: { line: 1, column: 7, index: 38 },
+                },
               },
               start: 6,
               end: 38,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 7, index: 38 },
+              },
             },
           ],
           start: 0,
-          end: 38,
+          end: 39,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 7, index: 39 },
+          },
         },
       ],
       start: 0,
-      end: 38,
+      end: 39,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 7, index: 39 },
+      },
     }
     expect(generate(ast)).toEqual(input)
   })
@@ -529,161 +977,249 @@ describe('declaration', () => {
           declarations: [
             {
               type: NodeType.VariableDeclarator,
-              id: { type: NodeType.Identifier, name: 'a', start: 6, end: 7 },
+              id: {
+                start: 6,
+                end: 7,
+                type: NodeType.Identifier,
+                name: 'a',
+                loc: {
+                  start: { line: 1, column: 1, index: 6 },
+                  end: { line: 1, column: 2, index: 7 },
+                },
+              },
               init: {
                 type: NodeType.FunctionExpression,
                 id: {
-                  type: NodeType.Identifier,
-                  name: 'name',
                   start: 20,
                   end: 24,
+                  type: NodeType.Identifier,
+                  name: 'name',
+                  loc: {
+                    start: { line: 1, column: 4, index: 20 },
+                    end: { line: 1, column: 8, index: 24 },
+                  },
                 },
                 params: [
-                  { type: NodeType.Identifier, name: 'a', start: 25, end: 26 },
-                  { type: NodeType.Identifier, name: 'b', start: 27, end: 28 },
+                  {
+                    start: 25,
+                    end: 26,
+                    type: NodeType.Identifier,
+                    name: 'a',
+                    loc: {
+                      start: { line: 1, column: 4, index: 25 },
+                      end: { line: 1, column: 5, index: 26 },
+                    },
+                  },
+                  {
+                    start: 27,
+                    end: 28,
+                    type: NodeType.Identifier,
+                    name: 'b',
+                    loc: {
+                      start: { line: 1, column: 4, index: 27 },
+                      end: { line: 1, column: 5, index: 28 },
+                    },
+                  },
                 ],
                 body: {
                   type: NodeType.BlockStatement,
-                  body: [],
                   start: 30,
                   end: 32,
+                  body: [],
+                  loc: {
+                    start: { line: 1, column: 5, index: 30 },
+                    end: { line: 1, column: 6, index: 32 },
+                  },
                 },
                 async: false,
                 generator: true,
                 start: 10,
                 end: 32,
+                loc: {
+                  start: { line: 1, column: 3, index: 10 },
+                  end: { line: 1, column: 6, index: 32 },
+                },
               },
               start: 6,
               end: 32,
+              loc: {
+                start: { line: 1, column: 1, index: 6 },
+                end: { line: 1, column: 6, index: 32 },
+              },
             },
           ],
           start: 0,
-          end: 32,
+          end: 33,
+          loc: {
+            start: { line: 1, column: 0, index: 0 },
+            end: { line: 1, column: 6, index: 33 },
+          },
         },
       ],
       start: 0,
-      end: 32,
+      end: 33,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 1, column: 6, index: 33 },
+      },
     }
     expect(generate(ast)).toEqual(input)
   })
   it('import namespace specifier declaration', () => {
     const ast: Program = {
       type: NodeType.Program,
-      start: 0,
-      end: 80,
       body: [
         {
           type: NodeType.ImportDeclaration,
-          start: 0,
-          end: 46,
           specifiers: [
             {
               type: NodeType.ImportDefaultSpecifier,
-              start: 7,
-              end: 10,
               local: {
+                start: 8,
+                end: 11,
                 type: NodeType.Identifier,
                 name: 'foo',
-                start: 7,
-                end: 10,
+                loc: {
+                  start: { line: 2, column: 1, index: 8 },
+                  end: { line: 2, column: 4, index: 11 },
+                },
               },
+              loc: {
+                start: { line: 2, column: 1, index: 8 },
+                end: { line: 2, column: 4, index: 11 },
+              },
+              start: 8,
+              end: 11,
             },
             {
               type: NodeType.ImportSpecifier,
-              start: 14,
-              end: 19,
               imported: {
+                start: 15,
+                end: 20,
                 type: NodeType.Identifier,
                 name: 'name1',
-                start: 14,
-                end: 19,
+                loc: {
+                  start: { line: 2, column: 3, index: 15 },
+                  end: { line: 2, column: 8, index: 20 },
+                },
               },
               local: {
+                start: 15,
+                end: 20,
                 type: NodeType.Identifier,
                 name: 'name1',
-                start: 14,
-                end: 19,
+                loc: {
+                  start: { line: 2, column: 3, index: 15 },
+                  end: { line: 2, column: 8, index: 20 },
+                },
+              },
+              start: 15,
+              end: 20,
+              loc: {
+                start: { line: 2, column: 3, index: 15 },
+                end: { line: 2, column: 8, index: 20 },
               },
             },
             {
               type: NodeType.ImportSpecifier,
-              start: 21,
-              end: 33,
               imported: {
+                start: 22,
+                end: 27,
                 type: NodeType.Identifier,
                 name: 'name2',
-                start: 21,
-                end: 26,
+                loc: {
+                  start: { line: 2, column: 4, index: 22 },
+                  end: { line: 2, column: 9, index: 27 },
+                },
               },
               local: {
+                start: 31,
+                end: 34,
                 type: NodeType.Identifier,
                 name: 'bar',
-                start: 30,
-                end: 33,
+                loc: {
+                  start: { line: 2, column: 6, index: 31 },
+                  end: { line: 2, column: 9, index: 34 },
+                },
+              },
+              start: 22,
+              end: 34,
+              loc: {
+                start: { line: 2, column: 4, index: 22 },
+                end: { line: 2, column: 9, index: 34 },
               },
             },
           ],
+          start: 1,
+          end: 47,
+          loc: {
+            start: { line: 2, column: 0, index: 1 },
+            end: { line: 2, column: 14, index: 47 },
+          },
           source: {
+            start: 42,
+            end: 47,
             type: NodeType.Literal,
-            start: 41,
-            end: 46,
             value: 'foo',
+            loc: {
+              start: { line: 2, column: 9, index: 42 },
+              end: { line: 2, column: 14, index: 47 },
+            },
             raw: "'foo'",
           },
         },
         {
           type: NodeType.ImportDeclaration,
-          start: 54,
-          end: 80,
           specifiers: [
             {
               type: NodeType.ImportNamespaceSpecifier,
-              start: 61,
-              end: 69,
               local: {
+                start: 68,
+                end: 71,
                 type: NodeType.Identifier,
                 name: 'mod',
-                start: 66,
-                end: 69,
+                loc: {
+                  start: { line: 3, column: 3, index: 68 },
+                  end: { line: 3, column: 6, index: 71 },
+                },
+              },
+              start: 63,
+              end: 71,
+              loc: {
+                start: { line: 3, column: 1, index: 63 },
+                end: { line: 3, column: 6, index: 71 },
               },
             },
           ],
+          start: 56,
+          end: 82,
+          loc: {
+            start: { line: 3, column: 0, index: 56 },
+            end: { line: 3, column: 10, index: 82 },
+          },
           source: {
+            start: 77,
+            end: 82,
             type: NodeType.Literal,
-            start: 75,
-            end: 80,
             value: 'mod',
+            loc: {
+              start: { line: 3, column: 5, index: 77 },
+              end: { line: 3, column: 10, index: 82 },
+            },
             raw: "'mod'",
           },
         },
       ],
-    }
-    const result =
-      "import foo, { name1, name2 as bar } from 'foo';       import * as mod from 'mod'; "
-    expect(generate(ast)).to.be.equal(result)
-  })
-  it('import declaration', () => {
-    const ast: Program = {
-      type: NodeType.Program,
-      body: [
-        {
-          type: NodeType.ImportDeclaration,
-          specifiers: [],
-          start: 1,
-          end: 27,
-          source: {
-            type: NodeType.Literal,
-            value: 'common/reset.scss',
-            start: 8,
-            end: 27,
-            raw: "'common/reset.scss'",
-          },
-        },
-      ],
       start: 0,
-      end: 27,
+      end: 82,
+      loc: {
+        start: { line: 0, column: 0, index: 0 },
+        end: { line: 3, column: 10, index: 82 },
+      },
     }
-    const result = ` import 'common/reset.scss';`
+    const result = `
+    import foo, { name1, name2 as bar } from 'foo';       
+    import * as mod from 'mod'; `
     expect(generate(ast)).to.be.equal(result)
   })
 })

@@ -59,9 +59,11 @@ export class Generate {
   constructor(ast: Program) {
     const { loc } = ast
     this.ast = ast
-    this.currentLine = loc.start.line
-    this.currentIndex = loc.start.index
-    this.code = new RanString(loc.end.index - loc.start.index)
+    this.currentLine = loc?.start?.line || 0
+    this.currentIndex = loc?.start?.index || ast.start
+    const end = loc?.end?.index || ast.end
+    const start = loc?.start?.index || ast.start
+    this.code = new RanString(end - start)
   }
   generateExportDefaultDeclaration(node: ExportDefaultDeclaration): void {
     const { loc, declaration } = node

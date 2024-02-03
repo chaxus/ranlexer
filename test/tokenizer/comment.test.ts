@@ -4,9 +4,36 @@ import { tokenize } from '@/parser'
 describe('Comment', () => {
   it('// c', () => {
     const result = [
-      { type: 'BinaryOperator', value: '/', start: 0, end: 1 },
-      { type: 'BinaryOperator', value: '/', start: 1, end: 2 },
-      { type: 'Identifier', value: 'c', start: 3, end: 4 },
+      {
+        type: 'BinaryOperator',
+        value: '/',
+        start: 0,
+        end: 1,
+        loc: {
+          start: { line: 1, column: 0, index: 0 },
+          end: { line: 1, column: 1, index: 1 },
+        },
+      },
+      {
+        type: 'BinaryOperator',
+        value: '/',
+        start: 1,
+        end: 2,
+        loc: {
+          start: { line: 1, column: 0, index: 1 },
+          end: { line: 1, column: 1, index: 2 },
+        },
+      },
+      {
+        type: 'Identifier',
+        value: 'c',
+        start: 3,
+        end: 4,
+        loc: {
+          start: { line: 1, column: 1, index: 3 },
+          end: { line: 1, column: 2, index: 4 },
+        },
+      },
     ]
     const code = '// c'
     expect(tokenize(code)).toEqual(result)

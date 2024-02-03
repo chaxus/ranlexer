@@ -115,6 +115,8 @@ export interface Loc {
 
 export interface Node {
   type: string
+  start: number
+  end: number
   loc: {
     start: Loc
     end: Loc

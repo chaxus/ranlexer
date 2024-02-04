@@ -1,21 +1,21 @@
 export function isWhiteSpace(char: string): boolean {
-  return char === ' ' || char === '\t' || char === '\r'
+  return char === ' ' || char === '\t' || char === '\r';
 }
 
 export function isColumnColon(char: string): boolean {
-  return char === '\n'
+  return char === '\n';
 }
 
 export function isAlpha(char: string): boolean {
-  return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
+  return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z');
 }
 
 export function isDigit(char: string): boolean {
-  return char >= '0' && char <= '9'
+  return char >= '0' && char <= '9';
 }
 
 export function isUnderline(char: string): boolean {
-  return char === '_'
+  return char === '_';
 }
 /**
  * @description: Determine if it is the next line
@@ -23,5 +23,5 @@ export function isUnderline(char: string): boolean {
  * @return {boolean}
  */
 export function isNewLine(code: number): boolean {
-  return code === 10 || code === 13 || code === 0x2028 || code === 0x2029
+  return code === 10 || code === 13 || code === 0x2028 || code === 0x2029;
 }

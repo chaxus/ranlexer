@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest'
-import { parse } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { parse } from '@/parser';
 
 describe('statement', () => {
   it('throw Error();', () => {
-    const code = 'throw Error();'
+    const code = 'throw Error();';
     const result = {
       type: 'Program',
       body: [
@@ -62,11 +62,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 8, index: 13, line: 1 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('{}', () => {
-    const code = '{}'
+    const code = '{}';
     const result = {
       type: 'Program',
       body: [
@@ -87,11 +87,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 1, index: 2 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('try {} catch(e) {} finally{}', () => {
-    const code = 'try {} catch(e) {} finally{}'
+    const code = 'try {} catch(e) {} finally{}';
     const result = {
       type: 'Program',
       body: [
@@ -210,11 +210,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 28 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('for (let key in obj) {}', () => {
-    const code = 'for (let key in obj) {}'
+    const code = 'for (let key in obj) {}';
     const result = {
       type: 'Program',
       body: [
@@ -286,11 +286,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 23 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('for (let i = 0;i < 10;i ++) {}', () => {
-    const code = 'for (let i = 0;i < 10;i ++) {}'
+    const code = 'for (let i = 0;i < 10;i ++) {}';
     const result = {
       type: 'Program',
       body: [
@@ -432,11 +432,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 9, index: 30 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('for (const key of obj) {}', () => {
-    const code = 'for (const key of obj) {}'
+    const code = 'for (const key of obj) {}';
     const result = {
       type: 'Program',
       body: [
@@ -508,11 +508,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 25 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('while (true) {}', () => {
-    const code = 'while (true) {}'
+    const code = 'while (true) {}';
     const result = {
       type: 'Program',
       body: [
@@ -573,11 +573,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 15 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('do {} while (true)', () => {
-    const code = 'do {} while (true)'
+    const code = 'do {} while (true)';
     const result = {
       type: 'Program',
       body: [
@@ -657,11 +657,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 14, index: 18, line: 1 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('switch (v){case 1: break;default:;}', () => {
-    const code = 'switch (v){case 1: break;default:;};'
+    const code = 'switch (v){case 1: break;default:;};';
     const result = {
       type: 'Program',
       body: [
@@ -745,11 +745,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 35 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('label: console.log();', () => {
-    const code = 'label: console.log();'
+    const code = 'label: console.log();';
     const result = {
       type: 'Program',
       body: [
@@ -828,9 +828,9 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 6, index: 20, line: 1 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('with (a){}', () => {
     const result = {
       type: 'Program',
@@ -892,10 +892,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 2, index: 10 },
       },
-    }
-    const code = 'with (a){}'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'with (a){}';
+    expect(parse(code)).toEqual(result);
+  });
   it('break;', () => {
     const result = {
       type: 'Program',
@@ -926,10 +926,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 5 },
       },
-    }
-    const code = 'break;'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'break;';
+    expect(parse(code)).toEqual(result);
+  });
   it('continue;', () => {
     const result = {
       type: 'Program',
@@ -960,12 +960,12 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 8 },
       },
-    }
-    const code = 'continue;'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'continue;';
+    expect(parse(code)).toEqual(result);
+  });
   it('return;', () => {
-    const code = 'return;'
+    const code = 'return;';
     const result = {
       type: 'Program',
       body: [
@@ -986,11 +986,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 6 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('debugger;', () => {
-    const code = 'debugger;'
+    const code = 'debugger;';
     const result = {
       type: 'Program',
       body: [
@@ -1020,11 +1020,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 8 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('if statement', () => {
-    const code = 'if (a) b = 1'
+    const code = 'if (a) b = 1';
     const result = {
       type: 'Program',
       body: [
@@ -1095,11 +1095,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 12 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('if BlockStatement', () => {
-    const code = 'if (a) {b=1}'
+    const code = 'if (a) {b=1}';
     const result = {
       type: 'Program',
       body: [
@@ -1181,11 +1181,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 12 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('member expression nested', () => {
-    const code = 'a[c(e,d)[g]]()'
+    const code = 'a[c(e,d)[g]]()';
     const result = {
       type: 'Program',
       body: [
@@ -1296,9 +1296,9 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 3, index: 14, line: 1 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('member expression computed', () => {
     const result = {
       type: 'Program',
@@ -1380,12 +1380,12 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 1, index: 10 },
       },
-    }
-    const code = 'a[b()][12]'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'a[b()][12]';
+    expect(parse(code)).toEqual(result);
+  });
   it('instanceof', () => {
-    const code = 'function a(){}; a instanceof Function;'
+    const code = 'function a(){}; a instanceof Function;';
     const result = {
       type: 'Program',
       body: [
@@ -1467,11 +1467,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 12, index: 37 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('const [a,b] = c;', () => {
-    const code = 'const [a,b] = c;'
+    const code = 'const [a,b] = c;';
     const result = {
       type: 'Program',
       body: [
@@ -1544,11 +1544,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 15 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('const {a,b} = c;', () => {
-    const code = 'const {a,b} = c;'
+    const code = 'const {a,b} = c;';
     const result = {
       type: 'Program',
       body: [
@@ -1661,11 +1661,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 15 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('ConditionalExpression', () => {
-    const code = 'a ? b : c'
+    const code = 'a ? b : c';
     const result = {
       type: 'Program',
       body: [
@@ -1724,9 +1724,9 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 9 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('iife function', () => {
     const result = {
       type: 'Program',
@@ -1780,10 +1780,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 4, index: 16, line: 1 },
       },
-    }
-    const code = '(function(){})()'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = '(function(){})()';
+    expect(parse(code)).toEqual(result);
+  });
   it('nest CallExpression', () => {
     const result = {
       type: 'Program',
@@ -1844,12 +1844,12 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 7, index: 7, line: 1 },
       },
-    }
-    const code = 'a()()()'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'a()()()';
+    expect(parse(code)).toEqual(result);
+  });
   it('nest AssignmentExpression', () => {
-    const code = '((a=b))'
+    const code = '((a=b))';
     const result = {
       type: 'Program',
       body: [
@@ -1899,11 +1899,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 7 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    expect(parse(code)).toEqual(result);
+  });
   it('nest AssignmentExpression and function', () => {
-    const code = 'a=b=function a(){}'
+    const code = 'a=b=function a(){}';
     const result = {
       type: 'Program',
       body: [
@@ -1995,7 +1995,7 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 2, index: 18 },
       },
-    }
-    expect(parse(code)).toEqual(result)
-  })
-})
+    };
+    expect(parse(code)).toEqual(result);
+  });
+});

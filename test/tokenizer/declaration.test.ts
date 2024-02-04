@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('Declaration', () => {
   it('const a = 1;', () => {
@@ -55,10 +55,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 4, index: 12 },
         },
       },
-    ]
-    const code = 'const a = 1;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'const a = 1;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('function b(){}', () => {
     const result = [
       {
@@ -121,10 +121,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 2, index: 14 },
         },
       },
-    ]
-    const code = 'function b(){}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'function b(){}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('class C {}', () => {
     const result = [
       {
@@ -167,10 +167,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 3, index: 10 },
         },
       },
-    ]
-    const code = 'class C {}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'class C {}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('import d from "e";', () => {
     const result = [
       {
@@ -224,10 +224,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 4, index: 18 },
         },
       },
-    ]
-    const code = 'import d from "e";'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'import d from "e";';
+    expect(tokenize(code)).toEqual(result);
+  });
   it(`import * as b from 'b';`, () => {
     const result = [
       {
@@ -301,10 +301,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 6, index: 23 },
         },
       },
-    ]
-    const code = `import * as b from 'b';`
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = `import * as b from 'b';`;
+    expect(tokenize(code)).toEqual(result);
+  });
   it(`import {c, d} from 'c';`, () => {
     const result = [
       {
@@ -398,10 +398,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 5, index: 23 },
         },
       },
-    ]
-    const code = `import {c, d} from 'c';`
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = `import {c, d} from 'c';`;
+    expect(tokenize(code)).toEqual(result);
+  });
   it('export default e = 1;', () => {
     const result = [
       {
@@ -465,10 +465,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 5, index: 21 },
         },
       },
-    ]
-    const code = 'export default e = 1;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'export default e = 1;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('export {e};', () => {
     const result = [
       {
@@ -521,10 +521,10 @@ describe('Declaration', () => {
           end: { line: 1, column: 2, index: 11 },
         },
       },
-    ]
-    const code = 'export {e};'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'export {e};';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('export * from "e";', () => {
     const result = [
       {
@@ -578,8 +578,8 @@ describe('Declaration', () => {
           end: { line: 1, column: 4, index: 18 },
         },
       },
-    ]
-    const code = 'export * from "e";'
-    expect(tokenize(code)).toEqual(result)
-  })
-})
+    ];
+    const code = 'export * from "e";';
+    expect(tokenize(code)).toEqual(result);
+  });
+});

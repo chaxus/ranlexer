@@ -1,47 +1,49 @@
-import fs from 'node:fs'
-import { dirname } from 'node:path'
-import type { SourceMap } from 'magic-string'
-import { Bundle } from '@/bundle'
+import fs from 'node:fs';
+import { dirname } from 'node:path';
+import type { SourceMap } from 'magic-string';
+import { Bundle } from '@/bundle';
 
 export interface Options {
-  input?: string
-  output?: string
-  external?: Array<string>
+  input?: string;
+  output?: string;
+  external?: Array<string>;
 }
 
-type Error = NodeJS.ErrnoException | null
+type Error = NodeJS.ErrnoException | null;
 
 interface Build {
   generate: () => {
-    code: string
-    map: Omit<SourceMap, 'sourcesContent'> & { sourcesContent: Array<string | null> };
-  }
-  write: () => Promise<[WriteFileInfo, WriteFileInfo] | undefined>
+    code: string;
+    map: Omit<SourceMap, 'sourcesContent'> & {
+      sourcesContent: Array<string | null>;
+    };
+  };
+  write: () => Promise<[WriteFileInfo, WriteFileInfo] | undefined>;
 }
 
 interface WriteFileInfo {
-  success: boolean
+  success: boolean;
   data:
     | {
-        path: string
-        content: string
+        path: string;
+        content: string;
       }
-    | Error
+    | Error;
 }
 
-const existsSync = (dirname: string) => fs.existsSync(dirname)
+const existsSync = (dirname: string) => fs.existsSync(dirname);
 
 const createDir = (path: string) =>
   new Promise((resolve, reject) => {
-    const lastPath = path.substring(0, path.lastIndexOf('/'))
+    const lastPath = path.substring(0, path.lastIndexOf('/'));
     fs.mkdir(lastPath, { recursive: true }, (error) => {
       if (error) {
-        reject({ success: false })
+        reject({ success: false });
       } else {
-        resolve({ success: true })
+        resolve({ success: true });
       }
-    })
-  })
+    });
+  });
 /**
  * @description:
  * @param {string} path
@@ -65,40 +67,40 @@ export const writeFile = (
       },
       (err: Error) => {
         if (err) {
-          reject({ success: false, data: err })
+          reject({ success: false, data: err });
         } else {
-          resolve({ success: true, data: { path, content } })
+          resolve({ success: true, data: { path, content } });
         }
       },
-    )
-  })
+    );
+  });
 
 export function build(options: Options): Promise<Build> {
   const {
     input = './index.js',
     output = './dist/index.js',
     external = [],
-  } = options
+  } = options;
   const bundle = new Bundle({
     entry: input,
     external,
-  })
-  const generate = () => bundle.render()
+  });
+  const generate = () => bundle.render();
   const write = async () => {
     try {
-      const { code, map } = generate()
+      const { code, map } = generate();
       if (!existsSync(dirname(output))) {
-        await createDir(output)
+        await createDir(output);
       }
       return Promise.all([
         writeFile(output, code),
         writeFile(output + '.map', map.toString()),
-      ])
+      ]);
     } catch (error) {
-      console.warn('write bundle error', error)
+      console.warn('write bundle error', error);
     }
-  }
+  };
   return bundle.build().then(() => {
-    return { generate, write }
-  })
+    return { generate, write };
+  });
 }

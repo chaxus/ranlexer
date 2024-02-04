@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
-import { generate } from '@/generate'
-import { NodeType } from '@/ast/NodeType'
-import type { Program } from '@/ast/NodeType'
+import { describe, expect, it } from 'vitest';
+import { generate } from '@/generate';
+import { NodeType } from '@/ast/NodeType';
+import type { Program } from '@/ast/NodeType';
 
 describe('declaration', () => {
   it('variable declaration', async () => {
@@ -57,10 +57,10 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 9 },
       },
-    }
-    const result = 'let a = 1;'
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    const result = 'let a = 1;';
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('function', () => {
     const ast: Program = {
       type: NodeType.Program,
@@ -186,10 +186,10 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 39 },
       },
-    }
-    const result = 'function foo(a,b)  { return a.add(b)  };'
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    const result = 'function foo(a,b)  { return a.add(b)  };';
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('async function', () => {
     const ast: Program = {
       type: NodeType.Program,
@@ -315,10 +315,10 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 9, index: 45 },
       },
-    }
-    const result = 'async function foo(a,b)  { return a.add(b)  };'
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    const result = 'async function foo(a,b)  { return a.add(b)  };';
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('generator function', () => {
     const ast: Program = {
       type: NodeType.Program,
@@ -444,12 +444,12 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 40 },
       },
-    }
-    const result = 'function *foo(a,b)  { return a.add(b)  };'
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    const result = 'function *foo(a,b)  { return a.add(b)  };';
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('arrow function', () => {
-    const result = 'const a = (a,b) => {};'
+    const result = 'const a = (a,b) => {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -535,9 +535,9 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 22 },
       },
-    }
-    expect(generate(ast)).toEqual(result)
-  })
+    };
+    expect(generate(ast)).toEqual(result);
+  });
   it('arrow async function no params', () => {
     const ast: Program = {
       type: NodeType.Program,
@@ -603,10 +603,10 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 26 },
       },
-    }
-    const result = 'const app = async() => {};'
-    expect(generate(ast)).toEqual(result)
-  })
+    };
+    const result = 'const app = async() => {};';
+    expect(generate(ast)).toEqual(result);
+  });
 
   it('arrow function no params', () => {
     const ast: Program = {
@@ -673,13 +673,13 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 21 },
       },
-    }
-    const result = 'const app = () => {};'
-    expect(generate(ast)).toEqual(result)
-  })
+    };
+    const result = 'const app = () => {};';
+    expect(generate(ast)).toEqual(result);
+  });
 
   it('arrow async function', () => {
-    const result = 'const a = async(a,b) => {};'
+    const result = 'const a = async(a,b) => {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -765,11 +765,11 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 27 },
       },
-    }
-    expect(generate(ast)).toEqual(result)
-  })
+    };
+    expect(generate(ast)).toEqual(result);
+  });
   it('variable function', () => {
-    const input = 'const a = function async(a,b) {};'
+    const input = 'const a = function async(a,b) {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -864,11 +864,11 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 33 },
       },
-    }
-    expect(generate(ast)).toEqual(input)
-  })
+    };
+    expect(generate(ast)).toEqual(input);
+  });
   it('variable async function', () => {
-    const input = 'const a = async function async(a,b) {};'
+    const input = 'const a = async function async(a,b) {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -963,11 +963,11 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 7, index: 39 },
       },
-    }
-    expect(generate(ast)).toEqual(input)
-  })
+    };
+    expect(generate(ast)).toEqual(input);
+  });
   it('variable generator function', () => {
-    const input = 'const a = function *name(a,b) {};'
+    const input = 'const a = function *name(a,b) {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -1062,7 +1062,7 @@ describe('declaration', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 33 },
       },
-    }
-    expect(generate(ast)).toEqual(input)
-  })
-})
+    };
+    expect(generate(ast)).toEqual(input);
+  });
+});

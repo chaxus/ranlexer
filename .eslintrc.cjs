@@ -1,5 +1,5 @@
-const { builtinModules } = require('node:module')
-const { defineConfig } = require('eslint-define-config')
+const { builtinModules } = require('node:module');
+const { defineConfig } = require('eslint-define-config');
 
 module.exports = defineConfig({
   root: true,
@@ -105,4 +105,4 @@ module.exports = defineConfig({
     },
   ],
   reportUnusedDisableDirectives: true,
-})
+});

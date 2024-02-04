@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest'
-import { generate } from '@/generate'
-import { parse } from '@/parser'
-import type { Program } from '@/ast/NodeType'
-import { NodeType } from '@/ast/NodeType'
+import { describe, expect, it } from 'vitest';
+import { generate } from '@/generate';
+import { parse } from '@/parser';
+import type { Program } from '@/ast/NodeType';
+import { NodeType } from '@/ast/NodeType';
 
 describe('statement', () => {
   it('throw Error();', () => {
@@ -64,10 +64,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 8, index: 13, line: 1 },
       },
-    }
-    const code = 'throw Error()'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'throw Error()';
+    expect(generate(result)).toEqual(code);
+  });
   it('{}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -89,10 +89,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 1, index: 2 },
       },
-    }
-    const code = '{}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = '{}';
+    expect(generate(result)).toEqual(code);
+  });
   it('try {} catch(e) {} finally{}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -212,10 +212,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 28 },
       },
-    }
-    const code = 'try {} catch(e) {} finally{}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'try {} catch(e) {} finally{}';
+    expect(generate(result)).toEqual(code);
+  });
   it('for (let key in obj) {}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -288,10 +288,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 23 },
       },
-    }
-    const code = 'for( let key in obj) {}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'for( let key in obj) {}';
+    expect(generate(result)).toEqual(code);
+  });
   it('for (let i = 0;i < 10;i ++) {}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -434,10 +434,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 9, index: 30 },
       },
-    }
-    const code = 'for( let i = 0;i < 10;i++ ) {}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'for( let i = 0;i < 10;i++ ) {}';
+    expect(generate(result)).toEqual(code);
+  });
   it('for (const key of obj) {}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -510,10 +510,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 25 },
       },
-    }
-    const code = 'for( const key of obj) {}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'for( const key of obj) {}';
+    expect(generate(result)).toEqual(code);
+  });
   it('while (true) {}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -575,10 +575,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 15 },
       },
-    }
-    const code = 'while (true) {}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'while (true) {}';
+    expect(generate(result)).toEqual(code);
+  });
   it('do {} while (true)', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -659,10 +659,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 14, index: 18, line: 1 },
       },
-    }
-    const code = 'do {} while (true)'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'do {} while (true)';
+    expect(generate(result)).toEqual(code);
+  });
   it('switch (v){case 1: break;default:;}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -747,10 +747,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 35 },
       },
-    }
-    const code = 'switch (v){case 1: break;default:;};'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'switch (v){case 1: break;default:;};';
+    expect(generate(result)).toEqual(code);
+  });
   it('label: console.log();', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -830,10 +830,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 6, index: 20, line: 1 },
       },
-    }
-    const code = 'label: console.log()'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'label: console.log()';
+    expect(generate(result)).toEqual(code);
+  });
   it('with (a){}', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -895,10 +895,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 2, index: 10 },
       },
-    }
-    const code = 'with (a){}'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'with (a){}';
+    expect(generate(result)).toEqual(code);
+  });
   it('break', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -929,10 +929,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 5 },
       },
-    }
-    const code = 'break'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'break';
+    expect(generate(result)).toEqual(code);
+  });
   it('continue;', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -963,10 +963,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 8 },
       },
-    }
-    const code = 'continue'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'continue';
+    expect(generate(result)).toEqual(code);
+  });
   it('return', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -988,10 +988,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 6 },
       },
-    }
-    const code = 'return'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'return';
+    expect(generate(result)).toEqual(code);
+  });
   it('debugger', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -1022,10 +1022,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 8 },
       },
-    }
-    const code = 'debugger'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'debugger';
+    expect(generate(result)).toEqual(code);
+  });
   it('if statement', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -1097,12 +1097,12 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 5, index: 12 },
       },
-    }
-    const code = 'if (a) b = 1'
-    expect(parse(code)).toEqual(result)
-  })
+    };
+    const code = 'if (a) b = 1';
+    expect(parse(code)).toEqual(result);
+  });
   it('if BlockStatement', () => {
-    const code = 'if (a) {b=1} '
+    const code = 'if (a) {b=1} ';
     const result: Program = {
       type: NodeType.Program,
       body: [
@@ -1184,11 +1184,11 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 12 },
       },
-    }
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    expect(generate(result)).toEqual(code);
+  });
   it('member expression computed', () => {
-    const code = 'a[b()][12]'
+    const code = 'a[b()][12]';
     const result: Program = {
       type: NodeType.Program,
       body: [
@@ -1269,9 +1269,9 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 1, index: 10 },
       },
-    }
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    expect(generate(result)).toEqual(code);
+  });
   it('const [a,b] = c;', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -1345,10 +1345,10 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 15 },
       },
-    }
-    const code = 'const [a,b] = c;'
-    expect(generate(result)).toEqual(code)
-  })
+    };
+    const code = 'const [a,b] = c;';
+    expect(generate(result)).toEqual(code);
+  });
   it('const {a,b} = c;', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -1462,8 +1462,8 @@ describe('statement', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 15 },
       },
-    }
-    const code = 'const {a,b} = c;'
-    expect(generate(result)).toEqual(code)
-  })
-})
+    };
+    const code = 'const {a,b} = c;';
+    expect(generate(result)).toEqual(code);
+  });
+});

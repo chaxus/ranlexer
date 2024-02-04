@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('statement', () => {
   it('throw Error();', () => {
@@ -54,10 +54,10 @@ describe('statement', () => {
           end: { line: 1, column: 2, index: 14 },
         },
       },
-    ]
-    const code = 'throw Error();'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'throw Error();';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('{}', () => {
     const result = [
       {
@@ -80,10 +80,10 @@ describe('statement', () => {
           end: { line: 1, column: 1, index: 2 },
         },
       },
-    ]
-    const code = '{}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '{}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('try {} catch(e) {} finally{}', () => {
     const result = [
       {
@@ -206,10 +206,10 @@ describe('statement', () => {
           end: { line: 1, column: 5, index: 28 },
         },
       },
-    ]
-    const code = 'try {} catch(e) {} finally{}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'try {} catch(e) {} finally{}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('for (let key in obj) {}', () => {
     const result = [
       {
@@ -302,10 +302,10 @@ describe('statement', () => {
           end: { line: 1, column: 6, index: 23 },
         },
       },
-    ]
-    const code = 'for (let key in obj) {}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'for (let key in obj) {}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('for (let i = 0;i < 10;i ++) {}', () => {
     const result = [
       {
@@ -470,10 +470,10 @@ describe('statement', () => {
           end: { line: 1, column: 9, index: 30 },
         },
       },
-    ]
-    const code = 'for (let i = 0;i < 10;i ++) {}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'for (let i = 0;i < 10;i ++) {}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('while (true) {}', () => {
     const result = [
       {
@@ -536,10 +536,10 @@ describe('statement', () => {
           end: { line: 1, column: 3, index: 15 },
         },
       },
-    ]
-    const code = 'while (true) {}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'while (true) {}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('do {} while (true)', () => {
     const result = [
       {
@@ -612,10 +612,10 @@ describe('statement', () => {
           end: { line: 1, column: 4, index: 18 },
         },
       },
-    ]
-    const code = 'do {} while (true)'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'do {} while (true)';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('switch (v){case 1: break;default:;}', () => {
     const result = [
       {
@@ -759,10 +759,10 @@ describe('statement', () => {
           end: { line: 1, column: 4, index: 35 },
         },
       },
-    ]
-    const code = 'switch (v){case 1: break;default:;}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'switch (v){case 1: break;default:;}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('label: console.log();', () => {
     const result = [
       {
@@ -845,10 +845,10 @@ describe('statement', () => {
           end: { line: 1, column: 2, index: 21 },
         },
       },
-    ]
-    const code = 'label: console.log();'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'label: console.log();';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('with (a){}', () => {
     const result = [
       {
@@ -911,10 +911,10 @@ describe('statement', () => {
           end: { line: 1, column: 2, index: 10 },
         },
       },
-    ]
-    const code = 'with (a){}'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'with (a){}';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('break;', () => {
     const result = [
       {
@@ -937,10 +937,10 @@ describe('statement', () => {
           end: { line: 1, column: 1, index: 6 },
         },
       },
-    ]
-    const code = 'break;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'break;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('continue;', () => {
     const result = [
       {
@@ -963,10 +963,10 @@ describe('statement', () => {
           end: { line: 1, column: 1, index: 9 },
         },
       },
-    ]
-    const code = 'continue;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'continue;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('return;', () => {
     const result = [
       {
@@ -989,10 +989,10 @@ describe('statement', () => {
           end: { line: 1, column: 1, index: 7 },
         },
       },
-    ]
-    const code = 'return;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'return;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('debugger;', () => {
     const result = [
       {
@@ -1015,8 +1015,8 @@ describe('statement', () => {
           end: { line: 1, column: 1, index: 9 },
         },
       },
-    ]
-    const code = 'debugger;'
-    expect(tokenize(code)).toEqual(result)
-  })
-})
+    ];
+    const code = 'debugger;';
+    expect(tokenize(code)).toEqual(result);
+  });
+});

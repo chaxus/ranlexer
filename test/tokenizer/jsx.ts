@@ -18,7 +18,7 @@ const app = () => {
       </>
     )
 }
-`
+`;
 
 // JSXFragment
 const ast = {
@@ -2234,4 +2234,4 @@ const ast = {
     directives: [],
   },
   comments: [],
-}
+};

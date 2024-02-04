@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest'
-import { parse } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { parse } from '@/parser';
 
 describe('Parser', () => {
   it('variable declaration', () => {
-    const input = 'let a = 1;'
+    const input = 'let a = 1;';
     const ast = {
       type: 'Program',
       body: [
@@ -56,11 +56,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 9 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('member expression', () => {
-    const input = 'foo.bar'
+    const input = 'foo.bar';
     const ast = {
       type: 'Program',
       body: [
@@ -110,12 +110,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 7 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('nested member expression', () => {
-    const input = 'foo.bar.zoo'
+    const input = 'foo.bar.zoo';
     const ast = {
       type: 'Program',
       body: [
@@ -185,12 +185,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 11 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('function', () => {
-    const input = 'function foo(a, b) { return a.add(b); }'
+    const input = 'function foo(a, b) { return a.add(b); }';
     const ast = {
       type: 'Program',
       body: [
@@ -315,12 +315,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 7, index: 39 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('async function', () => {
-    const input = 'async function foo(a, b) { return a.add(b); }'
+    const input = 'async function foo(a, b) { return a.add(b); }';
     const ast = {
       type: 'Program',
       body: [
@@ -445,11 +445,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 45 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('generator function', () => {
-    const input = 'function *foo(a, b) { return a.add(b); }'
+    const input = 'function *foo(a, b) { return a.add(b); }';
     const ast = {
       type: 'Program',
       body: [
@@ -574,12 +574,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 7, index: 40 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('arrow function', () => {
-    const input = 'const a = (a,b) => {}'
+    const input = 'const a = (a,b) => {}';
     const ast = {
       type: 'Program',
       body: [
@@ -665,12 +665,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 21 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('arrow function no params', () => {
-    const input = 'const app = () => {}'
+    const input = 'const app = () => {}';
     const ast = {
       type: 'Program',
       body: [
@@ -735,11 +735,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 20 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('arrow async function no params', () => {
-    const input = 'const app = async() => {}'
+    const input = 'const app = async() => {}';
     const ast = {
       type: 'Program',
       body: [
@@ -804,12 +804,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 25 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('arrow async function', () => {
-    const input = 'const a = async(a,b) => {}'
+    const input = 'const a = async(a,b) => {}';
     const ast = {
       type: 'Program',
       body: [
@@ -895,12 +895,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 26 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('variable function', () => {
-    const input = 'const a = function async(a,b) {}'
+    const input = 'const a = function async(a,b) {}';
     const ast = {
       type: 'Program',
       body: [
@@ -995,12 +995,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 32 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('variable async function', () => {
-    const input = 'const a = async function async(a,b) {}'
+    const input = 'const a = async function async(a,b) {}';
     const ast = {
       type: 'Program',
       body: [
@@ -1095,11 +1095,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 7, index: 38 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('variable generator function', () => {
-    const input = 'const a = function *name(a,b) {}'
+    const input = 'const a = function *name(a,b) {}';
     const ast = {
       type: 'Program',
       body: [
@@ -1194,15 +1194,15 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 6, index: 32 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('import declaration', () => {
     const input = `
     import foo, { name1, name2 as bar } from 'foo';
     import * as mod from 'mod';
-    `
+    `;
     const ast = {
       type: 'Program',
       body: [
@@ -1353,12 +1353,12 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 3, column: 14, index: 83 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
 
   it('export ExportNamedDeclaration', () => {
-    const input = "export { foo, bar as ccc } from 'foo';"
+    const input = "export { foo, bar as ccc } from 'foo';";
     const ast = {
       type: 'Program',
       body: [
@@ -1450,11 +1450,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 13, index: 37 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('export ExportAllDeclaration', () => {
-    const input = "export * from 'foo';"
+    const input = "export * from 'foo';";
     const ast = {
       type: 'Program',
       body: [
@@ -1486,11 +1486,11 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 19 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('export ExportDefaultDeclaration', () => {
-    const input = 'export default function() {}'
+    const input = 'export default function() {}';
     const ast = {
       type: 'Program',
       body: [
@@ -1533,13 +1533,13 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 28 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
+    };
+    expect(parse(input)).toEqual(ast);
+  });
   it('Conditional assignment', () => {
     const input = `
     let basename = '';
-    if (baseTag) basename = baseTag.getAttribute('href');`
+    if (baseTag) basename = baseTag.getAttribute('href');`;
     const ast = {
       type: 'Program',
       body: [
@@ -1693,7 +1693,7 @@ describe('Parser', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { column: 34, index: 86, line: 3 },
       },
-    }
-    expect(parse(input)).toEqual(ast)
-  })
-})
+    };
+    expect(parse(input)).toEqual(ast);
+  });
+});

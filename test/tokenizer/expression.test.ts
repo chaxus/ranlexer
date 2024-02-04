@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('Expression', () => {
   it('const a = [1,2,3]', () => {
@@ -107,10 +107,10 @@ describe('Expression', () => {
           end: { line: 1, column: 4, index: 17 },
         },
       },
-    ]
-    const code = 'const a = [1,2,3]'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'const a = [1,2,3]';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('a = 1', () => {
     const result = [
       {
@@ -144,10 +144,10 @@ describe('Expression', () => {
         },
         raw: '1',
       },
-    ]
-    const code = 'a = 1'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'a = 1';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('1 + 2;', () => {
     const result = [
       {
@@ -192,10 +192,10 @@ describe('Expression', () => {
           end: { line: 1, column: 3, index: 6 },
         },
       },
-    ]
-    const code = '1 + 2;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '1 + 2;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('-1;', () => {
     const result = [
       {
@@ -229,10 +229,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 3 },
         },
       },
-    ]
-    const code = '-1;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '-1;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('function(){};', () => {
     const result = [
       {
@@ -295,10 +295,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 13 },
         },
       },
-    ]
-    const code = 'function(){};'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'function(){};';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('() => {};', () => {
     const result = [
       {
@@ -361,10 +361,10 @@ describe('Expression', () => {
           end: { line: 1, column: 3, index: 9 },
         },
       },
-    ]
-    const code = '() => {};'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '() => {};';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('class{};', () => {
     const result = [
       {
@@ -407,10 +407,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 8 },
         },
       },
-    ]
-    const code = 'class{};'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'class{};';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('a;', () => {
     const result = [
       {
@@ -433,10 +433,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 2 },
         },
       },
-    ]
-    const code = 'a;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'a;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('this;', () => {
     const result = [
       {
@@ -459,10 +459,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 5 },
         },
       },
-    ]
-    const code = 'this;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'this;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('super;', () => {
     const result = [
       {
@@ -485,10 +485,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 6 },
         },
       },
-    ]
-    const code = 'super;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'super;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('a::b;', () => {
     const result = [
       {
@@ -541,10 +541,10 @@ describe('Expression', () => {
           end: { line: 1, column: 1, index: 5 },
         },
       },
-    ]
-    const code = 'a::b;'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'a::b;';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('function a(){}; a instanceof Function;', () => {
     const result = [
       {
@@ -657,8 +657,8 @@ describe('Expression', () => {
           end: { line: 1, column: 5, index: 38 },
         },
       },
-    ]
-    const code = 'function a(){}; a instanceof Function;'
-    expect(tokenize(code)).toEqual(result)
-  })
-})
+    ];
+    const code = 'function a(){}; a instanceof Function;';
+    expect(tokenize(code)).toEqual(result);
+  });
+});

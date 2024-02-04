@@ -1,11 +1,11 @@
-import path, { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
+import path, { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
-const __filename = fileURLToPath(import.meta.url)
+const __filename = fileURLToPath(import.meta.url);
 
-const __dirname = path.dirname(__filename)
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   build: {
@@ -34,4 +34,4 @@ export default defineConfig({
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
   },
   plugins: [dts()],
-})
+});

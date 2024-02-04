@@ -36,10 +36,10 @@ ranlexer can export the following methods
 Parse the code into an ast:
 
 ```ts
-import { parse } from 'ranlexer'
+import { parse } from 'ranlexer';
 
-const code = 'let a = 1;'
-const ast = parse(code)
+const code = 'let a = 1;';
+const ast = parse(code);
 ```
 
 ### walk
@@ -71,7 +71,7 @@ walk(ast, opts)
 Parse the ast into code:
 
 ```ts
-import { generate } from 'ranlexer'
+import { generate } from 'ranlexer';
 
 const ast = {
   type: NodeType.Program,
@@ -105,8 +105,8 @@ const ast = {
       kind: 'let',
     },
   ],
-}
-const code = generate(ast) // 'let a = 1;'
+};
+const code = generate(ast); // 'let a = 1;'
 ```
 
 ### build
@@ -114,9 +114,9 @@ const code = generate(ast) // 'let a = 1;'
 A lightweight build tool that supports treeshaking
 
 ```ts
-import { build } from 'ranlexer'
+import { build } from 'ranlexer';
 
-const bundle = await build(option)
+const bundle = await build(option);
 ```
 
 Generate a bundle by passing in options，All options are well, optional:
@@ -130,21 +130,21 @@ The bundle has two methods:
 - **generate**: generate is to output the built code directly,
 
 ```ts
-import { build } from 'ranlexer'
+import { build } from 'ranlexer';
 
-const bundle = await build(option)
+const bundle = await build(option);
 
-const code = bundle.generate()
+const code = bundle.generate();
 ```
 
 - **write**: write is to output the file to a directory.
 
 ```ts
-import { build } from 'ranlexer'
+import { build } from 'ranlexer';
 
-const bundle = await build(option)
+const bundle = await build(option);
 
-bundle.write()
+bundle.write();
 ```
 
 ## Meta

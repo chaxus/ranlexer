@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
-import { generate } from '@/generate'
-import { NodeType } from '@/ast/NodeType'
-import type { Program } from '@/ast/NodeType'
+import { describe, expect, it } from 'vitest';
+import { generate } from '@/generate';
+import { NodeType } from '@/ast/NodeType';
+import type { Program } from '@/ast/NodeType';
 
 describe('import', () => {
   it('import namespace specifier declaration', () => {
@@ -155,12 +155,12 @@ describe('import', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 3, column: 14, index: 83 },
       },
-    }
+    };
     const result = `
     import foo, { name1, name2 as bar } from 'foo';
-    import * as mod from 'mod'; `
-    expect(generate(ast)).to.be.equal(result)
-  })
+    import * as mod from 'mod'; `;
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('import declaration', () => {
     const ast: Program = {
       type: NodeType.Program,
@@ -193,8 +193,8 @@ describe('import', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 20, index: 26 },
       },
-    }
-    const result = `import 'common/reset.scss';`
-    expect(generate(ast)).to.be.equal(result)
-  })
-})
+    };
+    const result = `import 'common/reset.scss';`;
+    expect(generate(ast)).to.be.equal(result);
+  });
+});

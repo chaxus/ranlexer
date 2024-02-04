@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
-import { generate } from '@/generate'
-import { NodeType } from '@/ast/NodeType'
-import type { MemberExpression, Program } from '@/ast/NodeType'
+import { describe, expect, it } from 'vitest';
+import { generate } from '@/generate';
+import { NodeType } from '@/ast/NodeType';
+import type { MemberExpression, Program } from '@/ast/NodeType';
 
 describe('expression', () => {
   it('member expression', () => {
@@ -54,12 +54,12 @@ describe('expression', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 7 },
       },
-    }
-    const result = 'foo.bar'
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    const result = 'foo.bar';
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('nested member expression', () => {
-    const result = 'foo.bar.zoo'
+    const result = 'foo.bar.zoo';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -129,9 +129,9 @@ describe('expression', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 3, index: 11 },
       },
-    }
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('instanceof', () => {
     const result: Program = {
       type: NodeType.Program,
@@ -214,8 +214,8 @@ describe('expression', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 12, index: 37 },
       },
-    }
-    const code = 'function a(){}; a instanceof Function;'
-    expect(generate(result)).toEqual(code)
-  })
-})
+    };
+    const code = 'function a(){}; a instanceof Function;';
+    expect(generate(result)).toEqual(code);
+  });
+});

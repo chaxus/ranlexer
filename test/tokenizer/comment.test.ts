@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('Comment', () => {
   it('// c', () => {
@@ -34,10 +34,10 @@ describe('Comment', () => {
           end: { line: 1, column: 2, index: 4 },
         },
       },
-    ]
-    const code = '// c'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '// c';
+    expect(tokenize(code)).toEqual(result);
+  });
   // it('/* c */', () => {
   //   const result = [
   //     { type: 'BinaryOperator', value: '/', start: 0, end: 1 },
@@ -49,14 +49,14 @@ describe('Comment', () => {
   //   const code = '/* c */'
   //   expect(tokenize(code)).toEqual(result)
   // })
-})
+});
 
 const code = `
 // 1. Determines whether it is a delimiter
 /**
   * @description: Main program, scan string to generate token
   */
-`
+`;
 
 const commentAst = {
   type: 'File',
@@ -174,4 +174,4 @@ const commentAst = {
       },
     },
   ],
-}
+};

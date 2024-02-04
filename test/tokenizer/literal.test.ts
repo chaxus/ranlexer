@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('Literal', () => {
   /**
@@ -19,10 +19,10 @@ describe('Literal', () => {
           end: { line: 1, column: 6, index: 6 },
         },
       },
-    ]
-    const code = 'string'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'string';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('RegExp literal', () => {
     const result = [
       {
@@ -125,10 +125,10 @@ describe('Literal', () => {
           end: { line: 1, column: 1, index: 10 },
         },
       },
-    ]
-    const code = '/^[a-z]+/g'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '/^[a-z]+/g';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('boolean literal', () => {
     const result = [
       {
@@ -141,10 +141,10 @@ describe('Literal', () => {
           end: { line: 1, column: 4, index: 4 },
         },
       },
-    ]
-    const code = 'true'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'true';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('bigInt literal', () => {
     const result = [
       {
@@ -168,10 +168,10 @@ describe('Literal', () => {
           end: { line: 1, column: 1, index: 5 },
         },
       },
-    ]
-    const code = '1.23n'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = '1.23n';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('null literal', () => {
     const result = [
       {
@@ -184,10 +184,10 @@ describe('Literal', () => {
           end: { line: 1, column: 4, index: 4 },
         },
       },
-    ]
-    const code = 'null'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'null';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('undefined literal', () => {
     const result = [
       {
@@ -200,13 +200,13 @@ describe('Literal', () => {
           end: { line: 1, column: 9, index: 9 },
         },
       },
-    ]
-    const code = 'undefined'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'undefined';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('    literal', () => {
-    const result: unknown = []
-    const code = '     '
-    expect(tokenize(code)).toEqual(result)
-  })
-})
+    const result: unknown = [];
+    const code = '     ';
+    expect(tokenize(code)).toEqual(result);
+  });
+});

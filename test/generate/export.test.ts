@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest'
-import { generate } from '@/generate'
-import { NodeType } from '@/ast/NodeType'
-import type { Program } from '@/ast/NodeType'
+import { describe, expect, it } from 'vitest';
+import { generate } from '@/generate';
+import { NodeType } from '@/ast/NodeType';
+import type { Program } from '@/ast/NodeType';
 
 describe('export', () => {
   it('export ExportNamedDeclaration declaration', () => {
-    const result = "export { foo, ccc as bar } from 'foo';"
+    const result = "export { foo, ccc as bar } from 'foo';";
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -97,11 +97,11 @@ describe('export', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 13, index: 37 },
       },
-    }
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('export ExportAllDeclaration declaration', () => {
-    const result = "export * from 'foo';"
+    const result = "export * from 'foo';";
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -133,11 +133,11 @@ describe('export', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 8, index: 19 },
       },
-    }
-    expect(generate(ast)).to.be.equal(result)
-  })
+    };
+    expect(generate(ast)).to.be.equal(result);
+  });
   it('export ExportDefaultDeclaration declaration', () => {
-    const result = 'export default function() {};'
+    const result = 'export default function() {};';
     const ast: Program = {
       type: NodeType.Program,
       body: [
@@ -180,7 +180,7 @@ describe('export', () => {
         start: { line: 0, column: 0, index: 0 },
         end: { line: 1, column: 4, index: 28 },
       },
-    }
-    expect(generate(ast)).to.be.equal(result)
-  })
-})
+    };
+    expect(generate(ast)).to.be.equal(result);
+  });
+});

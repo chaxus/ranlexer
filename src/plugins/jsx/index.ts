@@ -1,6 +1,6 @@
-import type { Token } from '@/parser/Tokenizer'
-import type { Node, Program } from '@/ast/NodeType'
-import { isWhiteSpace } from '@/utils/char'
+import type { Token } from '@/parser/Tokenizer';
+import type { Node, Program } from '@/ast/NodeType';
+import { isWhiteSpace } from '@/utils/char';
 
 // 追加 token，追加 parser
 export const ranlexerJsxPlugin = () => {
@@ -22,7 +22,7 @@ export const ranlexerJsxPlugin = () => {
       // StringLiteral
       // JSXExpressionContainer
       // ConditionalExpression
-      return []
+      return [];
     },
     parser(token: Token[]): Node {
       return {
@@ -31,16 +31,20 @@ export const ranlexerJsxPlugin = () => {
         end: 0,
         loc: {
           start: {
-            index: 0, column: 0, line: 1
+            index: 0,
+            column: 0,
+            line: 1,
           },
           end: {
-            index: 0, column: 0, line: 1
-          }
-        }
-      }
+            index: 0,
+            column: 0,
+            line: 1,
+          },
+        },
+      };
     },
     generate(ast: Program): string {
-      return ''
+      return '';
     },
-  }
-}
+  };
+};

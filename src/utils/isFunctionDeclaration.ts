@@ -1,12 +1,12 @@
-import type { Declaration, ExportDeclaration } from '@/ast/NodeType'
-import { NodeType } from '@/ast/NodeType'
+import type { Declaration, ExportDeclaration } from '@/ast/NodeType';
+import { NodeType } from '@/ast/NodeType';
 /**
  * @description: Whether it is a function node
  * @param {Declaration} node
  * @return {*}
  */
 export function isFunctionDeclaration(node: Declaration): boolean {
-  if (!node) return false
+  if (!node) return false;
 
   return (
     // function foo() {}
@@ -21,7 +21,7 @@ export function isFunctionDeclaration(node: Declaration): boolean {
       node.type === NodeType.ExportDefaultDeclaration) &&
       !!node.declaration &&
       node.declaration.type === NodeType.FunctionDeclaration)
-  )
+  );
 }
 /**
  * @description: Whether to declare the node as export
@@ -29,7 +29,7 @@ export function isFunctionDeclaration(node: Declaration): boolean {
  * @return {boolean}
  */
 export function isExportDeclaration(node: ExportDeclaration): boolean {
-  return /^Export/.test(node.type)
+  return /^Export/.test(node.type);
 }
 /**
  * @description: import declaration node or not
@@ -37,5 +37,5 @@ export function isExportDeclaration(node: ExportDeclaration): boolean {
  * @return {boolean}
  */
 export function isImportDeclaration(node: any): boolean {
-  return node.type === 'ImportDeclaration'
+  return node.type === 'ImportDeclaration';
 }

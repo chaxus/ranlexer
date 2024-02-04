@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { tokenize } from '@/parser'
+import { describe, expect, it } from 'vitest';
+import { tokenize } from '@/parser';
 
 describe('Identifier', () => {
   it('const name = "a";', () => {
@@ -55,10 +55,10 @@ describe('Identifier', () => {
           end: { line: 1, column: 4, index: 17 },
         },
       },
-    ]
-    const code = 'const name = "a";'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'const name = "a";';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('function', () => {
     const result = [
       {
@@ -201,10 +201,10 @@ describe('Identifier', () => {
           end: { line: 1, column: 3, index: 39 },
         },
       },
-    ]
-    const code = `function say(name) {console.log(name);}`
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = `function say(name) {console.log(name);}`;
+    expect(tokenize(code)).toEqual(result);
+  });
   it('object', () => {
     const result = [
       {
@@ -288,10 +288,10 @@ describe('Identifier', () => {
           end: { line: 1, column: 5, index: 23 },
         },
       },
-    ]
-    const code = `const obj = {name: 'a'}`
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = `const obj = {name: 'a'}`;
+    expect(tokenize(code)).toEqual(result);
+  });
   it('const name = "a";', () => {
     const result = [
       {
@@ -345,10 +345,10 @@ describe('Identifier', () => {
           end: { line: 1, column: 4, index: 17 },
         },
       },
-    ]
-    const code = 'const name = "a";'
-    expect(tokenize(code)).toEqual(result)
-  })
+    ];
+    const code = 'const name = "a";';
+    expect(tokenize(code)).toEqual(result);
+  });
   it('const name = "a";', () => {
     const result = [
       {
@@ -402,8 +402,8 @@ describe('Identifier', () => {
           end: { line: 1, column: 4, index: 17 },
         },
       },
-    ]
-    const code = 'const name = "a";'
-    expect(tokenize(code)).toEqual(result)
-  })
-})
+    ];
+    const code = 'const name = "a";';
+    expect(tokenize(code)).toEqual(result);
+  });
+});

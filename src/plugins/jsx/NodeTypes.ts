@@ -5,7 +5,7 @@
  * @Description: https://github.com/facebook/jsx/blob/main/AST.md
  */
 
-import type { Expression, Literal, Node } from '@/ast/NodeType'
+import type { Expression, Literal, Node } from '@/ast/NodeType';
 
 export enum JSXNodeType {
   JSXIdentifier = 'JSXIdentifier',
@@ -28,98 +28,98 @@ export enum JSXNodeType {
 
 // JSX Names
 export interface JSXIdentifier extends Node {
-  type: JSXNodeType.JSXIdentifier
-  name: string
+  type: JSXNodeType.JSXIdentifier;
+  name: string;
 }
 
 export interface JSXMemberExpression extends Node {
-  type: JSXNodeType.JSXMemberExpression
-  object: JSXMemberExpression | JSXIdentifier
-  property: JSXIdentifier
+  type: JSXNodeType.JSXMemberExpression;
+  object: JSXMemberExpression | JSXIdentifier;
+  property: JSXIdentifier;
 }
 
 export interface JSXNamespacedName extends Node {
-  type: JSXNodeType.JSXNamespacedName
-  namespace: JSXIdentifier
-  name: JSXIdentifier
+  type: JSXNodeType.JSXNamespacedName;
+  namespace: JSXIdentifier;
+  name: JSXIdentifier;
 }
 
 // JSX Expression Container
 export interface JSXEmptyExpression extends Node {
-  type: JSXNodeType.JSXEmptyExpression
+  type: JSXNodeType.JSXEmptyExpression;
 }
 
 export interface JSXExpressionContainer extends Node {
-  type: JSXNodeType.JSXExpressionContainer
-  expression: Expression | JSXEmptyExpression
+  type: JSXNodeType.JSXExpressionContainer;
+  expression: Expression | JSXEmptyExpression;
 }
 
 export interface JSXSpreadChild extends Node {
-  type: JSXNodeType.JSXSpreadChild
-  expression: Expression
+  type: JSXNodeType.JSXSpreadChild;
+  expression: Expression;
 }
 
 // JSX Boundary Tags
 export interface JSXBoundaryElement extends Node {
-  name: JSXIdentifier | JSXMemberExpression | JSXNamespacedName
+  name: JSXIdentifier | JSXMemberExpression | JSXNamespacedName;
 }
 
 export interface JSXOpeningElement extends JSXBoundaryElement {
-  type: JSXNodeType.JSXOpeningElement
-  attributes: Array<JSXAttribute | JSXSpreadAttribute>
-  selfClosing: boolean
+  type: JSXNodeType.JSXOpeningElement;
+  attributes: Array<JSXAttribute | JSXSpreadAttribute>;
+  selfClosing: boolean;
 }
 
 export interface JSXClosingElement extends JSXBoundaryElement {
-  type: JSXNodeType.JSXClosingElement
+  type: JSXNodeType.JSXClosingElement;
 }
 
 // JSX Attributes
 export interface JSXAttribute extends Node {
-  type: JSXNodeType.JSXAttribute
-  name: JSXIdentifier | JSXNamespacedName
-  value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
+  type: JSXNodeType.JSXAttribute;
+  name: JSXIdentifier | JSXNamespacedName;
+  value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null;
 }
 
 export interface SpreadElement extends Node {
-  type: JSXNodeType.SpreadElement
-  argument: Expression
+  type: JSXNodeType.SpreadElement;
+  argument: Expression;
 }
 
 export interface JSXSpreadAttribute extends Node {
-  type: JSXNodeType.JSXSpreadAttribute
-  argument: Expression
+  type: JSXNodeType.JSXSpreadAttribute;
+  argument: Expression;
 }
 
 // JSX Text
 export interface JSXText extends Node {
-  type: JSXNodeType.JSXText
-  value: string
-  raw: string
+  type: JSXNodeType.JSXText;
+  value: string;
+  raw: string;
 }
 
 // JSX Element
 export interface JSXElement extends Node {
-  type: JSXNodeType.JSXElement
-  openingElement: JSXOpeningElement
+  type: JSXNodeType.JSXElement;
+  openingElement: JSXOpeningElement;
   children: Array<
     JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment
-  >
-  closingElement: JSXClosingElement | null
+  >;
+  closingElement: JSXClosingElement | null;
 }
 
 // JSX Fragment
 export interface JSXFragment extends Node {
-  type: JSXNodeType.JSXFragment
-  openingFragment: JSXOpeningFragment
+  type: JSXNodeType.JSXFragment;
+  openingFragment: JSXOpeningFragment;
   children: Array<
     JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment
-  >
-  closingFragment: JSXClosingFragment
+  >;
+  closingFragment: JSXClosingFragment;
 }
 export interface JSXOpeningFragment extends Node {
-  type: JSXNodeType.JSXOpeningFragment
+  type: JSXNodeType.JSXOpeningFragment;
 }
 export interface JSXClosingFragment extends Node {
-  type: JSXNodeType.JSXClosingFragment
+  type: JSXNodeType.JSXClosingFragment;
 }

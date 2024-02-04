@@ -59,7 +59,7 @@ export class Generate {
   constructor(ast: Program) {
     const { loc } = ast
     this.ast = ast
-    this.currentLine = loc?.start?.line || 0
+    this.currentLine = loc?.start?.line || 1
     this.currentIndex = loc?.start?.index || ast.start
     const end = loc?.end?.index || ast.end
     const start = loc?.start?.index || ast.start
@@ -105,7 +105,7 @@ export class Generate {
       this.code.update(
         loc.start.index,
         loc.end.index,
-        `${exported.name} as ${local.name}`,
+        `${local.name} as ${exported.name}`,
       )
     }
     this.currentIndex = loc.end.index
@@ -260,7 +260,7 @@ export class Generate {
           `from ${source.raw};`,
         )
       }
-      this.currentIndex = source.loc.end.index
+      this.currentIndex = source.loc.end.index + 1
     }
   }
   generateCallExpression(node: CallExpression): void {
@@ -340,8 +340,8 @@ export class Generate {
         this.code.update(this.currentIndex, this.currentIndex + 1, '\n')
         this.currentIndex++
       }
-      this.code.update(this.currentIndex, this.currentIndex + 1, '}')
-      this.currentIndex++
+      this.code.update(loc.end.index - 1, loc.end.index, '}')
+      this.currentIndex = loc.end.index
     } else {
       this.code.update(loc.start.index, loc.end.index, '{}')
       this.currentIndex = loc.end.index
@@ -517,6 +517,10 @@ export class Generate {
       right.loc.start.index - 1,
       operator,
     )
+    if (right.type === NodeType.Literal) {
+      this.code.update(right.loc.start.index, right.loc.end.index, right.raw)
+      this.currentIndex = right.loc.end.index
+    }
     if (right.type === NodeType.Identifier) {
       this.generateIdentifier(right)
     }
@@ -752,10 +756,14 @@ export class Generate {
       if (init.type === NodeType.Literal) {
         this.code.update(init.loc.start.index, init.loc.end.index, init.raw)
         this.currentIndex = init.loc.end.index
+        this.code.update(init.loc.end.index, init.loc.end.index + 1, ';')
+        this.currentIndex = init.loc.end.index + 1
       }
       if (init.type === NodeType.Identifier) {
         this.code.update(init.loc.start.index, init.loc.end.index, init.name)
         this.currentIndex = init.loc.end.index
+        this.code.update(init.loc.end.index, init.loc.end.index + 1, ';')
+        this.currentIndex = init.loc.end.index + 1
       }
       if (init.type === NodeType.ArrayExpression) {
         this.generateArrayExpression(init)
@@ -765,6 +773,8 @@ export class Generate {
       }
       if (init.type === NodeType.ArrowFunctionExpression) {
         this.generateArrowFunctionExpressionExpression(init)
+        this.code.update(init.loc.end.index, init.loc.end.index + 1, ';')
+        this.currentIndex = init.loc.end.index + 1
       }
       if (init.type === NodeType.FunctionExpression) {
         this.generateFunctionExpression(init)
@@ -867,8 +877,8 @@ export class Generate {
         return this.generateLiteral(declaration)
       }
     })
-    this.code.update(this.currentIndex, this.currentIndex + 1, ';')
-    this.currentIndex++
+    // this.code.update(this.currentIndex, this.currentIndex + 1, ';')
+    // this.currentIndex = loc.end.index
   }
   generateForInStatement(node: ForInStatement): void {
     const { type, left, right, body, loc } = node
@@ -966,10 +976,15 @@ export class Generate {
         this.currentIndex = loc.start.index + 8
       }
       consequent.forEach((exp) => {
+        const { loc } = exp
         if (exp.type === NodeType.ExpressionStatement) {
           this.generateExpressionStatement(exp)
         }
+        this.code.update(loc.end.index, loc.end.index + 1, ';')
       })
+      if (consequent.length === 0) {
+        this.code.update(this.currentIndex, this.currentIndex + 1, ';')
+      }
     })
     this.code.update(loc.end.index - 1, loc.end.index, '}')
     this.code.update(loc.end.index, loc.end.index + 1, ';')

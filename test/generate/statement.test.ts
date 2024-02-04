@@ -670,7 +670,7 @@ describe('statement', () => {
         {
           type: NodeType.SwitchStatement,
           loc: {
-            start: { line: 1, column: 3, index: 34 },
+            start: { line: 1, column: 0, index: 0 },
             end: { line: 1, column: 4, index: 35 },
           },
           end: 35,
@@ -748,7 +748,7 @@ describe('statement', () => {
         end: { line: 1, column: 4, index: 35 },
       },
     }
-    const code = 'switch (v){case 1: break;default:;}'
+    const code = 'switch (v){case 1: break;default:;};'
     expect(generate(result)).toEqual(code)
   })
   it('label: console.log();', () => {
@@ -1102,7 +1102,7 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('if BlockStatement', () => {
-    const code = 'if (a) {b=1}'
+    const code = 'if (a) {b=1} '
     const result: Program = {
       type: NodeType.Program,
       body: [

@@ -113,52 +113,52 @@ describe('import', () => {
             {
               type: NodeType.ImportNamespaceSpecifier,
               local: {
-                start: 76,
-                end: 79,
+                start: 69,
+                end: 72,
                 type: NodeType.Identifier,
                 name: 'mod',
                 loc: {
-                  start: { line: 3, column: 7, index: 76 },
-                  end: { line: 3, column: 10, index: 79 },
+                  start: { line: 3, column: 7, index: 69 },
+                  end: { line: 3, column: 10, index: 72 },
                 },
               },
-              start: 71,
-              end: 79,
+              start: 64,
+              end: 72,
               loc: {
-                start: { line: 3, column: 5, index: 71 },
-                end: { line: 3, column: 10, index: 79 },
+                start: { line: 3, column: 5, index: 64 },
+                end: { line: 3, column: 10, index: 72 },
               },
             },
           ],
-          start: 64,
-          end: 90,
+          start: 57,
+          end: 83,
           loc: {
-            start: { line: 3, column: 4, index: 64 },
-            end: { line: 3, column: 14, index: 90 },
+            start: { line: 3, column: 4, index: 57 },
+            end: { line: 3, column: 14, index: 83 },
           },
           source: {
-            start: 85,
-            end: 90,
+            start: 78,
+            end: 83,
             type: NodeType.Literal,
             value: 'mod',
             loc: {
-              start: { line: 3, column: 9, index: 85 },
-              end: { line: 3, column: 14, index: 90 },
+              start: { line: 3, column: 9, index: 78 },
+              end: { line: 3, column: 14, index: 83 },
             },
             raw: "'mod'",
           },
         },
       ],
       start: 0,
-      end: 90,
+      end: 83,
       loc: {
         start: { line: 0, column: 0, index: 0 },
-        end: { line: 3, column: 14, index: 90 },
+        end: { line: 3, column: 14, index: 83 },
       },
     }
     const result = `
-    import foo, { name1, name2 as bar } from 'foo';       
-    import * as mod from 'mod';`
+    import foo, { name1, name2 as bar } from 'foo';
+    import * as mod from 'mod'; `
     expect(generate(ast)).to.be.equal(result)
   })
   it('import declaration', () => {

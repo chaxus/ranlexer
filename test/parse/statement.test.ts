@@ -661,14 +661,14 @@ describe('statement', () => {
     expect(parse(code)).toEqual(result)
   })
   it('switch (v){case 1: break;default:;}', () => {
-    const code = 'switch (v){case 1: break;default:;}'
+    const code = 'switch (v){case 1: break;default:;};'
     const result = {
       type: 'Program',
       body: [
         {
           type: 'SwitchStatement',
           loc: {
-            start: { line: 1, column: 3, index: 34 },
+            start: { line: 1, column: 0, index: 0 },
             end: { line: 1, column: 4, index: 35 },
           },
           end: 35,

@@ -177,6 +177,7 @@ export class Parser {
   }
   private _parseSwitchStatement(): SwitchStatement {
     const { start } = this._getCurrentToken()
+    const startLoc = this._getCurrentToken().loc.start
     this._goNext(TokenType.Switch)
     this._goNext(TokenType.LeftParen)
     const discriminant = this._parseExpression()
@@ -223,13 +224,17 @@ export class Parser {
     }
     const switchStatement: SwitchStatement = {
       type: NodeType.SwitchStatement,
-      loc: this._getCurrentToken().loc,
+      loc: {
+        start: startLoc,
+        end: this._getCurrentToken().loc.end,
+      },
       end: this._getCurrentToken().end,
       start,
       discriminant,
       cases,
     }
     this._goNext(TokenType.RightCurly)
+    this._goNext(TokenType.Semicolon)
     return switchStatement
   }
   private _parseForStatement(): ForStatement | ForInStatement | ForOfStatement {

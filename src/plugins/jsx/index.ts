@@ -29,6 +29,14 @@ export const ranlexerJsxPlugin = () => {
         type: '',
         start: 0,
         end: 0,
+        loc: {
+          start: {
+            index: 0, column: 0, line: 1
+          },
+          end: {
+            index: 0, column: 0, line: 1
+          }
+        }
       }
     },
     generate(ast: Program): string {

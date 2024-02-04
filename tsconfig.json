@@ -12,6 +12,7 @@
     "isolatedModules": false,
     "strict": true,
     "noImplicitAny": true,
+    "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
     "inlineSourceMap": true,
     "baseUrl": ".",

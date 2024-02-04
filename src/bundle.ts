@@ -1,4 +1,5 @@
 import * as MagicString from 'magic-string'
+import type { SourceMap } from 'magic-string'
 import type { Module } from '@/module'
 import { Graph } from '@/graph'
 
@@ -30,9 +31,8 @@ export class Bundle {
   }
   /**
    * @description: Code generation logic, splicing module AST node, output code
-   * @return {*}
    */
-  render(): { code: string; map: MagicString.SourceMap } {
+  render(): { code: string; map: Omit<SourceMap, 'sourcesContent'> & { sourcesContent: Array<string | null> }; } {
     const msBundle = new MagicString.Bundle({ separator: '\n' })
 
     this.graph.orderedModules.forEach((module) => {

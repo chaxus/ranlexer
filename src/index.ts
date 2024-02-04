@@ -14,7 +14,7 @@ type Error = NodeJS.ErrnoException | null
 interface Build {
   generate: () => {
     code: string
-    map: SourceMap
+    map: Omit<SourceMap, 'sourcesContent'> & { sourcesContent: Array<string | null> };
   }
   write: () => Promise<[WriteFileInfo, WriteFileInfo] | undefined>
 }

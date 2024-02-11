@@ -1,6 +1,6 @@
 {
   "name": "ranlexer",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Tiny JavaScript parser and generator",
   "type": "module",
   "main": "./dist/index.umd.js",

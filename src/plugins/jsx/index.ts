@@ -1,14 +1,14 @@
 import type { Token } from '@/parser/Tokenizer';
+import type { Plugins } from '@/ast/Plugins';
 import type { Node, Program } from '@/ast/NodeType';
 import { isWhiteSpace } from '@/utils/char';
 
 // 追加 token，追加 parser
-export const ranlexerJsxPlugin = () => {
+export const ranlexerJsxPlugin = (): Plugins => {
   return {
-    name: 'ranlexer-jsx-plugin',
+    name: 'ranlexer-jsx',
     tokenizer(
-      currentChar: string,
-      startIndex: number,
+      index: number,
       source: string,
     ): Token[] {
       // JSXOpeningFragment

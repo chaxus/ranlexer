@@ -5,6 +5,7 @@ import {
   isUnderline,
   isWhiteSpace,
 } from '@/utils/char';
+import type { Plugins } from '@/ast/Plugins';
 import type { Loc } from '@/ast/NodeType';
 
 // Lexical analyzer divides the code into lexical units for the convenience of subsequent syntax analysis
@@ -71,11 +72,13 @@ export type Token = {
 };
 
 export interface TokenizerOption {
-  plugins?: Array<any>;
+  plugins?: Array<Plugins>;
 }
 
+type TokensGenerator<T = 'value'> = T extends 'value' ? ((loc: Loc, value: string) => Token) : T extends 'raw' ? ((loc: Loc, value: string, raw: string) => Token) : ((loc: Loc) => Token)
+
 // Token generator object, keyword mapping
-const TOKENS_GENERATOR: Record<string, (...args: any[]) => Token> = {
+const TOKENS_GENERATOR: Record<string, any> = {
   let(loc: Loc) {
     const { line, column, index } = loc;
     return {
@@ -558,6 +561,15 @@ export class Tokenizer {
   tokenize(): Token[] {
     // scan
     while (this._currentIndex < this._source.length) {
+      // exec plugins
+      this._options.plugins?.forEach((element) => {
+        const currentIndex = this._currentIndex
+        const tokens = element.tokenizer(currentIndex, this._source);
+        if (tokens.length > 0) {
+          this._tokens.concat(tokens);
+          this._currentIndex += (tokens[tokens.length - 1].end - currentIndex);
+        }
+      });
       const currentChar = this._source[this._currentIndex];
       const startIndex = this._currentIndex;
       const startLoc: Loc = {
@@ -579,14 +591,6 @@ export class Tokenizer {
         this._index++;
         continue;
       }
-      // exec plugins
-      this._options.plugins?.forEach((element) => {
-        const tokens = element.tokenizer(currentChar, startIndex, this._source);
-        this._tokens.concat(tokens || []);
-        if (tokens.length > 0) {
-          this._currentIndex += tokens[tokens.length - 1].end - startIndex;
-        }
-      });
       // 2. instanceof
       if (
         BINARY_OPERATOR_TOKENS.includes(this._getNextNumberChar(9)) &&

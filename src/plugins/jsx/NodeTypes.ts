@@ -1,8 +1,8 @@
 /*
  * @Author: chaxus nouo18@163.com
  * @LastEditors: chaxus nouo18@163.com
- * @LastEditTime: 2023-08-06 16:27:52
- * @Description: https://github.com/facebook/jsx/blob/main/AST.md
+ * @LastEditTime: 2024-02-15 19:58:58
+ * @Description: copy by https://github.com/facebook/jsx/blob/main/AST.md
  */
 
 import type { Expression, Literal, Node } from '@/ast/NodeType';

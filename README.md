@@ -147,6 +147,10 @@ const bundle = await build(option);
 bundle.write();
 ```
 
+## Visitors
+
+![](http://profile-counter.glitch.me/chaxus-ranlexer/count.svg)
+
 ## Meta
 
 [LICENSE (MIT)](/LICENSE)
